@@ -3,7 +3,7 @@ go:
     - 1.5
     - tip
 install:
-    - go get code.google.com/p/go.tools/cmd/cover
+    - go get golang.org/x/tools/cmd/cover
     - go get github.com/mattn/goveralls
 script:
     - go test -v -covermode=count -coverprofile=coverage.out github.com/cz-it/aliyun-oss-golang-sdk/ossapi github.com/cz-it/aliyun-oss-golang-sdk/osscmd
