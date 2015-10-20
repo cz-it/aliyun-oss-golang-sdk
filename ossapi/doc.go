@@ -5,3 +5,7 @@
 package ossapi
 
 import ()
+
+func doc() int {
+	return 0
+}
