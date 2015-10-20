@@ -5,8 +5,8 @@ install:
     - go get golang.org/x/tools/cmd/cover
     - go get github.com/mattn/goveralls
 script:
-    - go test -v -covermode=count -coverprofile=coverage_ossapi.out github.com/cz-it/aliyun-oss-golang-sdk/ossapi 
+    - go test -v -covermode=count -coverprofile=coverage.out github.com/cz-it/aliyun-oss-golang-sdk/ossapi 
     - go test -v -covermode=count -coverprofile=coverage_osscmd.out github.com/cz-it/aliyun-oss-golang-sdk/osscmd
-    - cat coverage_ossapi.out coverage_osscmd.out > coverage.out 
+    - cat coverage_osscmd.out | grep "mode: count" >> coverage.out 
     - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken n1g054tpzsXT3kJVwetmlA8SwPxpjDyIR
 
