@@ -9,7 +9,5 @@ import (
 )
 
 func TestMain(t *testing.T) {
-	if 0 == _main() {
-		t.Log("[PASS]:main")
-	}
+	main()
 }
