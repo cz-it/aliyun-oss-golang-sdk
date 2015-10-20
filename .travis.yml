@@ -6,5 +6,5 @@ install:
     - go get github.com/mattn/goveralls
 script:
     - go test -v -covermode=count -coverprofile=coverage.out github.com/cz-it/aliyun-oss-golang-sdk/ossapi 
-    - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+    - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken n1g054tpzsXT3kJVwetmlA8SwPxpjDyIR
 
