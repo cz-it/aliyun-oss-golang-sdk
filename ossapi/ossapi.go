@@ -5,7 +5,6 @@
 package ossapi
 
 import (
-	"errors"
 	"net/http"
 )
 
@@ -16,8 +15,9 @@ var (
 	accessKeySecret string
 )
 
-var (
-	EARG = errors.New("Invalied Argument !")
+const (
+	// GMT Format Date
+	DATE_FMT = "Mon, 02 Jan 2006 15:04:05 GMT"
 )
 
 // http client for http request
