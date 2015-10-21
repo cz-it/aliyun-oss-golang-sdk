@@ -8,9 +8,7 @@ import (
 	"net/http"
 )
 
-type Responser interface {
-}
-
 type Response struct {
+	Result  error
 	httpRsp *http.Response
 }

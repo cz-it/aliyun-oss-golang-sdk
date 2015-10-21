@@ -5,58 +5,84 @@
 package ossapi
 
 import (
-	"fmt"
+	"encoding/xml"
+	"io"
 	"net/http"
 	"path"
+	"strconv"
 	"time"
 )
-
-type Requester interface {
-	AddXOSS(key string, value string)
-	Signature() (sig string, err error)
-	Send() (rsp *Response, err error)
-}
 
 type Request struct {
 	Host string
 	Path string
 	Date string
 
-	httpreq *http.Request
+	httpReq *http.Request
 }
 
-func (req *Request) Send() (rsp *Response, err error) {
+type Signaturer func(*Request) (string, error)
+
+func (req *Request) Send(signature Signaturer) (rsp *Response, err error) {
+	if signature == nil {
+		err = EARG
+		return
+	}
 	URL := "http://" + path.Join(req.Host, req.Path)
-	req.httpreq, err = http.NewRequest("GET", URL, nil)
+	req.httpReq, err = http.NewRequest("GET", URL, nil)
 	if err != nil {
 		return
 	}
-	req.httpreq.ProtoMinor = 1
+	req.httpReq.ProtoMinor = 1
 	req.Date = time.Now().UTC().Format(DATE_FMT)
-	req.httpreq.Header.Add("Date", req.Date)
+	req.httpReq.Header.Add("Date", req.Date)
 	//req.httpreq.Header.Add("Host", req.Host)
-	auth, err := req.Auth()
+	auth, err := req.Auth(signature)
 	if err != nil {
 		return
 	}
-	req.httpreq.Header.Add("Authorization", auth)
+	req.httpReq.Header.Add("Authorization", auth)
 	//fmt.Println("Req head:", req.httpreq.Header)
-	httprsp, err := httpClient.Do(req.httpreq)
+	httprsp, err := httpClient.Do(req.httpReq)
 	if err != nil {
 		return
 	}
 	rsp = &Response{httpRsp: httprsp}
-	body := make([]byte, 10240)
-	//fmt.Println("httpresponse:", httprsp.Header)
-	//fmt.Println("httpresponse:", httprsp.Status)
-	httprsp.Body.Read(body)
-	fmt.Println("Body:", string(body))
+	if httprsp.StatusCode/100 == 4 || httprsp.StatusCode/100 == 5 {
+		var cntLen int
+		rstErr := &Error{HttpStatus: httprsp.StatusCode, ErrNo: ENone, ErrMsg: "None", ErrDetailMsg: "None"}
+		cntLen, err = strconv.Atoi(httprsp.Header["Content-Length"][0])
+		if err != nil {
+			cntLen = 1024
+		}
+		body := make([]byte, cntLen*10)
+		_, err = httprsp.Body.Read(body)
+		if err != nil && err != io.EOF {
+			return
+		}
+		err = xml.Unmarshal(body, rstErr)
+		if err != nil {
+			return
+		}
+		rstErr.ErrDetailMsg = string(body)
+		err = rstErr
+		rsp.Result = EFAIL
+		return
+	} else if httprsp.StatusCode/100 == 2 {
+		rsp.Result = ESUCC
+	} else {
+		rsp.Result = EUNKNOWN
+	}
 	return
 }
 
-func (req *Request) Auth() (authStr string, err error) {
+func (req *Request) Auth(signature Signaturer) (authStr string, err error) {
+	if signature == nil {
+		err = EARG
+		return
+	}
 	authStr = "OSS " + accessKeyID + ":"
-	sigStr, err := req.Signature()
+	sigStr, err := signature(req)
 	if err != nil {
 		return
 	}
@@ -64,22 +90,5 @@ func (req *Request) Auth() (authStr string, err error) {
 	return
 }
 
-func (req *Request) Signature() (sig string, err error) {
-	sigStr := "GET\n"
-	cntMd5, err := Base64AndMd5([]byte(""))
-	if err != nil {
-		return
-	}
-	println(cntMd5)
-	sigStr += "" + "\n"
-	sigStr += "\n"
-	sigStr += req.Date + "\n"
-	sigStr += "/"
-	fmt.Println("sigStr:", sigStr)
-	sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr))
-	return
-}
-
 func (req *Request) AddXOSS(key string, value string) {
-
 }
