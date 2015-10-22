@@ -7,7 +7,7 @@ package ossapi
 import (
 	"bytes"
 	"encoding/xml"
-	"fmt"
+	//	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -53,7 +53,6 @@ func (req *Request) Send() (rsp *Response, err error) {
 		req.httpReq.Header.Add(k, v)
 	}
 	if req.Body != nil {
-		fmt.Println(string(req.Body))
 		req.httpReq.Header.Add("Content-Length", strconv.FormatUint(uint64(len(req.Body)), 10))
 		req.httpReq.Header.Add("Content-Type", req.CntType)
 		var cntMd5 string
@@ -65,9 +64,11 @@ func (req *Request) Send() (rsp *Response, err error) {
 			}
 		}
 		req.httpReq.Header.Add("Content-MD5", cntMd5)
+		b := make([]byte, uint64(len(req.Body)))
 		req.httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
+		req.httpReq.Body.Read(b) // For request's Do BUG
 	}
-	fmt.Println("Req head:", req.httpReq.Header)
+	//fmt.Println("Req head:", req.httpReq.Header)
 	httprsp, err := httpClient.Do(req.httpReq)
 	if err != nil {
 		Logger.Error("httpClient.Do(req.httpReq) Error:%s", err.Error())
@@ -140,7 +141,7 @@ func (req *Request) Signature() (sig string, err error) {
 	}
 	resources := req.Resource
 	sigStr += ossHeadersStr + resources
-	fmt.Println("sigStr:", sigStr)
+	//fmt.Println("sigStr:", sigStr)
 	sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr))
 	if err != nil {
 		Logger.Error("sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr)) Error:%s", err.Error())

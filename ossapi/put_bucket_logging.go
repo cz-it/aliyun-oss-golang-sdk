@@ -28,7 +28,7 @@ func OpenBucketLogging(name, location, targetBucket, targetPrefix string) (error
 	resource := path.Join("/", name)
 	info := LoggingInfo{TargetBucket: targetBucket, TargetPrefix: targetPrefix}
 	openInfo := &OpenLoggingInfo{LoggingEnabled: info}
-	body, err := xml.MarshalIndent(openInfo, "", "  ")
+	body, err := xml.Marshal(openInfo)
 	if err != nil {
 		Logger.Error("err := xml.Marshal(openInfo) Error %s", err.Error())
 		error = OSSAPIError
