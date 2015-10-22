@@ -6,7 +6,6 @@ package ossapi
 
 import (
 	"encoding/xml"
-	"fmt"
 )
 
 type Bucket struct {
@@ -69,7 +68,6 @@ func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInf
 	}
 	body := make([]byte, 10000)
 	rsp.httpRsp.Body.Read(body)
-	fmt.Println(string(body))
 	bucketsInfo = new(BucketsInfo)
 	xml.Unmarshal(body, bucketsInfo)
 	return
