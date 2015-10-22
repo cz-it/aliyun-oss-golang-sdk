@@ -5,8 +5,24 @@
 package ossapi
 
 import (
+	"fmt"
+	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/log"
 	"net/http"
 )
+
+//LogCat
+var Logger *log.Logger
+
+func init() {
+	var err error
+	Logger, err = log.NewFileLogger("ossapilog", "ossapi")
+	if err != nil {
+		fmt.Errorf("Create Logger Error\n")
+		return
+	}
+	Logger.SetMaxFileSize(1024 * 1024 * 100) //100MB
+	Logger.SetLevel(log.LDEBUG)
+}
 
 var (
 	// global Access Key ID

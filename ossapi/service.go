@@ -51,6 +51,7 @@ func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInf
 	if "" != args {
 		path += "?" + args
 	}
+	Logger.Info("path is %s", path)
 	req := &Request{Host: "oss.aliyuncs.com", Path: "/", Method: "GET", Resource: "/"}
 	rsp, err := req.Send()
 	if rsp.Result != ESUCC {
