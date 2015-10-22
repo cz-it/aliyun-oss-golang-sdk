@@ -35,7 +35,6 @@ func (req *Request) Send() (rsp *Response, err error) {
 	if req.Method == "GET" {
 		URL += "/" + req.Path
 	}
-	fmt.Println("URL:", URL)
 	req.httpReq, err = http.NewRequest(req.Method, URL, nil)
 	if err != nil {
 		Logger.Error("http.NewRequest(req.Method,URL, nil) Error:%s", err.Error())
@@ -44,7 +43,6 @@ func (req *Request) Send() (rsp *Response, err error) {
 	req.httpReq.ProtoMinor = 1
 	req.Date = time.Now().UTC().Format(DATE_FMT)
 	req.httpReq.Header.Add("Date", req.Date)
-	//req.httpreq.Header.Add("Host", req.Host)
 	auth, err := req.Auth()
 	if err != nil {
 		Logger.Error("req.Auth() Error:%s", err.Error)
@@ -54,18 +52,27 @@ func (req *Request) Send() (rsp *Response, err error) {
 	for k, v := range req.XOSSes {
 		req.httpReq.Header.Add(k, v)
 	}
-	fmt.Println("Req head:", req.httpReq.Header)
 	if req.Body != nil {
+		fmt.Println(string(req.Body))
 		req.httpReq.Header.Add("Content-Length", strconv.FormatUint(uint64(len(req.Body)), 10))
 		req.httpReq.Header.Add("Content-Type", req.CntType)
+		var cntMd5 string
+		if req.Body != nil {
+			cntMd5, err = Base64AndMd5(req.Body)
+			if err != nil {
+				Logger.Error("Base64AndMd5(req.Body) Error:%s", err.Error())
+				return
+			}
+		}
+		req.httpReq.Header.Add("Content-MD5", cntMd5)
 		req.httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
 	}
+	fmt.Println("Req head:", req.httpReq.Header)
 	httprsp, err := httpClient.Do(req.httpReq)
 	if err != nil {
 		Logger.Error("httpClient.Do(req.httpReq) Error:%s", err.Error())
 		return
 	}
-	fmt.Println("req Head:", req.httpReq.Header)
 	rsp = &Response{httpRsp: httprsp}
 	if httprsp.StatusCode/100 == 4 || httprsp.StatusCode/100 == 5 {
 		var cntLen int
