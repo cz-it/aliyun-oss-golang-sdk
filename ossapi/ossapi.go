@@ -15,7 +15,7 @@ var Logger *log.Logger
 
 func init() {
 	var err error
-	Logger, err = log.NewFileLogger("ossapilog", "ossapi")
+	Logger, err = log.NewFileLogger(".ossapilog", "ossapi")
 	if err != nil {
 		fmt.Errorf("Create Logger Error\n")
 		return
