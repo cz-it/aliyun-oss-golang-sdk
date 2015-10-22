@@ -6,7 +6,6 @@ package ossapi
 
 import (
 	"encoding/xml"
-	"fmt"
 	"path"
 )
 
@@ -32,7 +31,6 @@ type CreateBucketConfiguration struct {
 
 func PutBucket(name, location, permission string) (respath string, error *Error) {
 	host := name + "." + location + ".aliyuncs.com"
-	println(host)
 	cfg := &CreateBucketConfiguration{LocationConstraint: location}
 	body, err := xml.Marshal(cfg)
 	if err != nil {
@@ -40,7 +38,6 @@ func PutBucket(name, location, permission string) (respath string, error *Error)
 		error = OSSAPIError
 	}
 	body = append([]byte(xml.Header), body...)
-	fmt.Println("body:", string(body))
 	resource := path.Join("/", name)
 	req := &Request{Host: host, Path: "/", Method: "PUT", Resource: resource + "/", Body: body, CntType: "application/xml"}
 	req.AddXOSS("x-oss-acl", permission)

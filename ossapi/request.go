@@ -11,7 +11,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"path"
 	"sort"
 	"strconv"
 	"strings"
@@ -32,7 +31,11 @@ type Request struct {
 }
 
 func (req *Request) Send() (rsp *Response, err error) {
-	URL := "http://" + path.Join(req.Host, req.Path)
+	URL := "http://" + req.Host
+	if req.Method == "GET" {
+		URL += "/" + req.Path
+	}
+	fmt.Println("URL:", URL)
 	req.httpReq, err = http.NewRequest(req.Method, URL, nil)
 	if err != nil {
 		Logger.Error("http.NewRequest(req.Method,URL, nil) Error:%s", err.Error())
