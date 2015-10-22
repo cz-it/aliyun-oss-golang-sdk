@@ -56,9 +56,7 @@ func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInf
 	if err != nil {
 		if _, ok := err.(*Error); !ok {
 			Logger.Error("GetService's Send Error:%s", err.Error())
-			error = &Error{ErrNo: EAPI,
-				ErrMsg:       "OSSAPI SDK's Inner Error,You Can Find More Details In Log Files",
-				ErrDetailMsg: "OSSAPI SDK's Inner Error,You Can Find More Details In Log Files"}
+			error = OSSAPIError
 			return
 		}
 	}

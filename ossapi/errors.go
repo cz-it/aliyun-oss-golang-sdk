@@ -63,6 +63,12 @@ const (
 	ETooManyBuckets                      = "TooManyBuckets"
 )
 
+var (
+	OSSAPIError = &Error{ErrNo: EAPI,
+		ErrMsg:       "OSSAPI SDK's Inner Error,You Can Find More Details In Log Files",
+		ErrDetailMsg: "OSSAPI SDK's Inner Error,You Can Find More Details In Log Files"}
+)
+
 type Error struct {
 	XMLName      xml.Name `xml:"Error"`
 	ErrNo        string   `xml:"Code"`

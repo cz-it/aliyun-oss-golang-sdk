@@ -5,11 +5,16 @@
 package ossapi
 
 import (
+	"bytes"
 	"encoding/xml"
+	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"path"
+	"sort"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -20,8 +25,8 @@ type Request struct {
 	Method   string
 	CntType  string
 	Resource string
-
-	Body []byte
+	XOSSes   map[string]string
+	Body     []byte
 
 	httpReq *http.Request
 }
@@ -43,12 +48,21 @@ func (req *Request) Send() (rsp *Response, err error) {
 		return
 	}
 	req.httpReq.Header.Add("Authorization", auth)
-	//fmt.Println("Req head:", req.httpreq.Header)
+	for k, v := range req.XOSSes {
+		req.httpReq.Header.Add(k, v)
+	}
+	fmt.Println("Req head:", req.httpReq.Header)
+	if req.Body != nil {
+		req.httpReq.Header.Add("Content-Length", strconv.FormatUint(uint64(len(req.Body)), 10))
+		req.httpReq.Header.Add("Content-Type", req.CntType)
+		req.httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
+	}
 	httprsp, err := httpClient.Do(req.httpReq)
 	if err != nil {
 		Logger.Error("httpClient.Do(req.httpReq) Error:%s", err.Error())
 		return
 	}
+	fmt.Println("req Head:", req.httpReq.Header)
 	rsp = &Response{httpRsp: httprsp}
 	if httprsp.StatusCode/100 == 4 || httprsp.StatusCode/100 == 5 {
 		var cntLen int
@@ -95,14 +109,28 @@ func (req *Request) Signature() (sig string, err error) {
 	sigStr := req.Method + "\n"
 	var cntMd5 string
 	if req.Body != nil {
-
+		cntMd5, err = Base64AndMd5(req.Body)
+		if err != nil {
+			Logger.Error("Base64AndMd5(req.Body) Error:%s", err.Error())
+			return
+		}
 	}
 	sigStr += cntMd5 + "\n"
 	sigStr += req.CntType + "\n"
 	sigStr += req.Date + "\n"
-	var ossHeaders string
+	var ossHeaders []string
+	var ossHeadersStr string
+	if req.XOSSes != nil {
+		for k, v := range req.XOSSes {
+			ossHeaders = append(ossHeaders, strings.ToLower(k)+":"+v)
+		}
+		sort.Sort(sort.StringSlice(ossHeaders))
+		ossHeadersStr = strings.Join(ossHeaders, "\n")
+		ossHeadersStr += "\n"
+	}
 	resources := req.Resource
-	sigStr += ossHeaders + resources
+	sigStr += ossHeadersStr + resources
+	fmt.Println("sigStr:", sigStr)
 	sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr))
 	if err != nil {
 		Logger.Error("sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr)) Error:%s", err.Error())
@@ -111,4 +139,8 @@ func (req *Request) Signature() (sig string, err error) {
 	return
 }
 func (req *Request) AddXOSS(key string, value string) {
+	if req.XOSSes == nil {
+		req.XOSSes = make(map[string]string)
+	}
+	req.XOSSes[strings.TrimSpace(key)] = strings.TrimSpace(value)
 }
