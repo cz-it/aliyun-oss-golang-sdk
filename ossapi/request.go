@@ -14,20 +14,19 @@ import (
 )
 
 type Request struct {
-	Host string
-	Path string
-	Date string
+	Host     string
+	Path     string
+	Date     string
+	Method   string
+	CntType  string
+	Resource string
+
+	Body []byte
 
 	httpReq *http.Request
 }
 
-type Signaturer func(*Request) (string, error)
-
-func (req *Request) Send(signature Signaturer) (rsp *Response, err error) {
-	if signature == nil {
-		err = EARG
-		return
-	}
+func (req *Request) Send() (rsp *Response, err error) {
 	URL := "http://" + path.Join(req.Host, req.Path)
 	req.httpReq, err = http.NewRequest("GET", URL, nil)
 	if err != nil {
@@ -37,7 +36,7 @@ func (req *Request) Send(signature Signaturer) (rsp *Response, err error) {
 	req.Date = time.Now().UTC().Format(DATE_FMT)
 	req.httpReq.Header.Add("Date", req.Date)
 	//req.httpreq.Header.Add("Host", req.Host)
-	auth, err := req.Auth(signature)
+	auth, err := req.Auth()
 	if err != nil {
 		return
 	}
@@ -76,13 +75,9 @@ func (req *Request) Send(signature Signaturer) (rsp *Response, err error) {
 	return
 }
 
-func (req *Request) Auth(signature Signaturer) (authStr string, err error) {
-	if signature == nil {
-		err = EARG
-		return
-	}
+func (req *Request) Auth() (authStr string, err error) {
 	authStr = "OSS " + accessKeyID + ":"
-	sigStr, err := signature(req)
+	sigStr, err := req.Signature()
 	if err != nil {
 		return
 	}
@@ -90,5 +85,23 @@ func (req *Request) Auth(signature Signaturer) (authStr string, err error) {
 	return
 }
 
+func (req *Request) Signature() (sig string, err error) {
+	sigStr := req.Method + "\n"
+	var cntMd5 string
+	if req.Body != nil {
+
+	}
+	sigStr += cntMd5 + "\n"
+	sigStr += req.CntType + "\n"
+	sigStr += req.Date + "\n"
+	var ossHeaders string
+	resources := req.Resource
+	sigStr += ossHeaders + resources
+	sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr))
+	if err != nil {
+		return
+	}
+	return
+}
 func (req *Request) AddXOSS(key string, value string) {
 }

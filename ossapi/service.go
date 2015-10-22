@@ -9,19 +9,6 @@ import (
 	"fmt"
 )
 
-func signature(req *Request) (sig string, err error) {
-	sigStr := "GET\n"
-	sigStr += "" + "\n"
-	sigStr += "\n"
-	sigStr += req.Date + "\n"
-	sigStr += "/"
-	sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr))
-	if err != nil {
-		return
-	}
-	return
-}
-
 type Bucket struct {
 	Name         string
 	CreationDate string
@@ -64,8 +51,8 @@ func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInf
 	if "" != args {
 		path += "?" + args
 	}
-	req := &Request{Host: "oss.aliyuncs.com", Path: "/"}
-	rsp, err := req.Send(signature)
+	req := &Request{Host: "oss.aliyuncs.com", Path: "/", Method: "GET", Resource: "/"}
+	rsp, err := req.Send()
 	if rsp.Result != ESUCC {
 		return
 	}
