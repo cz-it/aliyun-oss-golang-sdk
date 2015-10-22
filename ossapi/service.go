@@ -4,10 +4,13 @@
 
 package ossapi
 
-import ()
+import (
+	"encoding/xml"
+	"fmt"
+)
 
 func signature(req *Request) (sig string, err error) {
-	sigStr := "ET\n"
+	sigStr := "GET\n"
 	sigStr += "" + "\n"
 	sigStr += "\n"
 	sigStr += req.Date + "\n"
@@ -19,10 +22,33 @@ func signature(req *Request) (sig string, err error) {
 	return
 }
 
-type Buckets struct {
+type Bucket struct {
+	Name         string
+	CreationDate string
+	Location     string
 }
 
-func GetServiceWith(prefix, marker string, maxKeys int) (buckets *Buckets, err error) {
+type Buckets struct {
+	Bucket []Bucket
+}
+
+type Owner struct {
+	ID          string
+	DisplayName string
+}
+
+type BucketsInfo struct {
+	XMLName     xml.Name `xml:"ListAllMyBucketsResult"`
+	Prefix      string   `xml:"Prefix"`
+	Marker      string   `xml:"Marker"`
+	MaxKeys     int      `xml:"MaxKeys"`
+	IsTruncated bool     `xml:"IsTruncated"`
+	NextMarker  string   `xml:"NextMarker"`
+	Owner       Owner    `xml:"Owner"`
+	Buckets     Buckets  `xml:"Buckets"`
+}
+
+func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, err error) {
 	args := ""
 	path := "/"
 	if "" != prefix {
@@ -40,18 +66,18 @@ func GetServiceWith(prefix, marker string, maxKeys int) (buckets *Buckets, err e
 	}
 	req := &Request{Host: "oss.aliyuncs.com", Path: "/"}
 	rsp, err := req.Send(signature)
-	/*
-		body := make([]byte, 10000)
-		rsp.httpRsp.Body.Read(body)
-		fmt.Println(string(body))
-	*/
 	if rsp.Result != ESUCC {
 		return
 	}
+	body := make([]byte, 10000)
+	rsp.httpRsp.Body.Read(body)
+	fmt.Println(string(body))
+	bucketsInfo = new(BucketsInfo)
+	xml.Unmarshal(body, bucketsInfo)
 	return
 }
 
-func GetService() (buckets *Buckets, err error) {
-	buckets, err = GetServiceWith("", "", 0)
+func GetService() (bucketsInfo *BucketsInfo, err error) {
+	bucketsInfo, err = GetServiceWith("", "", 0)
 	return
 }
