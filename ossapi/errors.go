@@ -19,6 +19,7 @@ var (
 
 const (
 	ENone                                = "None"
+	EAPI                                 = "OSSAPISDK"
 	EAccessDenied                        = "AccessDenied"
 	EBucketAlreadyExists                 = "BucketAlreadyExists"
 	EBucketNotEmpty                      = "BucketNotEmpty"

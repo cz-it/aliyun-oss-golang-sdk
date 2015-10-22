@@ -35,7 +35,7 @@ type BucketsInfo struct {
 	Buckets     Buckets  `xml:"Buckets"`
 }
 
-func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, err error) {
+func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, error *Error) {
 	args := ""
 	path := "/"
 	if "" != prefix {
@@ -54,7 +54,17 @@ func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInf
 	Logger.Info("path is %s", path)
 	req := &Request{Host: "oss.aliyuncs.com", Path: "/", Method: "GET", Resource: "/"}
 	rsp, err := req.Send()
+	if err != nil {
+		if _, ok := err.(*Error); !ok {
+			Logger.Error("GetService's Send Error:%s", err.Error())
+			error = &Error{ErrNo: EAPI,
+				ErrMsg:       "OSSAPI SDK's Inner Error,You Can Find More Details In Log Files",
+				ErrDetailMsg: "OSSAPI SDK's Inner Error,You Can Find More Details In Log Files"}
+			return
+		}
+	}
 	if rsp.Result != ESUCC {
+		error = err.(*Error)
 		return
 	}
 	body := make([]byte, 10000)
@@ -65,7 +75,7 @@ func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInf
 	return
 }
 
-func GetService() (bucketsInfo *BucketsInfo, err error) {
+func GetService() (bucketsInfo *BucketsInfo, err *Error) {
 	bucketsInfo, err = GetServiceWith("", "", 0)
 	return
 }
