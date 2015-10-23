@@ -11,7 +11,7 @@ import (
 func PutBucketACL(name, permission, location string) (error *Error) {
 	resource := path.Join("/", name)
 	host := name + "." + location + ".aliyuncs.com"
-	req := &Request{Host: host, Path: "/?acl", Method: "PUT", Resource: resource + "/"}
+	req := &Request{Host: host, Path: "/?acl", Method: "PUT", Resource: resource + "/", SubRes: []string{"acl"}}
 	req.AddXOSS("x-oss-acl", permission)
 
 	rsp, err := req.Send()

@@ -7,10 +7,11 @@ package ossapi
 import (
 	"bytes"
 	"encoding/xml"
-	//	"fmt"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"path"
 	"sort"
 	"strconv"
 	"strings"
@@ -24,6 +25,7 @@ type Request struct {
 	Method   string
 	CntType  string
 	Resource string
+	SubRes   []string
 	XOSSes   map[string]string
 	Body     []byte
 
@@ -31,10 +33,8 @@ type Request struct {
 }
 
 func (req *Request) Send() (rsp *Response, err error) {
-	URL := "http://" + req.Host
-	if req.Method == "GET" {
-		URL += "/" + req.Path
-	}
+	URL := "http://"
+	URL += path.Join(req.Host, req.Path)
 	req.httpReq, err = http.NewRequest(req.Method, URL, nil)
 	if err != nil {
 		Logger.Error("http.NewRequest(req.Method,URL, nil) Error:%s", err.Error())
@@ -64,9 +64,7 @@ func (req *Request) Send() (rsp *Response, err error) {
 			}
 		}
 		req.httpReq.Header.Add("Content-MD5", cntMd5)
-		b := make([]byte, uint64(len(req.Body)))
 		req.httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
-		req.httpReq.Body.Read(b) // For request's Do BUG
 	}
 	//fmt.Println("Req head:", req.httpReq.Header)
 	httprsp, err := httpClient.Do(req.httpReq)
@@ -139,9 +137,17 @@ func (req *Request) Signature() (sig string, err error) {
 		ossHeadersStr = strings.Join(ossHeaders, "\n")
 		ossHeadersStr += "\n"
 	}
-	resources := req.Resource
-	sigStr += ossHeadersStr + resources
-	//fmt.Println("sigStr:", sigStr)
+	var subResStr string
+	var resourcesStr string
+	if req.SubRes != nil {
+		subRes := req.SubRes
+		sort.Sort(sort.StringSlice(subRes))
+		subResStr = strings.Join(subRes, "&")
+		subResStr = "?" + subResStr
+	}
+	resourcesStr = req.Resource + subResStr
+	sigStr += ossHeadersStr + resourcesStr
+	fmt.Println("sigStr:", sigStr)
 	sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr))
 	if err != nil {
 		Logger.Error("sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr)) Error:%s", err.Error())

@@ -6,6 +6,7 @@ package ossapi
 
 import (
 	"encoding/xml"
+	"fmt"
 	"path"
 )
 
@@ -35,7 +36,8 @@ func OpenBucketLogging(name, location, targetBucket, targetPrefix string) (error
 		return
 	}
 	body = append([]byte(xml.Header), body...)
-	req := &Request{Host: host, Path: "/?logging", Method: "PUT", Resource: resource + "/", Body: body, CntType: "application/xml"}
+	fmt.Println("body:", string(body))
+	req := &Request{Host: host, Path: "/?logging", Method: "PUT", Resource: resource + "/", SubRes: []string{"logging"}, Body: body, CntType: "application/xml"}
 	rsp, err := req.Send()
 	if err != nil {
 		if _, ok := err.(*Error); !ok {
@@ -62,7 +64,7 @@ func CloseBucketLogging(name, location string) (error *Error) {
 		return
 	}
 	body = append([]byte(xml.Header), body...)
-	req := &Request{Host: host, Path: "/?logging", Method: "PUT", Resource: resource + "/", Body: body, CntType: "application/xml"}
+	req := &Request{Host: host, Path: "/?logging", Method: "PUT", Resource: resource + "/", SubRes: []string{"logging"}, Body: body, CntType: "application/xml"}
 	rsp, err := req.Send()
 	if err != nil {
 		if _, ok := err.(*Error); !ok {
