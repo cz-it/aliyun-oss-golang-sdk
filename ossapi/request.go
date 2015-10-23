@@ -7,7 +7,7 @@ package ossapi
 import (
 	"bytes"
 	"encoding/xml"
-	//	"fmt"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -35,6 +35,7 @@ type Request struct {
 func (req *Request) Send() (rsp *Response, err error) {
 	URL := "http://"
 	URL += path.Join(req.Host, req.Path)
+	fmt.Println("URL:", URL)
 	req.httpReq, err = http.NewRequest(req.Method, URL, nil)
 	if err != nil {
 		Logger.Error("http.NewRequest(req.Method,URL, nil) Error:%s", err.Error())
