@@ -9,14 +9,15 @@ import (
 	"path"
 )
 
-func DeleteBucket(name, location string) (ossapiError *Error) {
+func DeleteBucketLifecycle(name, location string) (ossapiError *Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"
 	req := &Request{
 		Host:     host,
-		Path:     "/",
+		Path:     "/?lifecycle",
 		Method:   "DELETE",
-		Resource: resource}
+		Resource: resource,
+		SubRes:   []string{"lifecycle"}}
 	rsp, err := req.Send()
 	if err != nil {
 		if _, ok := err.(*Error); !ok {

@@ -9,13 +9,13 @@ import (
 	"testing"
 )
 
-func TestDeleteBucket(t *testing.T) {
+func TestDeleteBucketWebsite(t *testing.T) {
 	if nil != Init("v8P430U3UcILP6KA", "EB9v8yL2aM07YOgtO1BdfrXtdxa4A1") {
 		t.Fail()
 	}
-	if err := DeleteBucket("test-put-bucket2", L_Hangzhou); err != nil {
+	if err := DeleteBucketWebsite("test-put-bucket3", L_Beijing); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
-		t.Log("DeleteBucket Success")
+		t.Log("DeleteBucketWebsite Success")
 	}
 }

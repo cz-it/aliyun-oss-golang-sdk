@@ -9,14 +9,15 @@ import (
 	"path"
 )
 
-func DeleteBucket(name, location string) (ossapiError *Error) {
+func DeleteBucketLogging(name, location string) (ossapiError *Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"
 	req := &Request{
 		Host:     host,
-		Path:     "/",
+		Path:     "/?logging",
 		Method:   "DELETE",
-		Resource: resource}
+		Resource: resource,
+		SubRes:   []string{"logging"}}
 	rsp, err := req.Send()
 	if err != nil {
 		if _, ok := err.(*Error); !ok {
