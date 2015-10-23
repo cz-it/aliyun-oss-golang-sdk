@@ -6,6 +6,7 @@ package ossapi
 
 import (
 	"encoding/xml"
+	"strconv"
 )
 
 type Bucket struct {
@@ -50,7 +51,6 @@ func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInf
 	if "" != args {
 		path += "?" + args
 	}
-	Logger.Info("path is %s", path)
 	req := &Request{Host: "oss.aliyuncs.com", Path: "/", Method: "GET", Resource: "/"}
 	rsp, err := req.Send()
 	if err != nil {
@@ -64,7 +64,13 @@ func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInf
 		error = err.(*Error)
 		return
 	}
-	body := make([]byte, 10000)
+	bodyLen, err := strconv.Atoi(rsp.httpRsp.Header["Content-Length"][0])
+	if err != nil {
+		Logger.Error("GetService's Send Error:%s", err.Error())
+		error = OSSAPIError
+		return
+	}
+	body := make([]byte, bodyLen)
 	rsp.httpRsp.Body.Read(body)
 	bucketsInfo = new(BucketsInfo)
 	xml.Unmarshal(body, bucketsInfo)

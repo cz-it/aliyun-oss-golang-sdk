@@ -24,3 +24,14 @@ _testmain.go
 
 ossapi/.ossapilog/
 osscmd/osscmd
+
+.DS_Store
+*/.DS_Store
+*/*/.DS_Store
+*/*/*/.DS_Store
+*/*/*/*/.DS_Store
+*/*/*/*/*/.DS_Store
+*/*/*/*/*/*/.DS_Store
+*/*/*/*/*/*/*/.DS_Store
+*/*/*/*/*/*/*/*/.DS_Store
+tmp/
