@@ -7,7 +7,7 @@ package ossapi
 import (
 	"bytes"
 	"encoding/xml"
-	"fmt"
+	//	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -147,7 +147,7 @@ func (req *Request) Signature() (sig string, err error) {
 	}
 	resourcesStr = req.Resource + subResStr
 	sigStr += ossHeadersStr + resourcesStr
-	fmt.Println("sigStr:", sigStr)
+	//fmt.Println("sigStr:", sigStr)
 	sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr))
 	if err != nil {
 		Logger.Error("sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr)) Error:%s", err.Error())
