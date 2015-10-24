@@ -1,2 +1,0 @@
-[ERROR][2015-10-24 17:02:50.131193][/Users/cz/Proj/golang/src/github.com/cz-it/aliyun-oss-golang-sdk/ossapi/request.go:79]:httpClient.Do(req.httpReq) Error:Put http://test-object-hz..aliyuncs.com/test: dial tcp: lookup test-object-hz..aliyuncs.com: no such host
-[ERROR][2015-10-24 17:02:50.131336][/Users/cz/Proj/golang/src/github.com/cz-it/aliyun-oss-golang-sdk/ossapi/object/put_object.go:50]:GetService's Send Error:Put http://test-object-hz..aliyuncs.com/test: dial tcp: lookup test-object-hz..aliyuncs.com: no such host
