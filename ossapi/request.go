@@ -7,7 +7,7 @@ package ossapi
 import (
 	"bytes"
 	"encoding/xml"
-	//	"fmt"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -19,15 +19,16 @@ import (
 )
 
 type Request struct {
-	Host     string
-	Path     string
-	Date     string
-	Method   string
-	CntType  string
-	Resource string
-	SubRes   []string
-	XOSSes   map[string]string
-	Body     []byte
+	Host      string
+	Path      string
+	Date      string
+	Method    string
+	CntType   string
+	Resource  string
+	SubRes    []string
+	XOSSes    map[string]string
+	Body      []byte
+	ExtHeader map[string]string
 
 	httpReq *http.Request
 }
@@ -68,6 +69,11 @@ func (req *Request) Send() (rsp *Response, err error) {
 		req.httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
 	}
 	//fmt.Println("Req head:", req.httpReq.Header)
+	if req.ExtHeader != nil {
+		for k, v := range req.ExtHeader {
+			req.httpReq.Header.Add(k, v)
+		}
+	}
 	httprsp, err := httpClient.Do(req.httpReq)
 	if err != nil {
 		Logger.Error("httpClient.Do(req.httpReq) Error:%s", err.Error())
@@ -148,7 +154,7 @@ func (req *Request) Signature() (sig string, err error) {
 	}
 	resourcesStr = req.Resource + subResStr
 	sigStr += ossHeadersStr + resourcesStr
-	//fmt.Println("sigStr:", sigStr)
+	fmt.Println("sigStr:", sigStr)
 	sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr))
 	if err != nil {
 		Logger.Error("sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr)) Error:%s", err.Error())

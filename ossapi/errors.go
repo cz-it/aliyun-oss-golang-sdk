@@ -67,6 +67,9 @@ var (
 	OSSAPIError = &Error{ErrNo: EAPI,
 		ErrMsg:       "OSSAPI SDK's Inner Error,You Can Find More Details In Log Files",
 		ErrDetailMsg: "OSSAPI SDK's Inner Error,You Can Find More Details In Log Files"}
+	ArgError = &Error{ErrNo: EAPI,
+		ErrMsg:       "Argument Error.Please Check Your Argment Such as nil",
+		ErrDetailMsg: "Argument Error.Please Check Your Argment Such as nil"}
 )
 
 type Error struct {
