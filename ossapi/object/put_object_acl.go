@@ -5,6 +5,7 @@
 package object
 
 import (
+	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"path"
 )
@@ -21,6 +22,7 @@ func SetObjectACL(objName, bucketName, permission, location string) (error *ossa
 	req.AddXOSS("x-oss-object-acl", permission)
 
 	rsp, err := req.Send()
+	fmt.Println(rsp.HttpRsp)
 	if err != nil {
 		if _, ok := err.(*ossapi.Error); !ok {
 			ossapi.Logger.Error("GetService's Send Error:%s", err.Error())

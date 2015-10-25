@@ -38,11 +38,4 @@ func TestNewObject(t *testing.T) {
 	} else {
 		t.Log("PutObject Success!")
 	}
-	objInfo.ObjName = "acl"
-	if err := NewObject(objInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
-	} else {
-		t.Log("PutObject Success!")
-	}
-
 }
