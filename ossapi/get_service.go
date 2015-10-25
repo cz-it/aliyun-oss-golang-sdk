@@ -64,14 +64,14 @@ func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInf
 		error = err.(*Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.httpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
 	if err != nil {
 		Logger.Error("GetService's Send Error:%s", err.Error())
 		error = OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.httpRsp.Body.Read(body)
+	rsp.HttpRsp.Body.Read(body)
 	bucketsInfo = new(BucketsInfo)
 	xml.Unmarshal(body, bucketsInfo)
 	return

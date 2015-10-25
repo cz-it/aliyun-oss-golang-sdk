@@ -54,7 +54,7 @@ func PutBucket(name, location, permission string) (respath string, error *Error)
 		error = err.(*Error)
 		return
 	}
-	respath = rsp.httpRsp.Header["Location"][0]
+	respath = rsp.HttpRsp.Header["Location"][0]
 	return
 }
 

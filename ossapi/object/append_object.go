@@ -4,20 +4,40 @@
 
 package ossapi
 
-import ()
-
-type RspObjInfo struct {
-	CntType      string
-	LastModified string
-	ETag         string
-	Ranges       string
-	Type         string
-	Length       int
-	Data         []byte
-}
+import (
+	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
+	"path"
+	"strconv"
+)
 
 /*
-func GetObject(objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
+//redefine on put_object
+type ObjectInfo struct {
+	CacheControl       string
+	ContentDisposition string
+	ContentEncoding    string
+	Expires            string
+	Encryption         string
+	ACL                string
+	ObjName            string
+	BucketName         string
+	Location           string
+	Body               []byte
+	Type               string
+}
+*/
+
+type AppendObjInfo struct {
+	ObjectInfo
+	Position uint64
+}
+
+type AppendObjRspInfo struct {
+	Possition uint64
+	crc64     uint64
+}
+
+func AppendObject(objInfo *AppendObjInfo) (ossapiError *ossapi.Error) {
 	if objInfo == nil {
 		ossapiError = ossapi.ArgError
 		return
@@ -35,11 +55,12 @@ func GetObject(objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
 	}
 	req := &ossapi.Request{
 		Host:      host,
-		Path:      "/" + objInfo.ObjName,
-		Method:    "PUT",
+		Path:      "/" + objInfo.ObjName + "?append&position=" + strconv.FormatUint(objInfo.Position, 10),
+		Method:    "POST",
 		Resource:  resource,
 		Body:      objInfo.Body,
 		CntType:   objInfo.Type,
+		SubRes:    []string{"append&position=" + strconv.FormatUint(objInfo.Position, 10)},
 		ExtHeader: header}
 	req.AddXOSS("x-oss-object-acl", objInfo.ACL)
 	req.AddXOSS("x-oss-server-side-encryption", objInfo.Encryption)
@@ -58,4 +79,3 @@ func GetObject(objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
 	}
 	return
 }
-*/

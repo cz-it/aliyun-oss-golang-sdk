@@ -27,6 +27,6 @@ func PutBucketACL(name, permission, location string) (error *Error) {
 		return
 	}
 	b := make([]byte, 1024)
-	rsp.httpRsp.Body.Read(b)
+	rsp.HttpRsp.Body.Read(b)
 	return
 }

@@ -26,7 +26,7 @@ func DeleteBucketLifecycle(name, location string) (ossapiError *Error) {
 			return
 		}
 	}
-	fmt.Println("status:", rsp.httpRsp.Status)
+	fmt.Println("status:", rsp.HttpRsp.Status)
 	if rsp.Result != ESUCC {
 		ossapiError = err.(*Error)
 		return

@@ -44,14 +44,14 @@ func GetBucketLogging(name, location string) (info *LoggingInfo, ossapiError *Er
 		ossapiError = err.(*Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.httpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
 	if err != nil {
 		Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.httpRsp.Body.Read(body)
+	rsp.HttpRsp.Body.Read(body)
 	status := new(LoggingStatus)
 	err = xml.Unmarshal(body, status)
 	if err != nil {

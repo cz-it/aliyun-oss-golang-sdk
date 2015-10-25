@@ -29,6 +29,7 @@ type Request struct {
 	XOSSes    map[string]string
 	Body      []byte
 	ExtHeader map[string]string
+	RspHeader map[string]string
 
 	httpReq *http.Request
 }
@@ -79,7 +80,7 @@ func (req *Request) Send() (rsp *Response, err error) {
 		Logger.Error("httpClient.Do(req.httpReq) Error:%s", err.Error())
 		return
 	}
-	rsp = &Response{httpRsp: httprsp}
+	rsp = &Response{HttpRsp: httprsp}
 	if httprsp.StatusCode/100 == 4 || httprsp.StatusCode/100 == 5 {
 		var cntLen int
 		rstErr := &Error{HttpStatus: httprsp.StatusCode, ErrNo: ENone, ErrMsg: "None", ErrDetailMsg: "None"}
