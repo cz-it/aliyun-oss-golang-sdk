@@ -2,7 +2,7 @@
 * Author: CZ cz.theng@gmail.com
  */
 
-package ossapi
+package object
 
 import (
 	"fmt"
@@ -26,6 +26,13 @@ func TestNewObject(t *testing.T) {
 		Body:               []byte("<html><head></head><body>test</body></html>"),
 		Type:               "text/html",
 		BucketName:         "test-object-hz"}
+	if err := NewObject(objInfo); err != nil {
+		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	} else {
+		t.Log("PutObject Success!")
+	}
+
+	objInfo.ObjName = "test2"
 	if err := NewObject(objInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {

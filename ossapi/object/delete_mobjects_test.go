@@ -10,15 +10,19 @@ import (
 	"testing"
 )
 
-func TestDeleteObject(t *testing.T) {
+func TestDeleteObjects(t *testing.T) {
 	if nil != ossapi.Init("v8P430U3UcILP6KA", "EB9v8yL2aM07YOgtO1BdfrXtdxa4A1") {
 		t.Fail()
 	}
-
-	if err := DeleteObject("append", "test-object-hz", ossapi.L_Hangzhou); err != nil {
+	info := &DeleteObjInfo{
+		Quiet:  false,
+		Object: []KeyInfo{KeyInfo{Key: "test"}, KeyInfo{Key: "test2"}},
+	}
+	if info, err := DeleteObjects("test-object-hz", ossapi.L_Hangzhou, info); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
-		t.Log("AppendObject Success!")
+		t.Log("Delte Multiplie Objects Success!")
+		fmt.Println(info)
 	}
 
 }

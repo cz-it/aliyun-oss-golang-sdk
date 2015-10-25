@@ -2,7 +2,7 @@
 * Author: CZ cz.theng@gmail.com
  */
 
-package ossapi
+package object
 
 import (
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"

@@ -1,7 +1,7 @@
 /**
 * Author: CZ cz.theng@gmail.com
  */
-package ossapi
+package object
 
 import (
 	"fmt"
