@@ -22,7 +22,9 @@ _testmain.go
 
 *.exe
 
-ossapi/.ossapilog/
+*/.ossapilog/
+*/*/.ossapilog/
+*/*/*/.ossapilog/
 osscmd/osscmd
 
 .DS_Store
