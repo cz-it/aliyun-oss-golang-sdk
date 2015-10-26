@@ -20,6 +20,12 @@ func TestGetService(t *testing.T) {
 		fmt.Println(buckets)
 		t.Log("[SUCC]:GetService")
 	}
+	if buckets, err := GetServiceWith("aa", "bb", 10); err != nil {
+		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	} else {
+		fmt.Println(buckets)
+		t.Log("[SUCC]:GetService")
+	}
 
 	if nil != ossapi.Init("v8P430U3UcILP6KA", "EB9v8yL2aM07YOgtO1BdfrXtdxa4A1sfasdfs") {
 		t.Fail()
