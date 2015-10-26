@@ -5,7 +5,6 @@
 package ossapi
 
 import (
-	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/log"
 	"net/http"
 )
