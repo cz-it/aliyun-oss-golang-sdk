@@ -62,6 +62,7 @@ func init() {
 		//TODO:
 	}
 	*/
+	_logger, _ = NewConsoleLogger()
 	_logger.SetCallDepth(3)
 }
 
