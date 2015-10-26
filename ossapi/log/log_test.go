@@ -43,7 +43,7 @@ func TestConsoleLog(t *testing.T) {
 	l.Error("bb")
 }
 
-func TestLog_2(t *testing.T) {
+func TestLogFileLog_2(t *testing.T) {
 	l, err := NewFileLogger("/dev/a", "txt")
 	if err != nil {
 		fmt.Errorf("Create Logger Error\n")
