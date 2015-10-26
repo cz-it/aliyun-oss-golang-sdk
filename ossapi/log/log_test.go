@@ -15,9 +15,9 @@ func TestLog(t *testing.T) {
 		fmt.Errorf("Create Logger Error\n")
 		return
 	}
-	l.SetMaxFileSize(10) //100MB
+	l.SetMaxFileSize(10000) //100MB
 	l.SetLevel(LDEBUG)
-	l.Error("Error")
+	l.Error("ErrorErrorError")
 	l.Debug("Debug:int a is %d", 10)
 	l.Fatal("fatal")
 	l.Info("Info")
@@ -51,4 +51,19 @@ func TestLogFileLog_2(t *testing.T) {
 	}
 	l.SetCallDepth(1024)
 	l.Debug("Debug")
+}
+
+func TestLogSizeFile(t *testing.T) {
+	l, err := NewFileLogger(".log", "ossapi")
+	if err != nil {
+		fmt.Errorf("Create Logger Error\n")
+		return
+	}
+	l.SetMaxFileSize(200) //100MB
+	l.SetLevel(LDEBUG)
+	l.Info("1234567890")
+	l.Info("1234567890")
+	l.Info("1234567890")
+	l.Info("1234567890")
+	l.Info("1234567890")
 }
