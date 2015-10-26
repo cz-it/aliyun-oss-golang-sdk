@@ -7,7 +7,7 @@ package ossapi
 import (
 	"bytes"
 	"encoding/xml"
-	"fmt"
+	//	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -74,7 +74,7 @@ func (req *Request) Send() (rsp *Response, err error) {
 			req.httpReq.Header.Add(k, v)
 		}
 	}
-	fmt.Println("Req head:", req.httpReq.Header)
+	//fmt.Println("Req head:", req.httpReq.Header)
 	httprsp, err := httpClient.Do(req.httpReq)
 	if err != nil {
 		Logger.Error("httpClient.Do(req.httpReq) Error:%s", err.Error())
@@ -163,7 +163,7 @@ func (req *Request) Signature() (sig string, err error) {
 	}
 	resourcesStr = req.Resource + subResStr
 	sigStr += ossHeadersStr + resourcesStr
-	fmt.Println("sigStr:", sigStr)
+	//fmt.Println("sigStr:", sigStr)
 	sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr))
 	if err != nil {
 		Logger.Error("sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr)) Error:%s", err.Error())
