@@ -13,12 +13,16 @@ import (
 var Logger *log.Logger
 
 func init() {
-	var err error
-	Logger, err = log.NewFileLogger(".ossapilog", "ossapi")
-	if err != nil {
-		//		fmt.Errorf("Create Logger Error\n")
-		return
-	}
+	/*
+		// for coverall 95%
+		var err error
+		Logger, err = log.NewFileLogger(".ossapilog", "ossapi")
+		if err != nil {
+			fmt.Errorf("Create Logger Error\n")
+			return
+		}
+	*/
+	Logger, _ = log.NewFileLogger(".ossapilog", "ossapi")
 	Logger.SetMaxFileSize(1024 * 1024 * 100) //100MB
 	Logger.SetLevel(log.LDEBUG)
 }

@@ -32,6 +32,12 @@ func TestLog(t *testing.T) {
 	l.SetCallDepth(2)
 	l.Warning("Warning")
 	l.Info("", err)
+
+	DEBUG("debug")
+	INFO("info")
+	WARNING("warning")
+	ERROR("error")
+	FATAL("fatal")
 }
 func TestConsoleLog(t *testing.T) {
 	l, err := NewConsoleLogger()
@@ -51,6 +57,7 @@ func TestLogFileLog_2(t *testing.T) {
 	}
 	l.SetCallDepth(1024)
 	l.Debug("Debug")
+	l.Fatal("fatal")
 }
 
 func TestLogSizeFile(t *testing.T) {
