@@ -7,6 +7,7 @@ package object
 import (
 	"encoding/xml"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
+	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/bucket"
 	"path"
 	"strconv"
 )
@@ -29,7 +30,7 @@ type ACLInfo struct {
 }
 */
 
-func GetObjectACL(objName, bucketName, location string) (info *ossapi.ACLInfo, ossapiError *ossapi.Error) {
+func GetObjectACL(objName, bucketName, location string) (info *bucket.ACLInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)
 	req := &ossapi.Request{
@@ -58,7 +59,7 @@ func GetObjectACL(objName, bucketName, location string) (info *ossapi.ACLInfo, o
 	}
 	body := make([]byte, bodyLen)
 	rsp.HttpRsp.Body.Read(body)
-	info = new(ossapi.ACLInfo)
+	info = new(bucket.ACLInfo)
 	xml.Unmarshal(body, info)
 	return
 }

@@ -7,6 +7,7 @@ package object
 import (
 	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
+	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/bucket"
 	"testing"
 )
 
@@ -18,7 +19,7 @@ func TestDeleteObjects(t *testing.T) {
 		Quiet:  false,
 		Object: []KeyInfo{KeyInfo{Key: "test"}, KeyInfo{Key: "test2"}},
 	}
-	if info, err := DeleteObjects("test-object-hz", ossapi.L_Hangzhou, info); err != nil {
+	if info, err := DeleteObjects("test-object-hz", bucket.L_Hangzhou, info); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("Delte Multiplie Objects Success!")

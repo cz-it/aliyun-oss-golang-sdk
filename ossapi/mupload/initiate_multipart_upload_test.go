@@ -7,6 +7,7 @@ package mupload
 import (
 	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
+	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/bucket"
 	"testing"
 )
 
@@ -20,7 +21,7 @@ func TestInit(t *testing.T) {
 		ContentEncoding:    "utf-8",
 		Expires:            "Fri, 28 Feb 2012 05:38:42 GMT",
 		Encryption:         "AES256"}
-	if info, err := Init("a.c", "test-mupload", ossapi.L_Hangzhou, initInfo); err != nil {
+	if info, err := Init("a.c", "test-mupload", bucket.L_Hangzhou, initInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("Init Multiple Upload Success!")

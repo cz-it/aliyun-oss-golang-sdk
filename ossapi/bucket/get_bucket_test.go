@@ -5,11 +5,12 @@ package bucket
 
 import (
 	"fmt"
+	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"testing"
 )
 
 func TestGetBucket(t *testing.T) {
-	if nil != Init("v8P430U3UcILP6KA", "EB9v8yL2aM07YOgtO1BdfrXtdxa4A1") {
+	if nil != ossapi.Init("v8P430U3UcILP6KA", "EB9v8yL2aM07YOgtO1BdfrXtdxa4A1") {
 		t.Fail()
 	}
 	if info, err := GetBucket("test-put-bucket3", L_Beijing, "", "", "", "", 0); err != nil {

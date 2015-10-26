@@ -7,6 +7,7 @@ package mupload
 import (
 	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
+	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/bucket"
 	"testing"
 )
 
@@ -22,7 +23,7 @@ func TestUploadPartCopy(t *testing.T) {
 		Encryption:         "AES256"}
 	var info *InitRstInfo
 	var err *ossapi.Error
-	if info, err = Init("a.c", "test-mupload", ossapi.L_Hangzhou, initInfo); err != nil {
+	if info, err = Init("a.c", "test-mupload", bucket.L_Hangzhou, initInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("Init Multiple Upload Success!")
@@ -36,7 +37,7 @@ func TestUploadPartCopy(t *testing.T) {
 	partInfo := &UploadPartCopyInfo{
 		ObjectName:    "a.cpp",
 		BucketName:    "test-mupload",
-		Location:      ossapi.L_Hangzhou,
+		Location:      bucket.L_Hangzhou,
 		UploadID:      info.UploadId,
 		PartNumber:    1,
 		SrcObjectName: "a.c",

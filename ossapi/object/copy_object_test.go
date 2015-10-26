@@ -6,6 +6,7 @@ package object
 import (
 	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
+	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/bucket"
 	"testing"
 )
 
@@ -17,7 +18,7 @@ func TestCopyObject(t *testing.T) {
 	copyInfo := &CopyInfo{
 		ObjectName: "test2.html",
 		BucketName: "test-object-hz",
-		Location:   ossapi.L_Hangzhou,
+		Location:   bucket.L_Hangzhou,
 		Source:     "/test-object-hz/test"}
 
 	if info, err := CopyObject(copyInfo, nil); err != nil {
