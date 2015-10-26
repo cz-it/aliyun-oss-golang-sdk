@@ -8,6 +8,7 @@ import (
 	"encoding/xml"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"strconv"
+	"strings"
 )
 
 type Bucket struct {
@@ -37,22 +38,22 @@ type BucketsInfo struct {
 }
 
 func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, ossapiError *ossapi.Error) {
-	args := ""
+	var args []string
 	path := "/"
 	if "" != prefix {
-		args += "prefix=" + prefix
+		args = append(args, "prefix="+prefix)
 	}
 	if "" != marker {
-		args += "marker=" + marker
+		args = append(args, "marker="+marker)
 	}
 	if 0 < maxKeys && maxKeys <= 1000 {
-		args += "maxkeys=" + string(maxKeys)
+		args = append(args, "maxkeys="+strconv.FormatUint(uint64(maxKeys), 10))
 	}
 
-	if "" != args {
-		path += "?" + args
+	if args != nil {
+		path += "?" + strings.Join(args, "&")
 	}
-	req := &ossapi.Request{Host: "oss.aliyuncs.com", Path: "/", Method: "GET", Resource: "/"}
+	req := &ossapi.Request{Host: "oss.aliyuncs.com", Path: path, Method: "GET", Resource: "/"}
 	rsp, err := req.Send()
 	if err != nil {
 		if _, ok := err.(*ossapi.Error); !ok {
