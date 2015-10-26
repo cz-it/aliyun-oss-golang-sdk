@@ -69,12 +69,12 @@ func (req *Request) Send() (rsp *Response, err error) {
 		req.httpReq.Header.Add("Content-MD5", cntMd5)
 		req.httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
 	}
-	//fmt.Println("Req head:", req.httpReq.Header)
 	if req.ExtHeader != nil {
 		for k, v := range req.ExtHeader {
 			req.httpReq.Header.Add(k, v)
 		}
 	}
+	fmt.Println("Req head:", req.httpReq.Header)
 	httprsp, err := httpClient.Do(req.httpReq)
 	if err != nil {
 		Logger.Error("httpClient.Do(req.httpReq) Error:%s", err.Error())
@@ -94,6 +94,7 @@ func (req *Request) Send() (rsp *Response, err error) {
 			Logger.Error("httprsp.Body.Read(body) Error:%s", err.Error())
 			return
 		}
+		//fmt.Println("body:", string(body))
 		err = xml.Unmarshal(body, rstErr)
 		if err != nil {
 			Logger.Error("xml.Unmarshal(body, rstErr) Error:%s", err.Error())
@@ -138,10 +139,17 @@ func (req *Request) Signature() (sig string, err error) {
 	var ossHeaders []string
 	var ossHeadersStr string
 	if req.XOSSes != nil {
-		for k, v := range req.XOSSes {
-			ossHeaders = append(ossHeaders, strings.ToLower(k)+":"+v)
+		var ossHeaderKeys []string
+		//fmt.Println("req.XOSSes : ", req.XOSSes)
+		for k, _ := range req.XOSSes {
+			ossHeaderKeys = append(ossHeaderKeys, strings.ToLower(k))
 		}
-		sort.Sort(sort.StringSlice(ossHeaders))
+		sort.Sort(sort.StringSlice(ossHeaderKeys))
+		//fmt.Println("ossheaderKeys:", ossHeaderKeys)
+		for i := 0; i < len(ossHeaderKeys); i++ {
+			//fmt.Println("ossHeaderKeys[i]:", i, ": ", ossHeaderKeys[i])
+			ossHeaders = append(ossHeaders, ossHeaderKeys[i]+":"+req.XOSSes[ossHeaderKeys[i]])
+		}
 		ossHeadersStr = strings.Join(ossHeaders, "\n")
 		ossHeadersStr += "\n"
 	}

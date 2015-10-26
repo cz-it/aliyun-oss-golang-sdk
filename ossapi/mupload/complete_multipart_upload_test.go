@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestUploadPart(t *testing.T) {
+func TestCompleteMultipartUpload(t *testing.T) {
 	if nil != ossapi.Init("v8P430U3UcILP6KA", "EB9v8yL2aM07YOgtO1BdfrXtdxa4A1") {
 		t.Fail()
 	}
@@ -42,10 +42,31 @@ func TestUploadPart(t *testing.T) {
 		Data:       partData[:100*1024],
 		CntType:    "text/html"}
 
+	var i1 PartInfo
 	if info, err := UploadPart(partInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
+		i1.ETag = info.Etag
+		i1.PartNumber = 1
 		t.Log("UploadPart Success!")
+	}
+
+	partInfo.PartNumber = 2
+	var i2 PartInfo
+	if info, err := UploadPart(partInfo); err != nil {
+		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	} else {
+		i2.ETag = info.Etag
+		i2.PartNumber = 2
+		t.Log("UploadPart Success!")
+	}
+
+	partsInfo := &PartsInfo{Part: []PartInfo{i1, i2}}
+	if info, err := CompleteMultipartUpload("a.c", "test-mupload", ossapi.L_Hangzhou, info.UploadId, partsInfo); err != nil {
+		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	} else {
+		t.Log(" CompleteMultipartUpload Success!")
 		fmt.Println(info)
 	}
+
 }

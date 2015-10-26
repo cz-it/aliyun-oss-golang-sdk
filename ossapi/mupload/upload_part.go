@@ -11,6 +11,10 @@ import (
 	"strconv"
 )
 
+type UploadPartRstInfo struct {
+	Etag string
+}
+
 type UploadPartInfo struct {
 	ObjectName string
 	BucketName string
@@ -21,7 +25,7 @@ type UploadPartInfo struct {
 	CntType    string
 }
 
-func UploadPart(partInfo *UploadPartInfo) (ossapiError *ossapi.Error) {
+func UploadPart(partInfo *UploadPartInfo) (rstInfo *UploadPartRstInfo, ossapiError *ossapi.Error) {
 	if partInfo == nil {
 		ossapiError = ossapi.ArgError
 		return
@@ -48,6 +52,8 @@ func UploadPart(partInfo *UploadPartInfo) (ossapiError *ossapi.Error) {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	fmt.Println("rsp:", rsp.HttpRsp)
+	rstInfo = new(UploadPartRstInfo)
+	fmt.Println("headis :", rsp.HttpRsp.Header)
+	rstInfo.Etag = rsp.HttpRsp.Header["Etag"][0]
 	return
 }
