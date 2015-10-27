@@ -17,9 +17,9 @@ func TestCreateBucketCORS(t *testing.T) {
 	}
 	corsInfo := &CORSInfo{
 		CORSRule: []CORSRuleInfo{CORSRuleInfo{
-			AllowedOrigin: []string{"www.qq.com", "www.baidu.com"},
+			AllowedOrigin: []string{"www.qq.com", "www.baidu.com", "*", "/"},
 			AllowedMethod: []string{"GET"},
-			AllowedHeader: []string{"Authorization"},
+			AllowedHeader: []string{"Access-Control-Requet-Headers", "Authorization", "Access-Control-Request-Method"},
 			ExposeHeader:  []string{"x-oss-test", "x-oss-test2"},
 			MaxAgeSeconds: 100,
 		}},
