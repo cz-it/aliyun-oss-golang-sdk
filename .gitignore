@@ -37,3 +37,7 @@ osscmd/osscmd
 */*/*/*/*/*/*/.DS_Store
 */*/*/*/*/*/*/*/.DS_Store
 tmp/
+
+
+ossapi/log/.log/
+ossapi/log/a.txt

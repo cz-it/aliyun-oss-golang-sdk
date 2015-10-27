@@ -68,7 +68,7 @@ func Init(objName, bucketName, location string, initInfo *InitInfo) (rstInfo *In
 	rstInfo = new(InitRstInfo)
 	err = xml.Unmarshal(body, rstInfo)
 	if err != nil {
-		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
+		ossapi.Logger.Error("xml.Unmarshal(body, rstInfo) Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
