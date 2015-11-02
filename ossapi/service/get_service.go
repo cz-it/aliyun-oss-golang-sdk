@@ -37,7 +37,7 @@ type BucketsInfo struct {
 	Buckets     Buckets  `xml:"Buckets"`
 }
 
-func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, ossapiError *ossapi.Error) {
+func GetService(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, ossapiError *ossapi.Error) {
 	var args []string
 	path := "/"
 	if "" != prefix {
@@ -79,7 +79,7 @@ func GetServiceWith(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInf
 	return
 }
 
-func GetService() (bucketsInfo *BucketsInfo, err *ossapi.Error) {
-	bucketsInfo, err = GetServiceWith("", "", 0)
+func GetServiceDefault() (bucketsInfo *BucketsInfo, err *ossapi.Error) {
+	bucketsInfo, err = GetService("", "", 0)
 	return
 }
