@@ -8,7 +8,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
-	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/service"
 	"os"
 )
 
@@ -25,6 +24,7 @@ const (
 		The commands are:
 
 		    init : init osscmd's evniroment 
+			bucket: buckets' tool
 	`
 	initHelpStr = `
 	Usage: init -i id -s secort 
@@ -96,17 +96,8 @@ func parseArgs() {
 		if len(os.Args) < 3 {
 			Usage()
 		}
-		if "-l" == os.Args[2] {
-			if err = readCfg(); err != nil {
-				fmt.Println("You May Havn't Init . Use osscmd init First!")
-				os.Exit(0)
-			}
-
-			ossapi.Init(accessKeyID, accessKeySecret)
-			info, e := service.GetService()
-			fmt.Println("id:", accessKeyID, " And key:", accessKeySecret)
-			fmt.Println("info:", info)
-			fmt.Println("err:", e)
+		if err = Bucket(os.Args[:]); err != nil {
+			Usage()
 		}
 	} else {
 		Usage()
