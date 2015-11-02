@@ -2,6 +2,9 @@
 * Author: CZ cz.theng@gmail.com
  */
 
+// service package support list action for bucket
+// or list bucket packge
+
 package service
 
 import (
@@ -11,21 +14,25 @@ import (
 	"strings"
 )
 
+// bucket info
 type Bucket struct {
 	Name         string
 	CreationDate string
 	Location     string
 }
 
+// buckets
 type Buckets struct {
 	Bucket []Bucket
 }
 
+// owner info
 type Owner struct {
 	ID          string
 	DisplayName string
 }
 
+// buckets info return form xml
 type BucketsInfo struct {
 	XMLName     xml.Name `xml:"ListAllMyBucketsResult"`
 	Prefix      string   `xml:"Prefix"`
@@ -37,6 +44,10 @@ type BucketsInfo struct {
 	Buckets     Buckets  `xml:"Buckets"`
 }
 
+// GetService will list bucket of a account
+// buckets with prefix will be return if prefix is not ""
+// marker mark the split for return
+// at moste maxKeys will return ,default is 100
 func GetService(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, ossapiError *ossapi.Error) {
 	var args []string
 	path := "/"
@@ -79,6 +90,7 @@ func GetService(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, o
 	return
 }
 
+// GetServiceDefault list all buckets with no prefix ,no marker and maxkeys to 100
 func GetServiceDefault() (bucketsInfo *BucketsInfo, err *ossapi.Error) {
 	bucketsInfo, err = GetService("", "", 0)
 	return
