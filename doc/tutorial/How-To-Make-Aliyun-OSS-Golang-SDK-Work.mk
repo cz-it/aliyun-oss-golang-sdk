@@ -1,5 +1,5 @@
 #How To Make Aliyun OSS Golang SDK Work
-Aliyun OSS Golang SDK is a warp for Aliyun OSS [Web API](https://docs.aliyun.com/?spm=5176.1980653.30105.5.rDaFkB#/pub/oss/api-reference/abstract) on Golang. To use this SDK you should install golang first, see how to [install golang](https://golang.org/doc/install) .The following articles assume that golang has been installed.
+Aliyun OSS Golang SDK is a wrap for Aliyun OSS [Web API](https://docs.aliyun.com/?spm=5176.1980653.30105.5.rDaFkB#/pub/oss/api-reference/abstract) on Golang. To use this SDK you should install golang first, see how to [install golang](https://golang.org/doc/install) .The following articles assume that golang has been installed.
 
 Use `go get` commands to get Aliyun OSS Golang SDK and it's command tools "osscmd". 
 
