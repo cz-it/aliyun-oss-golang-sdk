@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
+	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/service"
 	"os"
 )
 
@@ -65,12 +66,18 @@ func InitUsage() {
 
 func parseArgs() {
 	var err error
+	if len(os.Args) < 2 {
+		Usage()
+	}
 	if "-h" == os.Args[1] || "help" == os.Args[1] {
 		Usage()
 	} else if "-v" == os.Args[1] || "version" == os.Args[1] {
 		fmt.Println("Cur Version:", ossapi.Version())
 		return
 	} else if "init" == os.Args[1] {
+		if len(os.Args) < 3 {
+			Usage()
+		}
 		if "-h" == os.Args[2] || "--help" == os.Args[2] {
 			InitUsage()
 		}
@@ -85,6 +92,22 @@ func parseArgs() {
 			fmt.Println("[SUCC]: Init Success!")
 		}
 		return
+	} else if "bucket" == os.Args[1] {
+		if len(os.Args) < 3 {
+			Usage()
+		}
+		if "-l" == os.Args[2] {
+			if err = readCfg(); err != nil {
+				fmt.Println("You May Havn't Init . Use osscmd init First!")
+				os.Exit(0)
+			}
+
+			ossapi.Init(accessKeyID, accessKeySecret)
+			info, e := service.GetService()
+			fmt.Println("id:", accessKeyID, " And key:", accessKeySecret)
+			fmt.Println("info:", info)
+			fmt.Println("err:", e)
+		}
 	} else {
 		Usage()
 	}

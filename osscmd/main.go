@@ -7,10 +7,11 @@ package main
 import (
 	"encoding/xml"
 	"os"
+	"path/filepath"
 )
 
 const (
-	configPath = "~/.osscmd/config.xml"
+	configPath = "./.osscmd/config.xml"
 )
 
 type ConfigInfo struct {
@@ -47,7 +48,7 @@ func writeCfg(ID, Secret string) (err error) {
 		return
 	}
 	cfg := &ConfigInfo{AccessKeyID: ID, AccessKeySecret: Secret}
-	cfgData, err := xml.Marshal(cfg)
+	cfgData, err := xml.MarshalIndent(cfg, "", "  ")
 	if err != nil {
 		return
 	}
@@ -59,5 +60,7 @@ func writeCfg(ID, Secret string) (err error) {
 }
 
 func main() {
+	dirPath := filepath.Dir(configPath)
+	os.MkdirAll(dirPath, 0777)
 	parseArgs()
 }
