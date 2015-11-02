@@ -70,4 +70,6 @@ func TestDo(t *testing.T) {
 		fmt.Println(err)
 	}
 	fmt.Println(rsp)
+
+	fmt.Println(Version())
 }
