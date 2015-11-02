@@ -64,7 +64,11 @@ func GetService(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, o
 	if args != nil {
 		path += "?" + strings.Join(args, "&")
 	}
-	req := &ossapi.Request{Host: "oss.aliyuncs.com", Path: path, Method: "GET", Resource: "/"}
+	req := &ossapi.Request{
+		Host:     "oss.aliyuncs.com",
+		Path:     path,
+		Method:   "GET",
+		Resource: "/"}
 	rsp, err := req.Send()
 	if err != nil {
 		if _, ok := err.(*ossapi.Error); !ok {

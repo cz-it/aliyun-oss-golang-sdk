@@ -10,18 +10,18 @@ import (
 	"testing"
 )
 
-func TestPutBucketDefault(t *testing.T) {
+func TestCreate(t *testing.T) {
 	if nil != ossapi.Init("v8P430U3UcILP6KA", "EB9v8yL2aM07YOgtO1BdfrXtdxa4A1") {
 		t.Fail()
 	}
-	if p, err := PutBucketDefault("test-put-bucket2"); err != nil {
+	if err := CreateDefault("test-put-bucket2"); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
-		fmt.Println(p)
+		fmt.Println("Create Default Success!")
 	}
-	if p, err := PutBucket("test-put-bucket3", L_Beijing, P_Private); err != nil {
+	if err := Create("test-put-bucket3", L_Beijing, P_Private); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
-		fmt.Println(p)
+		fmt.Println("Create Success")
 	}
 }

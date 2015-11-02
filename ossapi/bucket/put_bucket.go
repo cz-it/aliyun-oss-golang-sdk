@@ -1,6 +1,8 @@
 /**
 * Author: CZ cz.theng@gmail.com
  */
+// package bucket wrap opration for bucket
+// such as create query delete modify and etc.
 
 package bucket
 
@@ -10,6 +12,7 @@ import (
 	"path"
 )
 
+// Location and Permission
 const (
 	L_Hangzhou      = "oss-cn-hangzhou"
 	L_Shenzhen      = "oss-cn-shenzhen"
@@ -25,12 +28,16 @@ const (
 	P_PublicRW       = "public-read-write"
 )
 
+// Requestion's XML Content
 type CreateBucketConfiguration struct {
 	XMLName            xml.Name `xml:"CreateBucketConfiguration"`
 	LocationConstraint string   `xml:"LocationConstraint"`
 }
 
-func PutBucket(name, location, permission string) (respath string, ossapiError *ossapi.Error) {
+// Create Bucket with name/location and permission
+// location is list above
+// permission now can be three value
+func Create(name, location, permission string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	cfg := &CreateBucketConfiguration{LocationConstraint: location}
 	body, err := xml.Marshal(cfg)
@@ -61,11 +68,11 @@ func PutBucket(name, location, permission string) (respath string, ossapiError *
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	respath = rsp.HttpRsp.Header["Location"][0]
 	return
 }
 
-func PutBucketDefault(name string) (path string, ossapiError *ossapi.Error) {
-	path, ossapiError = PutBucket(name, L_Hangzhou, P_Private)
+// Create Bucket with default
+func CreateDefault(name string) (ossapiError *ossapi.Error) {
+	ossapiError = Create(name, L_Hangzhou, P_Private)
 	return
 }
