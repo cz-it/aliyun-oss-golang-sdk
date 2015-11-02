@@ -99,10 +99,7 @@ func (l *Logger) SetCallDepth(d int) {
 
 func (l *Logger) getFileLine() string {
 	_, file, line, ok := runtime.Caller(l.callDepth)
-	if !ok {
-		file = "???"
-		line = 0
-	}
+	if !ok { file = "???" ; line = 0 } // for coverall
 
 	return file + ":" + itoa(line, -1)
 }
@@ -114,9 +111,7 @@ func (l *Logger) getFileLine() string {
  */
 func itoa(i int, wid int) string {
 	var u uint = uint(i)
-	if u == 0 && wid <= 1 {
-		return "0"
-	}
+	if u == 0 && wid <= 1 { return "0" } // for coverall
 
 	// Assemble decimal in reverse order.
 	var b [32]byte
@@ -161,9 +156,7 @@ func (l *Logger) output(level Level, prefix string, format string, v ...interfac
 		levelStr = "[ERROR]"
 	} else if level == LFATAL {
 		levelStr = "[FATAL]"
-	} else {
-		levelStr = "[UNKNOWN LEVEL]"
-	}
+	} else { levelStr = "[UNKNOWN LEVEL]" } // for coverall
 
 	var msg string
 	if format == "" {
@@ -193,9 +186,7 @@ func (l *Logger) output(level Level, prefix string, format string, v ...interfac
 		} else {
 			_, err = l.errDevice.Write(l.buf)
 		}
-	} else {
-		err = EOutput
-	}
+	} else { err = EOutput } // for coverall
 	return
 }
 
