@@ -137,4 +137,11 @@ If bucket has config logging , it will return with Target Bucket name and Target
 
 --website option indicate to query bucket's website configurtion. index page and 404 error page is return .
 
+
+### Query Lifecycle
+
+	 ./osscmd bucket -q --lifecycle  -b testossscmd -a shenzhen
+	Rule [0]:{97d7bc25-5ed3-444d-83f4-27f43c750ff0 cmd Enabled {30}}
+	
+--lifecycle option indicate to query bucket's lifecycle info .If bucket has no lifecycle , it return a NoSuchLifecycle Error . If bucket has lifecycles , it show evey rules.
 	

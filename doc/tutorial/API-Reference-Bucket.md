@@ -57,6 +57,29 @@ return nil error when success. If failed return a ossapi.Error.
 Set Bucket's Website pages. it will set index page to indexPage and 404 page to errorPage.
 
 return nil error when success. If failed return a ossapi.Error.
+
+##bucket.SetLifecycle
+
+	SetLifecycle(name, location string, rules []RuleInfo) (ossapiError *ossapi.Error)
+Set Bucket's Lifecycle limitation. rules is a rule list:
+
+	const (
+	    LifecycleStatsEnable  = "Enabled"
+	    LifecycleStatsDisable = "Disabled"
+	)
+	
+	type ExpirationDaysInfo struct {
+	    Days uint
+	}
+	
+	type RuleInfo struct {
+	    ID         string
+	    Prefix     string
+	    Status     string
+	    Expiration ExpirationDaysInfo
+	}
+	
+ID is a rule's ID. you can custom it.ExpirationDaysInfo points out how many days to expire.Prefix figure out object's name with this prefix be setted. status is "Enabled" and  "Disabled" point weather this rule has function.
 ##bucket.Delete
 
 	Delete(name, location string) (ossapiError *ossapi.Error)
@@ -179,6 +202,19 @@ Query bucket's referer white list . Urls stored in info.
 	}
 	
 If bucket allows empty access, AllowEmptyReferer will be true otherwise false. White Url List is on RefererList.Referer A string split.
+
+##bucket.QueryLifcycle
+
+	QueryLifecycle(name, location string) (infos []RuleInfo, ossapiError *ossapi.Error)
+Query Bucket's lifecycle info .If buckt doesn't have a lifecycle, infos is nil and ossapiError is ENoSuchLifecycle.Otherwise  rules are in infos.
+
+	type RuleInfo struct {
+	    ID         string
+	    Prefix     string
+	    Status     string
+	    Expiration ExpirationDaysInfo
+	}
+Expiration has the number of days to expire.
 
 ##bucket.QueryWebsite
 
