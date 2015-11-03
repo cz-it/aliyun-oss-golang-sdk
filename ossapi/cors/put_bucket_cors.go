@@ -23,9 +23,10 @@ type CORSInfo struct {
 	CORSRule []CORSRuleInfo
 }
 
-func CreateBucketCORS(bucketName, location string, corsInfo *CORSInfo) (ossapiError *ossapi.Error) {
+func Create(bucketName, location string, corsInfo []CORSRuleInfo) (ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
-	body, err := xml.Marshal(corsInfo)
+	info := &CORSInfo{CORSRule: corsInfo}
+	body, err := xml.Marshal(info)
 	if err != nil {
 		ossapi.Logger.Error("xml.Marshal(cfg) Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError

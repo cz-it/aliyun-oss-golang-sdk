@@ -15,16 +15,14 @@ func TestCreateBucketCORS(t *testing.T) {
 	if nil != ossapi.Init("v8P430U3UcILP6KA", "EB9v8yL2aM07YOgtO1BdfrXtdxa4A1") {
 		t.Fail()
 	}
-	corsInfo := &CORSInfo{
-		CORSRule: []CORSRuleInfo{CORSRuleInfo{
-			AllowedOrigin: []string{"www.qq.com", "www.baidu.com", "*", "/"},
-			AllowedMethod: []string{"GET"},
-			AllowedHeader: []string{"Access-Control-Requet-Headers", "Authorization", "Access-Control-Request-Method"},
-			ExposeHeader:  []string{"x-oss-test", "x-oss-test2"},
-			MaxAgeSeconds: 100,
-		}},
-	}
-	if err := CreateBucketCORS("test-cors", bucket.L_Hangzhou, corsInfo); err != nil {
+	corsInfo := []CORSRuleInfo{CORSRuleInfo{
+		AllowedOrigin: []string{"www.qq.com", "www.baidu.com", "*", "/"},
+		AllowedMethod: []string{"GET"},
+		AllowedHeader: []string{"Access-Control-Requet-Headers", "Authorization", "Access-Control-Request-Method"},
+		ExposeHeader:  []string{"x-oss-test", "x-oss-test2"},
+		MaxAgeSeconds: 100,
+	}}
+	if err := Create("test-cors", bucket.L_Hangzhou, corsInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		fmt.Println("Create Bucket CORS SUCCESS")

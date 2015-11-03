@@ -99,6 +99,13 @@ func parseArgs() {
 		if err = Bucket(os.Args[:]); err != nil {
 			Usage()
 		}
+	} else if "cors" == os.Args[1] {
+		if len(os.Args) < 3 {
+			Usage()
+		}
+		if err = CORS(os.Args[:]); err != nil {
+			Usage()
+		}
 	} else {
 		Usage()
 	}

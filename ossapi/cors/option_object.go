@@ -5,7 +5,6 @@
 package cors
 
 import (
-	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"path"
 	"strconv"
@@ -25,7 +24,7 @@ type OptionRspInfo struct {
 	MaxAge        uint64
 }
 
-func OptionObject(objName, bucketName, location string, optionInfo *OptionReqInfo) (rstInfo *OptionRspInfo, ossapiError *ossapi.Error) {
+func Option(objName, bucketName, location string, optionInfo *OptionReqInfo) (rstInfo *OptionRspInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)
 	headers := make(map[string]string)
@@ -53,7 +52,6 @@ func OptionObject(objName, bucketName, location string, optionInfo *OptionReqInf
 		return
 	}
 	rstInfo = new(OptionRspInfo)
-	fmt.Println("rsp Header:", rsp.HttpRsp.Header)
 	rstInfo.AllowOrigin = rsp.HttpRsp.Header["Access-Control-Allow-Origin"][0]
 	rstInfo.AllowMethods = rsp.HttpRsp.Header["Access-Control-Allow-Methods"][0]
 	rstInfo.ExposeHeaders = rsp.HttpRsp.Header["Access-Control-Expose-Headers"][0]

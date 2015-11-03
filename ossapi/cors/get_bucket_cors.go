@@ -11,7 +11,7 @@ import (
 	"strconv"
 )
 
-func GetBucketCORS(bucketName, location string) (rstInfo *CORSInfo, ossapiError *ossapi.Error) {
+func Query(bucketName, location string) (rstInfo []CORSRuleInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName) + "/"
 	req := &ossapi.Request{
@@ -40,12 +40,13 @@ func GetBucketCORS(bucketName, location string) (rstInfo *CORSInfo, ossapiError 
 	}
 	rstBody := make([]byte, bodyLen)
 	rsp.HttpRsp.Body.Read(rstBody)
-	rstInfo = new(CORSInfo)
-	err = xml.Unmarshal(rstBody, rstInfo)
+	info := new(CORSInfo)
+	err = xml.Unmarshal(rstBody, info)
 	if err != nil {
 		ossapi.Logger.Error("xml.Unmarshal(body, rstInfo)Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
+	rstInfo = info.CORSRule
 	return
 }

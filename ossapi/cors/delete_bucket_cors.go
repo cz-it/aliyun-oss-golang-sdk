@@ -9,7 +9,7 @@ import (
 	"path"
 )
 
-func DeleteBucketCORS(bucketName, location string) (ossapiError *ossapi.Error) {
+func Delete(bucketName, location string) (ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName) + "/"
 	req := &ossapi.Request{

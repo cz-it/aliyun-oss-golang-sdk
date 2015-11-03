@@ -145,3 +145,36 @@ If bucket has config logging , it will return with Target Bucket name and Target
 	
 --lifecycle option indicate to query bucket's lifecycle info .If bucket has no lifecycle , it return a NoSuchLifecycle Error . If bucket has lifecycles , it show evey rules.
 	
+## CORS
+CORS allow other domain to access resources 
+### Query Bucket's CORS
+
+	./osscmd cors -q -b testossscmd  -a shenzhen
+	Rule [0]:
+	    AllowedOrigin: [* /]
+	    AllowedMethod: [GET POST PUT DELETE HEAD]
+	    AllowedHeader: [access-control-requet-headers authorization access-control-request-method]
+	    ExposeHeader: [x-oss-test]
+	    MaxAgeSeconds: 1000
+-q option means query . Query bucket testossscmd's CORS Info.
+
+Info is a Rule list. With AllowedOrigin  AllowedMethod AllowedHeader ExposeHeader MaxAgeSeconds
+
+### Delete Bucket's CORS
+
+	./osscmd cors -d -b testossscmd  -a shenzhen
+	Delete CORS Success.
+	
+-d options means delete . Delete Bucket's CORS attribute.
+
+### Query object's CORS
+
+	./osscmd cors -o -b testossscmd  -a shenzhen --object a.c --origin "/" --method "GET"  --headers "authorization"
+	Option Info: &{* GET, POST, PUT, DELETE, HEAD authorization x-oss-test 1000}
+	
+-o options means option, Query ojbect's bucket's CORS information
+
+--object : object name
+--origin : origin path
+--method : http method
+--headers: http headers
