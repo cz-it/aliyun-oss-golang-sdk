@@ -55,3 +55,55 @@ return nil error when success. If failed return a ossapi.Error.
 
 	SetWebsite(name, location, indexPage, errorPage string) (ossapiError *ossapi.Error)
 Set Bucket's Website pages. it will set index page to indexPage and 404 page to errorPage.
+
+return nil error when success. If failed return a ossapi.Error.
+##bucket.Delete
+
+	Delete(name, location string) (ossapiError *ossapi.Error)
+Delte bucket which named name and on location. If bucket has objects ,this action may be failed .
+
+return nil error when success. If failed return a ossapi.Error.
+
+## bucket.DeleteLifecycle
+
+	DeleteLifecycle(name, location string) (ossapiError *ossapi.Error)
+Delte all lifecycle rules on bucket which named name .After this, no object will be delte automaticly.
+
+return nil error when success. If failed return a ossapi.Error.
+
+## bucket.DeleteLogging
+
+	DeleteLogging(name, location string) (ossapiError *ossapi.Error)
+Close bucket's logging function. it is the same as bucket.CloseLogging
+
+return nil error when success. If failed return a ossapi.Error.
+
+##bucket.DeleteWebsite
+
+	DeleteWebsite(name, location string) (ossapiError *ossapi.Error)
+Delete bucket's website info. It is the same as bucket.SetWebsite with index and error "";
+
+return nil error when success. If failed return a ossapi.Error.
+
+##bucket.QueryACL
+
+	QueryACL(name, location string) (info *ACLInfo, ossapiError *ossapi.Error)
+Query Bucket's ACL information. The result is stored in info.
+
+	type OwnerInfo struct {
+    ID          string
+    DisplayName string
+	}
+	
+	type AccessControlListInfo struct {
+	    Grant string
+	}
+	
+	type ACLInfo struct {
+	    XMLName           xml.Name `xml:"AccessControlPolicy"`
+	    Owner             OwnerInfo
+	    AccessControlList AccessControlListInfo
+	}
+Owner store Owner Info, ACL is in AccessControlListInfo.Grant
+
+return nil error when success. If failed return a ossapi.Error.

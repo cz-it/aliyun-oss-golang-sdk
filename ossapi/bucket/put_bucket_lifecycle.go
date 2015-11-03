@@ -35,7 +35,7 @@ type LifecycleConfiguration struct {
 	Rule    []RuleInfo
 }
 
-func SetBucketLifecycle(name, location string, rules []RuleInfo) (ossapiError *ossapi.Error) {
+func SetLifecycle(name, location string, rules []RuleInfo) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name)
 	info := LifecycleConfiguration{Rule: rules}

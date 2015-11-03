@@ -26,7 +26,7 @@ type ACLInfo struct {
 	AccessControlList AccessControlListInfo
 }
 
-func GetBucketACL(name, location string) (info *ACLInfo, ossapiError *ossapi.Error) {
+func QueryACL(name, location string) (info *ACLInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"
 	req := &ossapi.Request{

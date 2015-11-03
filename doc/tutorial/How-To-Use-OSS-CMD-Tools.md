@@ -82,6 +82,19 @@ Delete the bucket test-put-bucket2
 	
 --logging options indicate to close logging function of bucket testosscmd
 
+## Query Bucket's Attributes
+osscmd has subcommand bucket and option -q to get bucket's attributes. 
 
+Usage：
 	
+	./osscmd bucket -q [--logging|website|lifecycle] -b bucket'name [-a location]
+
+### Get Bucket's ACL
+	
+	./osscmd bucket -q --acl -b testossscmd -a shenzhen
+	Owner is : {1415982622007927 1415982622007927}
+	Grant is : public-read
+--acl option indicate to get bucket's acl infomation. Grant show the ACL: public-read.
+
+
 	

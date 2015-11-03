@@ -9,7 +9,7 @@ import (
 	"path"
 )
 
-func PutBucketACL(name, permission, location string) (error *ossapi.Error) {
+func SetACL(name, location, permission string) (error *ossapi.Error) {
 	resource := path.Join("/", name)
 	host := name + "." + location + ".aliyuncs.com"
 	req := &ossapi.Request{

@@ -24,11 +24,14 @@ type CloseLoggingInfo struct {
 	XMLName xml.Name `xml:"BucketLoggingStatus"`
 }
 
-func OpenBucketLogging(name, location, targetBucket, targetPrefix string) (ossapiError *ossapi.Error) {
+func OpenLogging(name, location, targetBucket, targetPrefix string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name)
-	info := LoggingInfo{TargetBucket: targetBucket, TargetPrefix: targetPrefix}
-	openInfo := &OpenLoggingInfo{LoggingEnabled: info}
+	info := LoggingInfo{
+		TargetBucket: targetBucket,
+		TargetPrefix: targetPrefix}
+	openInfo := &OpenLoggingInfo{
+		LoggingEnabled: info}
 	body, err := xml.Marshal(openInfo)
 	if err != nil {
 		ossapi.Logger.Error("err := xml.Marshal(openInfo) Error %s", err.Error())
@@ -59,7 +62,7 @@ func OpenBucketLogging(name, location, targetBucket, targetPrefix string) (ossap
 	return
 }
 
-func CloseBucketLogging(name, location string) (ossapiError *ossapi.Error) {
+func CloseLogging(name, location string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name)
 	closeInfo := &CloseLoggingInfo{}

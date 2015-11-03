@@ -20,15 +20,18 @@ type RefererConfigurationInfo struct {
 	RefererList       RefererListInfo `xml:"RefererList"`
 }
 
-func SetBucketReferer(name, location string, enable bool, urls []string) (ossapiError *ossapi.Error) {
+func SetReferer(name, location string, enable bool, urls []string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name)
 	refersInfo := RefererListInfo{Referer: urls}
 	var info RefererConfigurationInfo
 	if urls == nil {
-		info = RefererConfigurationInfo{AllowEmptyReferer: enable}
+		info = RefererConfigurationInfo{
+			AllowEmptyReferer: enable}
 	} else {
-		info = RefererConfigurationInfo{AllowEmptyReferer: enable, RefererList: refersInfo}
+		info = RefererConfigurationInfo{
+			AllowEmptyReferer: enable,
+			RefererList:       refersInfo}
 	}
 	body, err := xml.Marshal(info)
 	if err != nil {

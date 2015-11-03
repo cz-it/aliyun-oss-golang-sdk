@@ -24,7 +24,7 @@ type WebsiteInfo struct {
 	ErrorDocument KeyInfo   `xml:"ErrorDocument"`
 }
 
-func SetBucketWebsite(name, location, indexPage, errorPage string) (ossapiError *ossapi.Error) {
+func SetWebsite(name, location, indexPage, errorPage string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name)
 	indexInfo := IndexInfo{Suffix: indexPage}

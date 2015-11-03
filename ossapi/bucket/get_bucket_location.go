@@ -16,7 +16,7 @@ type LocationInfo struct {
 	Location string   `xml:",chardata"`
 }
 
-func GetBucketLocation(name string) (location string, ossapiError *ossapi.Error) {
+func QueryLocation(name string) (location string, ossapiError *ossapi.Error) {
 	host := name + ".oss.aliyuncs.com"
 	resource := path.Join("/", name) + "/"
 	req := &ossapi.Request{

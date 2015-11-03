@@ -9,7 +9,7 @@ import (
 	"path"
 )
 
-func DeleteBucketWebsite(name, location string) (ossapiError *ossapi.Error) {
+func DeleteWebsite(name, location string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"
 	req := &ossapi.Request{
