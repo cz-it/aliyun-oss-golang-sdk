@@ -35,3 +35,23 @@ Set Bucket (name+location) with perission.
 
 name and location point a unique bucket, set it with permission. permission is a ossapi's enum value with descripted above.
 
+return nil error when success. If failed return a ossapi.Error.
+## bucket.OpenLogging
+
+	OpenLogging(name, location, targetBucket, targetPrefix string) (ossapiError *ossapi.Error)
+Open bucket's logging .It will log to bucket with name targetBucket wiht a logging object , logging's object wiht targetPrefix prefix name.such as "MyLog-oss-example-2012-09-10-04-00-00-0000" . Format is "<TargetPrefix><SourceBucket>-YYYY-mm-DD-HH-MM-SS-UniqueString". Here, "Mylog" is the prefix by targetPrefix.
+
+return nil error when success. If failed return a ossapi.Error.
+
+## bucket.CloseLogging
+
+	CloseLogging(name, location string) (ossapiError *ossapi.Error)
+	
+Close Bucket's Logging ,Bucket is indicated by name and location.
+
+return nil error when success. If failed return a ossapi.Error.
+
+##bucket.SetWebsite
+
+	SetWebsite(name, location, indexPage, errorPage string) (ossapiError *ossapi.Error)
+Set Bucket's Website pages. it will set index page to indexPage and 404 page to errorPage.
