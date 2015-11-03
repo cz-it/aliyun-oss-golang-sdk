@@ -48,7 +48,7 @@ type BucketsInfo struct {
 // buckets with prefix will be return if prefix is not ""
 // marker mark the split for return
 // at moste maxKeys will return ,default is 100
-func GetService(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, ossapiError *ossapi.Error) {
+func QueryBuckets(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, ossapiError *ossapi.Error) {
 	var args []string
 	path := "/"
 	if "" != prefix {
@@ -95,7 +95,7 @@ func GetService(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, o
 }
 
 // GetServiceDefault list all buckets with no prefix ,no marker and maxkeys to 100
-func GetServiceDefault() (bucketsInfo *BucketsInfo, err *ossapi.Error) {
-	bucketsInfo, err = GetService("", "", 0)
+func QueryBucketsDefault() (bucketsInfo *BucketsInfo, err *ossapi.Error) {
+	bucketsInfo, err = QueryBuckets("", "", 0)
 	return
 }

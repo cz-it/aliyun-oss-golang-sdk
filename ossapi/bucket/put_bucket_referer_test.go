@@ -19,7 +19,7 @@ func TestSetBucketReferer(t *testing.T) {
 	} else {
 		t.Log("SetBucketReferer Success")
 	}
-	if err := SetBucketReferer("test-put-bucket4", L_Beijing, false, nil); err != nil {
+	if err := SetReferer("test-put-bucket4", L_Beijing, false, nil); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("SetBucketReferer Success")
