@@ -90,7 +90,7 @@ func Bucket(args []string) (err error) {
 	ossapi.Init(accessKeyID, accessKeySecret)
 	var e *ossapi.Error
 	if "-l" == args[2] {
-		info, e := service.GetServiceDefault()
+		info, e := service.QueryBucketsDefault()
 		if e != nil {
 			Exit(e.Error())
 		}
