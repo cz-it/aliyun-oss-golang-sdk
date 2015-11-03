@@ -163,6 +163,14 @@ func Bucket(args []string) (err error) {
 			}
 			fmt.Println("Location is ", info)
 		} else if BucketFlag.IsLifecycle {
+			info, e := bucket.QueryLifecycle(BucketFlag.Bucket, loc)
+			if e != nil {
+				Exit(e.Error())
+			}
+			for idx, rule := range info {
+				fmt.Printf("Rule [%d]:", idx)
+				fmt.Println(rule)
+			}
 		} else if BucketFlag.IsLog {
 			info, e := bucket.QueryLogging(BucketFlag.Bucket, loc)
 			if e != nil {
