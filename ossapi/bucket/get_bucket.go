@@ -47,7 +47,7 @@ type BucktsInfo struct {
 	CommonPrefixes CommonInfo `xml:"CommonPrefixes"`
 }
 
-func GetBucket(name, location string, prefix, marker, delimiter, encodingType string, maxKeys int) (info *BucktsInfo, ossapiError *ossapi.Error) {
+func QueryObjects(name, location string, prefix, marker, delimiter, encodingType string, maxKeys int) (info *BucktsInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"
 	urlPath := "/"

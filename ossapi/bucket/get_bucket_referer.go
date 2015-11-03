@@ -24,7 +24,7 @@ type RefererConfigurationInfo struct {
 }
 */
 
-func GetBucketReferer(name, location string) (info *RefererConfigurationInfo, ossapiError *ossapi.Error) {
+func QueryReferer(name, location string) (info *RefererConfigurationInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"
 	req := &ossapi.Request{

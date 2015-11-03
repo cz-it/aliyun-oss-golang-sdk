@@ -26,7 +26,7 @@ type WebsiteInfo struct {
 }
 */
 
-func GetBucketWebsite(name, location string) (info *WebsiteInfo, ossapiError *ossapi.Error) {
+func QueryWebsite(name, location string) (info *WebsiteInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"
 	req := &ossapi.Request{

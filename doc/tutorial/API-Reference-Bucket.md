@@ -85,6 +85,37 @@ Delete bucket's website info. It is the same as bucket.SetWebsite with index and
 
 return nil error when success. If failed return a ossapi.Error.
 
+##bucket.Query
+	QueryObjects(name, location string, prefix, marker, delimiter, encodingType string, maxKeys int) (info     *BucktsInfo, ossapiError *ossapi.Error)
+	
+List All Object in Bucket . if prefix/marker/delimiter and encodingType is not "" .It Only return object match these. At most maxKeys items will return. objects store in info:
+
+	type ContentInfo struct {
+	    Key          string
+	    LastModified string
+	    ETag         string
+	    Type         string
+	    Size         string
+	    StorageClass string
+	    Owner        service.Owner
+	}
+	
+	type CommonInfo struct {
+	    Prefix string
+	}
+	
+	type BucktsInfo struct {
+	    XMLName        xml.Name `xml:"ListBucketResult"`
+	    Name           string   `xml:"Name"`
+	    Prefix         string   `xml:"Prefix"`
+	    Marker         string   `xml:"Marker"`
+	    MaxKeys        int      `xml:"MaxKeys"`
+	    EncodingType   string   `xml:"encoding-type"`
+	    IsTruncated    bool     `xml:"IsTruncated"`
+	    Contents       []ContentInfo
+	    CommonPrefixes CommonInfo `xml:"CommonPrefixes"`
+	}
+Real Object's meta info is in ContentInfo Such as ETag/ Size/ Type etc.
 ##bucket.QueryACL
 
 	QueryACL(name, location string) (info *ACLInfo, ossapiError *ossapi.Error)
@@ -107,3 +138,64 @@ Query Bucket's ACL information. The result is stored in info.
 Owner store Owner Info, ACL is in AccessControlListInfo.Grant
 
 return nil error when success. If failed return a ossapi.Error.
+
+##bucket.QueryLocation
+
+	QueryLocation(name string) (location string, ossapiError *ossapi.Error)
+	
+Query Where bucket is located. The return value is a string with "oss-cn" prefix and city name . Such as 
+"oss-cn-shenzhen"	 means Shenzhen
+
+return nil error when success. If failed return a ossapi.Error.
+
+##bucket.QueryLogging
+
+	QueryLogging(name, location string) (info *LoggingInfo, ossapiError *ossapi.Error)	
+Query bucket's  Logging configure .If bucket has configure of logging , It is stored in info:
+
+	type LoggingInfo struct {
+	    TargetBucket string
+	    TargetPrefix string
+	}
+	
+If Not , info is nil 
+
+return nil error when success. If failed return a ossapi.Error.
+
+##bucket.QueryReferer
+
+	QueryReferer(name, location string) (info *RefererConfigurationInfo, ossapiError *ossapi.Error)
+
+Query bucket's referer white list . Urls stored in info.
+
+	type RefererListInfo struct {
+	    Referer []string
+	}
+	
+	type RefererConfigurationInfo struct {
+	    XMLName           xml.Name        `xml:"RefererConfiguration"`
+	    AllowEmptyReferer bool            `xml:"AllowEmptyReferer"`
+	    RefererList       RefererListInfo `xml:"RefererList"`
+	}
+	
+If bucket allows empty access, AllowEmptyReferer will be true otherwise false. White Url List is on RefererList.Referer A string split.
+
+##bucket.QueryWebsite
+
+	QueryWebsite(name, location string) (info *WebsiteInfo, ossapiError *ossapi.Error)
+	
+Query bucket's website info. The Index page and error page is stored in info.
+
+	type IndexInfo struct {
+	    Suffix string
+	}
+	type ErrorInfo struct {
+	    Key string
+	}
+	type WebsiteInfo struct {
+	    XMLName       xml.Name  `xml:"WebsiteConfiguration"`
+	    IndexDocument IndexInfo `xml:"IndexDocument"`
+	    ErrorDocument KeyInfo   `xml:"ErrorDocument"`
+	}
+	
+Index Page is IndexDocument.Suffix and 404 Error Page is ErrorDocument.Key

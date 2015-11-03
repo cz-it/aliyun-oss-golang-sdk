@@ -24,7 +24,7 @@ type LoggingStatus struct {
 	LoggingEnabled LoggingInfo
 }
 
-func GetBucketLogging(name, location string) (info *LoggingInfo, ossapiError *ossapi.Error) {
+func QueryLogging(name, location string) (info *LoggingInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"
 	req := &ossapi.Request{
@@ -60,6 +60,10 @@ func GetBucketLogging(name, location string) (info *LoggingInfo, ossapiError *os
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
-	info = &status.LoggingEnabled
+	if status.LoggingEnabled.TargetBucket == "" {
+		info = nil
+	} else {
+		info = &status.LoggingEnabled
+	}
 	return
 }

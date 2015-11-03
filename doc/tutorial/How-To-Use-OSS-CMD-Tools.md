@@ -95,6 +95,46 @@ Usage：
 	Owner is : {1415982622007927 1415982622007927}
 	Grant is : public-read
 --acl option indicate to get bucket's acl infomation. Grant show the ACL: public-read.
+### Query objects in Bucket
+	 ./osscmd bucket -q   -b testossscmd -a shenzhen
+	Objects [0] are: {a.c 2015-11-03T09:49:10.000Z "B0222DA9C0BC538F896ED4441F9F7C24" Normal 67 Standard {1415982622007927 1415982622007927}}
+	
+This will Query all objects in bucket testossscmd.And List followed.
 
+### Query where bucket is 
+
+	./osscmd bucket -q --location -b testossscmd
+	Location is  oss-cn-shenzhen
+	
+--location option indicate to query where bucket is . Here it is Shenzhen
+
+###Query Logging info
+
+	./osscmd bucket -q --logging -b testossscmd -a shenzhen
+	Target Bucket testossscmd
+	Target Prefix cmd
+
+	./osscmd bucket -q --logging -b testossscmd -a shenzhen
+	Bucket has not config logging
+	
+--logging option indicate to query bucket's logging info .
+If bucket has config logging , it will return with Target Bucket name and Target Prefix name. If Not , return 
+"Bucket has not config logging"
+
+### Query Referer Whilte list
+
+	./osscmd bucket -q --referer  -b testossscmd -a shenzhen
+	If Allow Empyt :true
+	White List [http://baidu.com http://qq.com]
+	
+--referer option indicate to query bucket's referer info . If bucket allow emtpy url , it return true , otherwise false. The white list is followed.
+
+### Query Website info
+
+	./osscmd bucket -q --website  -b testossscmd -a shenzhen
+	Index is : index.html
+	404page is : 404.html
+
+--website option indicate to query bucket's website configurtion. index page and 404 error page is return .
 
 	

@@ -156,9 +156,48 @@ func Bucket(args []string) (err error) {
 			}
 			fmt.Println("Owner is :", info.Owner)
 			fmt.Println("Grant is :", info.AccessControlList.Grant)
+		} else if BucketFlag.IsLocation {
+			info, e := bucket.QueryLocation(BucketFlag.Bucket)
+			if e != nil {
+				Exit(e.Error())
+			}
+			fmt.Println("Location is ", info)
 		} else if BucketFlag.IsLifecycle {
-		} else {
+		} else if BucketFlag.IsLog {
+			info, e := bucket.QueryLogging(BucketFlag.Bucket, loc)
+			if e != nil {
+				Exit(e.Error())
+			}
+			if info == nil {
+				fmt.Println("Bucket has not config logging")
 
+			} else {
+				fmt.Println("Target Bucket", info.TargetBucket)
+				fmt.Println("Target Prefix", info.TargetPrefix)
+			}
+		} else if BucketFlag.IsReferer {
+			info, e := bucket.QueryReferer(BucketFlag.Bucket, loc)
+			if e != nil {
+				Exit(e.Error())
+			}
+			fmt.Println("If Allow Empyt", info.AllowEmptyReferer)
+			fmt.Println("White List", info.RefererList.Referer)
+		} else if BucketFlag.IsWebsite {
+			info, e := bucket.QueryWebsite(BucketFlag.Bucket, loc)
+			if e != nil {
+				Exit(e.Error())
+			}
+			fmt.Println("Index is :", info.IndexDocument.Suffix)
+			fmt.Println("404page is :", info.ErrorDocument.Key)
+		} else {
+			info, e := bucket.QueryObjects(BucketFlag.Bucket, loc, "", "", "", "", 0)
+			if e != nil {
+				Exit(e.Error())
+			}
+			for idx, obj := range info.Contents {
+				fmt.Printf("Objects [%d]", idx)
+				fmt.Println(" are:", obj)
+			}
 		}
 	} else if "-d" == args[2] {
 		flag.CommandLine.Parse(args[3:])
