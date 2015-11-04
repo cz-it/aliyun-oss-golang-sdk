@@ -167,6 +167,53 @@ Copy a object to create a new one
 	
 Append file to object. It is just like create .But a --position more . position should be equeal to result info Possition.
 	
+### Delete Object
+
+	./osscmd object -d --object copynew2.go -b testossscmd -a shenzhen
+	Delete copynew2.go Success
+	
+Delete Object with name --objcet on -b bucket.
+
+### Query Object meat Info
+	./osscmd object -m --object copynew.go -b testossscmd -a shenzhen
+	Meta copynew.go  is  &{Normal text/html Wed, 04 Nov 2015 07:55:07 GMT "3BECD44293735912D10E269B6FFDF273" 1107}
+Query Ojbect's Meta Infomation. Such as 
+
+* object type: normal or appendable
+* content type : "text/htl"
+* expire time
+* ETag
+
+### Set Object's ACL
+
+	./osscmd object -s --object copynew.go -b testossscmd -a shenzhen -p RO
+	Set Object's ACL Success
+	
+Set Ojbect permission to RO(Pubic ReadOnly) , RW(Public Write And Read) and PT(Private)
+
+### Query Object's ACL
+
+	./osscmd object -q --acl --object copynew.go -b testossscmd -a shenzhen
+	Object's ACL Owner: {1415982622007927 1415982622007927}
+	Object's ACL: {public-read}
+	
+Query object's ACL info . --acl option should be given. Object's Owner and permission info will return.
+	
+##3.MultiUpload
+### Init a MulitplyUpload Context.
+
+	./osscmd mupload -i --object init -b testossscmd -a shenzhen
+	Init Mupload Success:
+	Key is: init
+	Id is:  A2D59D7FD7F24660A08449C65F53241D
+
+Init a MulitplyUpload Context . ID And Key will be used to do the following actions.
+
+### Append a slice to context
+	./osscmd mupload -a --object init -b testossscmd -a shenzhen --file main.go  --id A2D59D7FD7F24660A08449C65F53241D --number 3
+	Add Part Success, Tag is  "3BECD44293735912D10E269B6FFDF273"
+		
+-a Add --file's content to context with id --id .--number indicates the sequence.
 ##4. CORS
 CORS allow other domain to access resources 
 ### Query Bucket's CORS

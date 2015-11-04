@@ -29,7 +29,7 @@ type PartsCompleteInfo struct {
 	ETag     string   `xml:"ETag"`
 }
 
-func CompleteMultipartUpload(objName, bucketName, location string, uploadId string, info *PartsInfo) (rstInfo *PartsCompleteInfo, ossapiError *ossapi.Error) {
+func Complete(objName, bucketName, location string, uploadId string, info *PartsInfo) (rstInfo *PartsCompleteInfo, ossapiError *ossapi.Error) {
 	resource := path.Join("/", bucketName, objName)
 	host := bucketName + "." + location + ".aliyuncs.com"
 	body, err := xml.Marshal(info)

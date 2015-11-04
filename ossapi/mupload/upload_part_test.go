@@ -43,7 +43,7 @@ func TestUploadPart(t *testing.T) {
 		Data:       partData[:100*1024],
 		CntType:    "text/html"}
 
-	if info, err := UploadPart(partInfo); err != nil {
+	if info, err := Append(partInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("UploadPart Success!")

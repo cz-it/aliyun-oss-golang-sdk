@@ -5,12 +5,11 @@
 package object
 
 import (
-	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"path"
 )
 
-func DeleteObject(objName, bucketName, location string) (ossapiError *ossapi.Error) {
+func Delete(objName, bucketName, location string) (ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)
 	req := &ossapi.Request{
@@ -26,7 +25,6 @@ func DeleteObject(objName, bucketName, location string) (ossapiError *ossapi.Err
 			return
 		}
 	}
-	fmt.Println("status:", rsp.HttpRsp.Status)
 	if rsp.Result != ossapi.ESUCC {
 		ossapiError = err.(*ossapi.Error)
 		return

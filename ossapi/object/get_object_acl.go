@@ -30,7 +30,7 @@ type ACLInfo struct {
 }
 */
 
-func GetObjectACL(objName, bucketName, location string) (info *bucket.ACLInfo, ossapiError *ossapi.Error) {
+func QueryACL(objName, bucketName, location string) (info *bucket.ACLInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)
 	req := &ossapi.Request{

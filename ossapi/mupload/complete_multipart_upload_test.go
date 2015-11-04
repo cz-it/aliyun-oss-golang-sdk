@@ -44,7 +44,7 @@ func TestCompleteMultipartUpload(t *testing.T) {
 		CntType:    "text/html"}
 
 	var i1 PartInfo
-	if info, err := UploadPart(partInfo); err != nil {
+	if info, err := Append(partInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		i1.ETag = info.Etag
@@ -54,7 +54,7 @@ func TestCompleteMultipartUpload(t *testing.T) {
 
 	partInfo.PartNumber = 2
 	var i2 PartInfo
-	if info, err := UploadPart(partInfo); err != nil {
+	if info, err := Append(partInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		i2.ETag = info.Etag
@@ -63,7 +63,7 @@ func TestCompleteMultipartUpload(t *testing.T) {
 	}
 
 	partsInfo := &PartsInfo{Part: []PartInfo{i1, i2}}
-	if info, err := CompleteMultipartUpload("a.c", "test-mupload", bucket.L_Hangzhou, info.UploadId, partsInfo); err != nil {
+	if info, err := Complete("a.c", "test-mupload", bucket.L_Hangzhou, info.UploadId, partsInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log(" CompleteMultipartUpload Success!")

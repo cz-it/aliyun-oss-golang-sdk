@@ -23,7 +23,10 @@ const (
 		-n : create a object 
 		-c : copy a object 
 		-a : append object
+		-d : delete object
 		-p : permission
+		-s : set object's attribute
+		-m: query object's brief meta info
 
 		--object: name of object
 		--position: position to append
@@ -44,6 +47,7 @@ type ObjectFlagInfo struct {
 	Directive string
 	Source    string
 	Position  int
+	Head      bool
 }
 
 var (
@@ -58,6 +62,7 @@ func init() {
 	flag.StringVar(&ObjectFlag.Directive, "directive", "COPY", "copy function: REPLACE/COPY")
 	flag.StringVar(&ObjectFlag.Source, "source", "", "source object of copy")
 	flag.IntVar(&ObjectFlag.Position, "position", 0, "content file type")
+	flag.BoolVar(&ObjectFlag.Head, "head", false, "")
 }
 
 func Object(args []string) (err error) {
@@ -96,11 +101,11 @@ func Object(args []string) (err error) {
 	if "-n" == args[2] {
 		fd, err := os.Open(ObjectFlag.File)
 		if err != nil {
-			Exit(e.Error())
+			Exit(err.Error())
 		}
 		body, err := ioutil.ReadAll(fd)
 		if err != nil {
-			Exit(e.Error())
+			Exit(err.Error())
 		}
 		objInfo := &object.ObjectInfo{
 			CacheControl:       "no-cache",
@@ -160,6 +165,33 @@ func Object(args []string) (err error) {
 			Exit(e.Error())
 		}
 		fmt.Println("Append Success. resuult:", info)
+	} else if "-d" == args[2] {
+		e = object.Delete(CORSFlag.Object, BucketFlag.Bucket, loc)
+		if e != nil {
+			Exit(e.Error())
+		}
+		fmt.Println("Delete " + CORSFlag.Object + " Success ")
+	} else if "-m" == args[2] {
+		info, e := object.QueryMeta(CORSFlag.Object, BucketFlag.Bucket, loc, nil)
+		if e != nil {
+			Exit(e.Error())
+		}
+		fmt.Println("Meta "+CORSFlag.Object+"  is ", info)
+	} else if "-s" == args[2] {
+		e := object.SetACL(CORSFlag.Object, BucketFlag.Bucket, loc, per)
+		if e != nil {
+			Exit(e.Error())
+		}
+		fmt.Println("Set Object's ACL Success")
+	} else if "-q" == args[2] {
+		if BucketFlag.IsACL {
+			info, e := object.QueryACL(CORSFlag.Object, BucketFlag.Bucket, loc)
+			if e != nil {
+				Exit(e.Error())
+			}
+			fmt.Println("Object's ACL Owner:", info.Owner)
+			fmt.Println("Object's ACL:", info.AccessControlList)
+		}
 	} else {
 		fmt.Println(objectHelp)
 		os.Exit(-1)

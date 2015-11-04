@@ -25,7 +25,7 @@ type BriefConnInfo struct {
 	NotMatchEtag    string
 }
 
-func BriefObject(objName, bucketName, location string, info *BriefConnInfo) (briefInfo *ObjectBriefInfo, ossapiError *ossapi.Error) {
+func QueryMeta(objName, bucketName, location string, info *BriefConnInfo) (briefInfo *ObjectBriefInfo, ossapiError *ossapi.Error) {
 	resource := path.Join("/", bucketName, objName)
 	host := bucketName + "." + location + ".aliyuncs.com"
 	header := make(map[string]string)

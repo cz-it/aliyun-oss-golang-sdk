@@ -113,6 +113,13 @@ func parseArgs() {
 		if err = Object(os.Args[:]); err != nil {
 			Usage()
 		}
+	} else if "mupload" == os.Args[1] {
+		if len(os.Args) < 3 {
+			Usage()
+		}
+		if err = Mupload(os.Args[:]); err != nil {
+			Usage()
+		}
 	} else {
 		Usage()
 	}

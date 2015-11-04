@@ -5,7 +5,6 @@
 package mupload
 
 import (
-	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"path"
 	"strconv"
@@ -25,7 +24,7 @@ type UploadPartInfo struct {
 	CntType    string
 }
 
-func UploadPart(partInfo *UploadPartInfo) (rstInfo *UploadPartRstInfo, ossapiError *ossapi.Error) {
+func Append(partInfo *UploadPartInfo) (rstInfo *UploadPartRstInfo, ossapiError *ossapi.Error) {
 	if partInfo == nil {
 		ossapiError = ossapi.ArgError
 		return
@@ -52,8 +51,8 @@ func UploadPart(partInfo *UploadPartInfo) (rstInfo *UploadPartRstInfo, ossapiErr
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
+	fmt.Println("headers:")
 	rstInfo = new(UploadPartRstInfo)
-	fmt.Println("headis :", rsp.HttpRsp.Header)
 	rstInfo.Etag = rsp.HttpRsp.Header["Etag"][0]
 	return
 }
