@@ -5,7 +5,6 @@
 package object
 
 import (
-	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"path"
 	"strconv"
@@ -78,7 +77,6 @@ func Append(objInfo *AppendObjInfo) (rstInfo *AppendObjRspInfo, ossapiError *oss
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	fmt.Println(rsp.HttpRsp.Header)
 	pos, _ := strconv.Atoi(rsp.HttpRsp.Header["X-Oss-Next-Append-Position"][0])
 	crc, _ := strconv.Atoi(rsp.HttpRsp.Header["X-Oss-Hash-Crc64ecma"][0])
 	rstInfo = &AppendObjRspInfo{

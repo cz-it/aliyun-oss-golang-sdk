@@ -159,6 +159,13 @@ Copy a object to create a new one
 	Copy Object Success , New Object is  &{{ CopyObjectResult} "3BECD44293735912D10E269B6FFDF273" 2015-11-04T08:00:03.000Z}
 	
 -c means copy . Copy from --srouce to generage a --object object on -b bucket .--directive influncse when object is existed. Only COPY or REPLACE.
+
+### Append Object
+
+	 ./osscmd object -a -b testossscmd -a shenzhen --file ./cors.go  --encoding utf-8 --expire "Fri, 28 Feb 2016 05:38:42 GMT" -p RO --type "text/html" --position 11352
+	Append Success. resuult: &{15136 9223372036854775807}
+	
+Append file to object. It is just like create .But a --position more . position should be equeal to result info Possition.
 	
 ##4. CORS
 CORS allow other domain to access resources 
