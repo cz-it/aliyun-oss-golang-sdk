@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestNewObject(t *testing.T) {
+func TestCreateObject(t *testing.T) {
 	if nil != ossapi.Init("v8P430U3UcILP6KA", "EB9v8yL2aM07YOgtO1BdfrXtdxa4A1") {
 		t.Fail()
 	}
@@ -27,14 +27,14 @@ func TestNewObject(t *testing.T) {
 		Body:               []byte("<html><head></head><body>test</body></html>"),
 		Type:               "text/html",
 		BucketName:         "test-object-hz"}
-	if err := CreateObject(objInfo); err != nil {
+	if err := Create(objInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("PutObject Success!")
 	}
 
 	objInfo.ObjName = "test2"
-	if err := CreateObject(objInfo); err != nil {
+	if err := Create(objInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("PutObject Success!")

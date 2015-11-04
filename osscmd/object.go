@@ -10,7 +10,9 @@ import (
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/bucket"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/object"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
 const (
@@ -23,25 +25,19 @@ const (
 		-d : --logging --website --lifecycle
 		-q : query bucket's attributes --logging --website --lifecycle --acl --location --referer
 
+		-p : permission
+		--encoding: encoding of content
+		--expire: expire time format is "Fri, 28 Feb 2012 05:38:42 GMT"
+		--file: file to upload
+		--type: content file type
 	`
 )
 
 type ObjectFlagInfo struct {
-	Bucket      string
-	Location    string
-	Permission  string
-	Log         bool
-	IsLog       bool
-	LogPrefix   string
-	Website     bool
-	IsWebsite   bool
-	WebIndex    string
-	WebError    string
-	Referer     bool
-	IsLifecycle bool
-	IsLocation  bool
-	IsACL       bool
-	IsReferer   bool
+	Encoding string
+	Expire   string
+	File     string
+	Type     string
 }
 
 var (
@@ -49,9 +45,10 @@ var (
 )
 
 func init() {
-	flag.StringVar(&ObjectFlag.Bucket, "b", "", "Bucket Name")
-	flag.StringVar(&ObjectFlag.Location, "a", "", "Area Name such as hangzhou/beijin/shenzhen")
-	flag.StringVar(&ObjectFlag.Permission, "p", "", "Permission such as RO/RW/PT")
+	flag.StringVar(&ObjectFlag.Encoding, "encoding", "", "encoding of content")
+	flag.StringVar(&ObjectFlag.Expire, "expire", "", "expire time format is `Fri, 28 Feb 2012 05:38:42 GMT`")
+	flag.StringVar(&ObjectFlag.File, "file", "", "file to upload")
+	flag.StringVar(&ObjectFlag.Type, "type", "", "content file type")
 }
 
 func Object(args []string) (err error) {
@@ -88,15 +85,38 @@ func Object(args []string) (err error) {
 		} else {
 			per = bucket.P_Private
 		}
-		e = bucket.Create(BucketFlag.Bucket, loc, per)
+
+		fd, err := os.Open(ObjectFlag.File)
+		if err != nil {
+			Exit(e.Error())
+		}
+
+		body, err := ioutil.ReadAll(fd)
+		if err != nil {
+			Exit(e.Error())
+		}
+
+		objInfo := &object.ObjectInfo{
+			CacheControl:       "no-cache",
+			ContentDisposition: "attachment;",
+			ContentEncoding:    ObjectFlag.Encoding,
+			Expires:            ObjectFlag.Expire,
+			Encryption:         "AES256",
+			ACL:                per,
+			ObjName:            filepath.Base(ObjectFlag.File),
+			Location:           loc,
+			Body:               body,
+			Type:               ObjectFlag.Type,
+			BucketName:         BucketFlag.Bucket}
+		e = object.Create(objInfo)
 		if e != nil {
 			Exit(e.Error())
 		}
-		fmt.Println("Create Bucket " + BucketFlag.Bucket + " Success !")
+		fmt.Println("Create Object" + ObjectFlag.File + " Success !")
 	} else if "-q" == args[2] {
 
 	} else {
-		fmt.Println(bucketHelp)
+		fmt.Println(objectHelp)
 		os.Exit(-1)
 	}
 	return

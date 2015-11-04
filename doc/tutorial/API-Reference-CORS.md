@@ -1,5 +1,5 @@
-#API Reference: Service
-
+#API Reference: CORS
+CORS allow remote domain to access resources. Before this ,you should create a CORS rule for the bucket.
 
 ##cors.Create
 
