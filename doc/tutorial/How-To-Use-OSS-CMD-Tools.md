@@ -223,7 +223,21 @@ Init a MulitplyUpload Context . ID And Key will be used to do the following acti
 	
 -c will finish upload .
 	
-## List 
+## Query all uploading objects
+
+	./osscmd  mupload -m  -b testossscmd -a shenzhen
+	Uploading Slices:
+	Part [0]{mupload 3AE43B3C0FE24F4D8E74C198C506B3BE 2015-11-04T17:37:23.000Z}
+	
+-m options list all uploading objects.
+
+## Query all uploading parts
+
+	./osscmd  mupload -l --object mupload  -b testossscmd -a shenzhen
+	Uploaded Parts:
+	Part [0]{1 2015-11-04T17:38:14.000Z "E304006340F83A79E3D6D2D36B2FFA69" 3784}
+	Part [1]{2 2015-11-04T17:38:19.000Z "E304006340F83A79E3D6D2D36B2FFA69" 3784}
+-l option List all uploading parts.
 	
 ## Abort Upload
 
