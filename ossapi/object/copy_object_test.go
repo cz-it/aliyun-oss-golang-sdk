@@ -21,7 +21,14 @@ func TestCopyObject(t *testing.T) {
 		Location:   bucket.L_Hangzhou,
 		Source:     "/test-object-hz/test"}
 
-	if info, err := CopyObject(copyInfo, nil); err != nil {
+	if info, err := Copy(copyInfo, nil); err != nil {
+		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	} else {
+		t.Log("CopyObject Success")
+		fmt.Println(info)
+	}
+	conInfo := &CopyConditionInfo{}
+	if info, err := Copy(copyInfo, conInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("CopyObject Success")

@@ -8,6 +8,7 @@ import (
 	"encoding/xml"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"path"
+	"strconv"
 )
 
 const (
@@ -38,7 +39,7 @@ type CopyResultInfo struct {
 	LastModified string   `xml:"LastModified"`
 }
 
-func CopyObject(copyInfo *CopyInfo, copyConnInfo *CopyConditionInfo) (info *CopyResultInfo, ossapiError *ossapi.Error) {
+func Copy(copyInfo *CopyInfo, copyConnInfo *CopyConditionInfo) (rstInfo *CopyResultInfo, ossapiError *ossapi.Error) {
 	if copyInfo == nil {
 		ossapiError = ossapi.ArgError
 		return
@@ -51,10 +52,18 @@ func CopyObject(copyInfo *CopyInfo, copyConnInfo *CopyConditionInfo) (info *Copy
 		Method:   "PUT",
 		Resource: resource}
 	if copyConnInfo != nil {
-		req.AddXOSS("x-oss-copy-source-if-match", copyConnInfo.ETAG)
-		req.AddXOSS("x-oss-copy-source-if-none-match", copyConnInfo.Date)
-		req.AddXOSS("x-oss-copy-source-if-unmodified-since", copyConnInfo.LastUnModify)
-		req.AddXOSS("x-oss-copy-source-if-modified-since", copyConnInfo.LastModify)
+		if copyConnInfo.ETAG != "" {
+			req.AddXOSS("x-oss-copy-source-if-match", copyConnInfo.ETAG)
+		}
+		if copyConnInfo.Date != "" {
+			req.AddXOSS("x-oss-copy-source-if-none-match", copyConnInfo.Date)
+		}
+		if copyConnInfo.LastUnModify != "" {
+			req.AddXOSS("x-oss-copy-source-if-unmodified-since", copyConnInfo.LastUnModify)
+		}
+		if copyConnInfo.LastModify != "" {
+			req.AddXOSS("x-oss-copy-source-if-modified-since", copyConnInfo.LastModify)
+		}
 	}
 	if copyInfo.ObjectName != "" {
 		req.AddXOSS("x-oss-copy-source", copyInfo.Source)
@@ -81,5 +90,16 @@ func CopyObject(copyInfo *CopyInfo, copyConnInfo *CopyConditionInfo) (info *Copy
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
+	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	if err != nil {
+		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
+		ossapiError = ossapi.OSSAPIError
+		return
+	}
+	body := make([]byte, bodyLen)
+	rsp.HttpRsp.Body.Read(body)
+	info := new(CopyResultInfo)
+	xml.Unmarshal(body, info)
+	rstInfo = info
 	return
 }

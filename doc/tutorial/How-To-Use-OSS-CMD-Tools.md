@@ -148,9 +148,17 @@ If bucket has config logging , it will return with Target Bucket name and Target
 ##2.Object
 ###Create Object
 
-	./osscmd object -c -b testossscmd -a shenzhen --file ./main.go  --encoding utf-8 --expire "Fri, 28 Feb 2016 05:38:42 GMT" -p RO --type "text/html"
+	./osscmd object -n -b testossscmd -a shenzhen --file ./main.go  --encoding utf-8 --expire "Fri, 28 Feb 2016 05:38:42 GMT" -p RO --type "text/html"
 	Create Object./main.go Success !
-Create a Ojbect in bucket testossscmd. Object's content is in --file . --encoding points content's encoding type.and --type is the HTTP file type. --expire is expire time in format GMT such as "Fri, 28 Feb 2016 05:38:42 GMT" 
+-n means new .Create a Ojbect in bucket testossscmd. Object's content is in --file . --encoding points content's encoding type.and --type is the HTTP file type. --expire is expire time in format GMT such as "Fri, 28 Feb 2016 05:38:42 GMT" 
+
+###Copy Object
+Copy a object to create a new one
+
+	./osscmd object -c -b testossscmd -a shenzhen --object copynew2.go --source "/testossscmd/main.go" --directive COPY
+	Copy Object Success , New Object is  &{{ CopyObjectResult} "3BECD44293735912D10E269B6FFDF273" 2015-11-04T08:00:03.000Z}
+	
+-c means copy . Copy from --srouce to generage a --object object on -b bucket .--directive influncse when object is existed. Only COPY or REPLACE.
 	
 ##4. CORS
 CORS allow other domain to access resources 

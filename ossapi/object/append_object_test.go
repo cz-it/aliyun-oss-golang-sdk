@@ -30,10 +30,11 @@ func TestAppendObject(t *testing.T) {
 		BucketName:         "test-object-hz"},
 
 		Position: 43}
-	if err := AppendObject(objInfo); err != nil {
+	if info, err := Append(objInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("AppendObject Success!")
+		fmt.Println("append object:", info)
 	}
 
 }
