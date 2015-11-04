@@ -33,11 +33,10 @@ func Append(partInfo *UploadPartInfo) (rstInfo *UploadPartRstInfo, ossapiError *
 	host := partInfo.BucketName + "." + partInfo.Location + ".aliyuncs.com"
 	req := &ossapi.Request{
 		Host:     host,
-		Path:     "/" + partInfo.ObjectName + "?partNumber=" + strconv.FormatUint(uint64(partInfo.PartNumber), 10) + "uploadId=" + partInfo.UploadID,
+		Path:     "/" + partInfo.ObjectName + "?partNumber=" + strconv.FormatUint(uint64(partInfo.PartNumber), 10) + "&uploadId=" + partInfo.UploadID,
 		Method:   "PUT",
 		Body:     partInfo.Data,
-		CntType:  partInfo.CntType,
-		SubRes:   []string{"partNumber=" + strconv.FormatUint(uint64(partInfo.PartNumber), 10) + "uploadId=" + partInfo.UploadID},
+		SubRes:   []string{"partNumber=" + strconv.FormatUint(uint64(partInfo.PartNumber), 10) + "&uploadId=" + partInfo.UploadID},
 		Resource: resource}
 	rsp, err := req.Send()
 	if err != nil {
@@ -51,7 +50,6 @@ func Append(partInfo *UploadPartInfo) (rstInfo *UploadPartRstInfo, ossapiError *
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	fmt.Println("headers:")
 	rstInfo = new(UploadPartRstInfo)
 	rstInfo.Etag = rsp.HttpRsp.Header["Etag"][0]
 	return

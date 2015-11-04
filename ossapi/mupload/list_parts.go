@@ -6,7 +6,6 @@ package mupload
 
 import (
 	"encoding/xml"
-	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"path"
 	"strconv"
@@ -14,7 +13,6 @@ import (
 )
 
 type PartsFilterInfo struct {
-	UploadID         string
 	MaxParts         int
 	PartNumberMarker int
 	Encoding         string
@@ -38,16 +36,16 @@ type PartsResultInfo struct {
 	Part                 []PartListInfo
 }
 
-func ListParts(objName, bucketName, location string, filter *PartsFilterInfo) (rstInfo *PartsResultInfo, ossapiError *ossapi.Error) {
+func QueryParts(objName, bucketName, location string, uploadID string, filter *PartsFilterInfo) (rstInfo *PartsResultInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)
 	var args []string
+	if uploadID != "" {
+		args = append(args, "uploadId="+uploadID)
+	}
 	if filter != nil {
 		if filter.Encoding != "" {
 			args = append(args, "=encoding-type"+filter.Encoding)
-		}
-		if filter.UploadID != "" {
-			args = append(args, "uploadId="+filter.UploadID)
 		}
 		if filter.MaxParts > 0 {
 			args = append(args, "max-parts="+strconv.FormatUint(uint64(filter.MaxParts), 10))
@@ -64,7 +62,7 @@ func ListParts(objName, bucketName, location string, filter *PartsFilterInfo) (r
 	req := &ossapi.Request{
 		Host:     host,
 		Path:     "/" + objName + "?" + argsStr,
-		SubRes:   []string{"uploadId=" + filter.UploadID},
+		SubRes:   []string{"uploadId=" + uploadID},
 		Method:   "GET",
 		Resource: resource}
 
@@ -88,7 +86,6 @@ func ListParts(objName, bucketName, location string, filter *PartsFilterInfo) (r
 	}
 	rstBody := make([]byte, bodyLen)
 	rsp.HttpRsp.Body.Read(rstBody)
-	fmt.Println("body", string(rstBody))
 	rstInfo = new(PartsResultInfo)
 	err = xml.Unmarshal(rstBody, rstInfo)
 	if err != nil {

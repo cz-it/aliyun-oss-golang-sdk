@@ -24,6 +24,9 @@ const (
 		-i : create bucket's cors
 		-a : add upload part
 		-c : complete
+		-d : abort upload
+		-m : list mulit parts
+		-l : list parts
 
 		--file : data from file
 		--number: part's number
@@ -107,6 +110,62 @@ func Mupload(args []string) (err error) {
 			Exit(err.Error())
 		}
 		fd.Write(append([]byte(xml.Header), body...))
+	} else if "-l" == args[2] {
+		cfgFd, err := os.Open(muploadCfgFile)
+		if err != nil {
+			Exit(err.Error())
+		}
+		cfgData, err := ioutil.ReadAll(cfgFd)
+		defer cfgFd.Close()
+		if err != nil {
+			Exit(err.Error())
+		}
+		cfgInfo := new(UploadInfo)
+		err = xml.Unmarshal(cfgData, cfgInfo)
+		if err != nil {
+			Exit(err.Error())
+		}
+		cfgFd.Close()
+		info, e := mupload.QueryParts(CORSFlag.Object, BucketFlag.Bucket, loc, cfgInfo.ID, nil)
+		if e != nil {
+			Exit(e.Error())
+		}
+		fmt.Println("Uploaded Parts:")
+		for idx, p := range info.Part {
+			fmt.Printf("Part [%d]", idx)
+			fmt.Println(p)
+		}
+	} else if "-m" == args[2] {
+		info, e := mupload.QueryObjects(BucketFlag.Bucket, loc, nil)
+		if e != nil {
+			Exit(e.Error())
+		}
+		fmt.Println("Uploading Slices:")
+		for idx, p := range info.Upload {
+			fmt.Printf("Part [%d]", idx)
+			fmt.Println(p)
+		}
+	} else if "-d" == args[2] {
+		cfgFd, err := os.Open(muploadCfgFile)
+		if err != nil {
+			Exit(err.Error())
+		}
+		cfgData, err := ioutil.ReadAll(cfgFd)
+		defer cfgFd.Close()
+		if err != nil {
+			Exit(err.Error())
+		}
+		cfgInfo := new(UploadInfo)
+		err = xml.Unmarshal(cfgData, cfgInfo)
+		if err != nil {
+			Exit(err.Error())
+		}
+		cfgFd.Close()
+		e := mupload.Abort(CORSFlag.Object, BucketFlag.Bucket, loc, cfgInfo.ID)
+		if e != nil {
+			Exit(e.Error())
+		}
+		fmt.Println("Success Cacnel Upload Task")
 	} else if "-c" == args[2] {
 		cfgFd, err := os.Open(muploadCfgFile)
 		if err != nil {

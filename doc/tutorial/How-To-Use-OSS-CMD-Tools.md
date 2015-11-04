@@ -210,10 +210,28 @@ Query object's ACL info . --acl option should be given. Object's Owner and permi
 Init a MulitplyUpload Context . ID And Key will be used to do the following actions.
 
 ### Append a slice to context
-	./osscmd mupload -a --object init -b testossscmd -a shenzhen --file main.go  --id A2D59D7FD7F24660A08449C65F53241D --number 3
-	Add Part Success, Tag is  "3BECD44293735912D10E269B6FFDF273"
+
+	./osscmd mupload -a --object mupload -b testossscmd -a shenzhen --number 1 --file cors.go
+	Add Part Success, Tag is  "E304006340F83A79E3D6D2D36B2FFA69"
 		
--a Add --file's content to context with id --id .--number indicates the sequence.
+-a Add --file's content previous init .--number indicates the sequence.--number should be [1,1000], 0 is not valied.
+
+### Complate Upload
+
+	./osscmd mupload -c --object mupload -b testossscmd -a shenzhen
+	Success Done Complete .
+	
+-c will finish upload .
+	
+## List 
+	
+## Abort Upload
+
+	./osscmd mupload -d --object mupload -b testossscmd -a shenzhen
+	Success Cacnel Upload Task
+	
+Cancle will Abort Uploading , And objects will not be stored.
+
 ##4. CORS
 CORS allow other domain to access resources 
 ### Query Bucket's CORS

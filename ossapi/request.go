@@ -7,7 +7,7 @@ package ossapi
 import (
 	"bytes"
 	"encoding/xml"
-	//	"fmt"
+	//"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -31,33 +31,35 @@ type Request struct {
 	ExtHeader map[string]string
 	RspHeader map[string]string
 
-	httpReq *http.Request
+	HttpReq *http.Request
 }
 
 func (req *Request) Send() (rsp *Response, err error) {
 	URL := "http://"
 	URL += path.Join(req.Host, req.Path)
 	//fmt.Println("URL:", URL)
-	req.httpReq, err = http.NewRequest(req.Method, URL, nil)
+	req.HttpReq, err = http.NewRequest(req.Method, URL, nil)
 	if err != nil {
 		Logger.Error("http.NewRequest(req.Method,URL, nil) Error:%s", err.Error())
 		return
 	}
-	req.httpReq.ProtoMinor = 1
+	req.HttpReq.ProtoMinor = 1
 	req.Date = time.Now().UTC().Format(DATE_FMT)
-	req.httpReq.Header.Add("Date", req.Date)
+	req.HttpReq.Header.Add("Date", req.Date)
 	auth, err := req.Auth()
 	if err != nil {
 		Logger.Error("req.Auth() Error:%s", err.Error)
 		return
 	}
-	req.httpReq.Header.Add("Authorization", auth)
+	req.HttpReq.Header.Add("Authorization", auth)
 	for k, v := range req.XOSSes {
-		req.httpReq.Header.Add(k, v)
+		req.HttpReq.Header.Add(k, v)
 	}
 	if req.Body != nil {
-		req.httpReq.Header.Add("Content-Length", strconv.FormatUint(uint64(len(req.Body)), 10))
-		req.httpReq.Header.Add("Content-Type", req.CntType)
+		req.HttpReq.Header.Add("Content-Length", strconv.FormatUint(uint64(len(req.Body)), 10))
+		if req.CntType != "" {
+			req.HttpReq.Header.Add("Content-Type", req.CntType)
+		}
 		var cntMd5 string
 		if req.Body != nil {
 			cntMd5, err = Base64AndMd5(req.Body)
@@ -66,16 +68,16 @@ func (req *Request) Send() (rsp *Response, err error) {
 				return
 			}
 		}
-		req.httpReq.Header.Add("Content-MD5", cntMd5)
-		req.httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
+		req.HttpReq.Header.Add("Content-MD5", cntMd5)
+		req.HttpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
 	}
 	if req.ExtHeader != nil {
 		for k, v := range req.ExtHeader {
-			req.httpReq.Header.Add(k, v)
+			req.HttpReq.Header.Add(k, v)
 		}
 	}
-	//fmt.Println("Req head:", req.httpReq.Header)
-	httprsp, err := httpClient.Do(req.httpReq)
+	//fmt.Println("Req head:", req.HttpReq.Header)
+	httprsp, err := httpClient.Do(req.HttpReq)
 	if err != nil {
 		Logger.Error("httpClient.Do(req.httpReq) Error:%s", err.Error())
 		return

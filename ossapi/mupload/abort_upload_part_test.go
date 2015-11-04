@@ -44,7 +44,7 @@ func TestAbortUploadPart(t *testing.T) {
 		CntType:    "text/html"}
 
 	var i1 PartInfo
-	if info, err := UploadPart(partInfo); err != nil {
+	if info, err := Append(partInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		i1.ETag = info.Etag
@@ -52,7 +52,7 @@ func TestAbortUploadPart(t *testing.T) {
 		t.Log("UploadPart Success!")
 	}
 
-	if err := AbortUploadPart("app.py", "test-mupload", bucket.L_Hangzhou, info.UploadId); err != nil {
+	if err := Abort("app.py", "test-mupload", bucket.L_Hangzhou, info.UploadId); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log(" AbortUploadPart Success!")

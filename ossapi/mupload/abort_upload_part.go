@@ -5,14 +5,15 @@
 package mupload
 
 import (
+	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"path"
 )
 
-func AbortUploadPart(objName, bucketName, location, uploadID string) (ossapiError *ossapi.Error) {
+func Abort(objName, bucketName, location, uploadID string) (ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)
-	urlPath := "/" + objName + "uploadId=" + uploadID
+	urlPath := "/" + objName + "?uploadId=" + uploadID
 	req := &ossapi.Request{
 		Host:     host,
 		Path:     urlPath,
@@ -29,6 +30,7 @@ func AbortUploadPart(objName, bucketName, location, uploadID string) (ossapiErro
 	}
 	if rsp.Result != ossapi.ESUCC {
 		ossapiError = err.(*ossapi.Error)
+		fmt.Println(ossapiError.ErrDetailMsg)
 		return
 	}
 	return

@@ -6,7 +6,6 @@ package mupload
 
 import (
 	"encoding/xml"
-	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"path"
 	"strconv"
@@ -42,7 +41,7 @@ type MultipartUploadsResultInfo struct {
 	Upload             []UploadInfo
 }
 
-func ListMultipartUploads(bucketName, location string, filter *FilterInfo) (rstInfo *MultipartUploadsResultInfo, ossapiError *ossapi.Error) {
+func QueryObjects(bucketName, location string, filter *FilterInfo) (rstInfo *MultipartUploadsResultInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName)
 	var args []string
@@ -98,7 +97,6 @@ func ListMultipartUploads(bucketName, location string, filter *FilterInfo) (rstI
 	}
 	rstBody := make([]byte, bodyLen)
 	rsp.HttpRsp.Body.Read(rstBody)
-	fmt.Println("body", string(rstBody))
 	rstInfo = new(MultipartUploadsResultInfo)
 	err = xml.Unmarshal(rstBody, rstInfo)
 	if err != nil {

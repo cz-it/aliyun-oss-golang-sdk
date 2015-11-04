@@ -44,7 +44,7 @@ func TestListParts(t *testing.T) {
 		CntType:    "text/html"}
 
 	var i1 PartInfo
-	if info, err := UploadPart(partInfo); err != nil {
+	if info, err := Append(partInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		i1.ETag = info.Etag
@@ -52,8 +52,7 @@ func TestListParts(t *testing.T) {
 		t.Log("UploadPart Success!")
 	}
 
-	filterInfo := &PartsFilterInfo{UploadID: info.UploadId}
-	if info, err := ListParts("app.py", "test-mupload", bucket.L_Hangzhou, filterInfo); err != nil {
+	if info, err := QueryParts("app.py", "test-mupload", bucket.L_Hangzhou, info.UploadId, nil); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("Init Multiple Upload Success!")
