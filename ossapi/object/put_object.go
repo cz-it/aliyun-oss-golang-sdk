@@ -23,7 +23,7 @@ type ObjectInfo struct {
 	Type               string
 }
 
-func NewObject(objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
+func CreateObject(objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
 	if objInfo == nil {
 		ossapiError = ossapi.ArgError
 		return

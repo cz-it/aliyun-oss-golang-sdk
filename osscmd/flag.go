@@ -106,6 +106,13 @@ func parseArgs() {
 		if err = CORS(os.Args[:]); err != nil {
 			Usage()
 		}
+	} else if "object" == os.Args[1] {
+		if len(os.Args) < 3 {
+			Usage()
+		}
+		if err = Object(os.Args[:]); err != nil {
+			Usage()
+		}
 	} else {
 		Usage()
 	}
