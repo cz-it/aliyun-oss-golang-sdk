@@ -4,7 +4,11 @@
 
 package object
 
-import ()
+import (
+	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
+	"path"
+	"strconv"
+)
 
 type RspObjInfo struct {
 	CntType      string
@@ -16,33 +20,73 @@ type RspObjInfo struct {
 	Data         []byte
 }
 
-/*
-func GetObject(objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
-	if objInfo == nil {
-		ossapiError = ossapi.ArgError
-		return
-	}
-	resource := path.Join("/", objInfo.BucketName, objInfo.ObjName)
-	host := objInfo.BucketName + "." + objInfo.Location + ".aliyuncs.com"
+type OverrideInfo struct {
+	Type         string
+	Language     string
+	Expires      string
+	CacheControl string
+	Disposition  string
+	Encoding     string
+}
+
+type ConditionInfo struct {
+	Range        string
+	LastModify   string
+	LastUnModify string
+	ETag         string
+	ETagMatched  bool
+}
+
+func Query(objName, bucketName, location string, condInfo *ConditionInfo, overrideInfo *OverrideInfo) (data []byte, ossapiError *ossapi.Error) {
+	resource := path.Join("/", bucketName, objName)
+	host := bucketName + "." + location + ".aliyuncs.com"
 	header := make(map[string]string)
-	if objInfo != nil {
-		header["Cache-Control"] = objInfo.CacheControl
-		header["Content-Disposition"] = objInfo.ContentDisposition
-		header["Content-Encoding"] = objInfo.ContentEncoding
-		header["Expires"] = objInfo.Expires
-		header["x-oss-server-side-encryption"] = objInfo.Encryption
-		header["x-oss-object-acl"] = objInfo.ACL
+	if condInfo != nil {
+		if condInfo.Range != "" {
+			header["Range"] = condInfo.Range
+		}
+		if condInfo.LastModify != "" {
+			header["If-Modified-Since"] = condInfo.LastModify
+		}
+		if condInfo.LastUnModify != "" {
+			header["If-Unmodified-Since"] = condInfo.LastUnModify
+		}
+		if condInfo.ETagMatched && condInfo.ETag != "" {
+			header["If-Match"] = condInfo.ETag
+		}
+		if !condInfo.ETagMatched && condInfo.ETag != "" {
+			header["If-None-Match"] = condInfo.ETag
+		}
+	}
+
+	overrideHeader := make(map[string]string)
+	if overrideInfo != nil {
+		if overrideInfo.CacheControl != "" {
+			overrideHeader["response-cache-control"] = overrideInfo.CacheControl
+		}
+		if overrideInfo.Disposition != "" {
+			overrideHeader["response-content-disposition"] = overrideInfo.Disposition
+		}
+		if overrideInfo.Encoding != "" {
+			overrideHeader["response-content-encoding"] = overrideInfo.Encoding
+		}
+		if overrideInfo.Expires != "" {
+			overrideHeader["response-expires"] = overrideInfo.Expires
+		}
+		if overrideInfo.Language != "" {
+			overrideHeader["response-content-language"] = overrideInfo.Language
+		}
+		if overrideInfo.Type != "" {
+			overrideHeader["response-content-type"] = overrideInfo.Type
+		}
 	}
 	req := &ossapi.Request{
 		Host:      host,
-		Path:      "/" + objInfo.ObjName,
-		Method:    "PUT",
+		Path:      "/" + objName,
+		Method:    "GET",
 		Resource:  resource,
-		Body:      objInfo.Body,
-		CntType:   objInfo.Type,
+		Override:  overrideHeader,
 		ExtHeader: header}
-	req.AddXOSS("x-oss-object-acl", objInfo.ACL)
-	req.AddXOSS("x-oss-server-side-encryption", objInfo.Encryption)
 
 	rsp, err := req.Send()
 	if err != nil {
@@ -56,6 +100,14 @@ func GetObject(objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
+	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	if err != nil {
+		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
+		ossapiError = ossapi.OSSAPIError
+		return
+	}
+	body := make([]byte, bodyLen)
+	rsp.HttpRsp.Body.Read(body)
+	data = body
 	return
 }
-*/

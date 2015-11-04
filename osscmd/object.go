@@ -20,6 +20,7 @@ const (
 	Usage: object [] 
 	   	use object and options to list/new/qurey etc 
 	Commands:
+	    -q : Query Object's data
 		-n : create a object 
 		-c : copy a object 
 		-a : append object
@@ -191,6 +192,12 @@ func Object(args []string) (err error) {
 			}
 			fmt.Println("Object's ACL Owner:", info.Owner)
 			fmt.Println("Object's ACL:", info.AccessControlList)
+		} else {
+			data, e := object.Query(CORSFlag.Object, BucketFlag.Bucket, loc, nil, nil)
+			if e != nil {
+				Exit(e.Error())
+			}
+			fmt.Println("Data:", string(data))
 		}
 	} else {
 		fmt.Println(objectHelp)

@@ -152,6 +152,17 @@ If bucket has config logging , it will return with Target Bucket name and Target
 	Create Object./main.go Success !
 -n means new .Create a Ojbect in bucket testossscmd. Object's content is in --file . --encoding points content's encoding type.and --type is the HTTP file type. --expire is expire time in format GMT such as "Fri, 28 Feb 2016 05:38:42 GMT" 
 
+###Query Object's data
+
+	./osscmd object -q -b testossscmd -a shenzhen --object a.c
+	Data: #include <stdio.h>
+-q means query object's data . object --object is on bucket -b .
+
+int main(int argc, char *argv[])
+{
+	return 0;
+}
+
 ###Copy Object
 Copy a object to create a new one
 

@@ -26,6 +26,7 @@ type Request struct {
 	CntType   string
 	Resource  string
 	SubRes    []string
+	Override  map[string]string
 	XOSSes    map[string]string
 	Body      []byte
 	ExtHeader map[string]string
@@ -155,10 +156,16 @@ func (req *Request) Signature() (sig string, err error) {
 		ossHeadersStr = strings.Join(ossHeaders, "\n")
 		ossHeadersStr += "\n"
 	}
+	var overrideStrs []string
+	if req.Override != nil {
+		for k, v := range req.Override {
+			overrideStrs = append(overrideStrs, k+"="+v)
+		}
+	}
 	var subResStr string
 	var resourcesStr string
 	if req.SubRes != nil {
-		subRes := req.SubRes
+		subRes := append(req.SubRes, overrideStrs...)
 		sort.Sort(sort.StringSlice(subRes))
 		subResStr = strings.Join(subRes, "&")
 		subResStr = "?" + subResStr
