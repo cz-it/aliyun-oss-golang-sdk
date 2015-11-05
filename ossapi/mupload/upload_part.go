@@ -10,10 +10,12 @@ import (
 	"strconv"
 )
 
+// Return Etag
 type UploadPartRstInfo struct {
 	Etag string
 }
 
+// upload part info
 type UploadPartInfo struct {
 	ObjectName string
 	BucketName string
@@ -24,6 +26,10 @@ type UploadPartInfo struct {
 	CntType    string
 }
 
+// Append a data slice
+// @param partInfo : data slice ifo
+// @return rstInfo : return response
+// @return ossapiError : nil on success
 func Append(partInfo *UploadPartInfo) (rstInfo *UploadPartRstInfo, ossapiError *ossapi.Error) {
 	if partInfo == nil {
 		ossapiError = ossapi.ArgError

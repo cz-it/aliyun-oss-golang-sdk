@@ -13,26 +13,31 @@ import (
 	"strconv"
 )
 
+// copy part info
 type UploadPartCopyInfo struct {
-	ObjectName string
-	BucketName string
-	Location   string
-	PartNumber int
-	UploadID   string
-	//	Data          []byte
-	//	CntType       string
+	ObjectName    string
+	BucketName    string
+	Location      string
+	PartNumber    int
+	UploadID      string
 	SrcObjectName string
 	SrcBucketName string
 	SrcRangeBegin int
 	SrcRangeEnd   int
 }
 
+// resoponse info
 type UploadPartCopyRstInfo struct {
 	XMLName      xml.Name `xml:"CopyObjectResult"`
 	LastModified string   `xml:"LastModified"`
 	ETag         string   `xml:"ETag"`
 }
 
+// Copy a data slice
+// @param partInfo : source and dest info
+// @param copyConnInfo : conditon to copy
+// @return rstInfo : return response
+// @return ossapiError : nil on success
 func Copy(partInfo *UploadPartCopyInfo, copyConnInfo *object.CopyConditionInfo) (rstInfo *UploadPartCopyRstInfo, ossapiError *ossapi.Error) {
 	if partInfo == nil {
 		ossapiError = ossapi.ArgError
