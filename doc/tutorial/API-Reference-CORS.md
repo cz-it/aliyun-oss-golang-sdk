@@ -20,7 +20,7 @@ Create CORS attribute for bucket.OSCR info is descriped by CORSRuleInfo.
 * ExposeHeader : Valied header from client
 * MaxAgeSeconds： Cache time
 
-Info is a Rule list. With AllowedOrigin  AllowedMethod AllowedHeader ExposeHeader MaxAgeSeconds
+return nil error when success. If failed return a ossapi.Error.
 ## cors.Query
 	
 	Query(bucketName, location string) (rstInfo []CORSRuleInfo, ossapiError *ossapi.Error)
@@ -33,7 +33,7 @@ Info is a Rule list. With AllowedOrigin  AllowedMethod AllowedHeader ExposeHeade
 	
 Delete CORS infomation of bucket.After this, other domain can't vister this bucket.
 
-Info is a Rule list. With AllowedOrigin  AllowedMethod AllowedHeader ExposeHeader MaxAgeSeconds
+return nil error when success. If failed return a ossapi.Error.
 ## cors.Option
 	Option(objName, bucketName, location string, optionInfo *OptionReqInfo) (rstInfo *OptionRspInfo, ossapiError *ossapi.Error)
 
@@ -55,4 +55,4 @@ CORS information is stored in OptionRspInfo:
 	    MaxAge        uint64
 	}	
 
-Info is a Rule list. With AllowedOrigin  AllowedMethod AllowedHeader ExposeHeader MaxAgeSeconds
+return nil error when success. If failed return a ossapi.Error.
