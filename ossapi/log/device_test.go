@@ -10,11 +10,11 @@ import (
 )
 
 func TestDevice(t *testing.T) {
-	fd, err := NewFileDevice("a.txt")
+	fd, err := newFileDevice("a.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(fd)
 	fd.SetFileName("abc.txt")
-	fd, err = NewFileDevice("/dev/a.txt")
+	fd, err = newFileDevice("/dev/a.txt")
 }
