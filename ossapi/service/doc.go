@@ -1,6 +1,7 @@
 /**
 * Author: CZ cz.theng@gmail.com
  */
+//Package service.
 //Service package wraps action for a user. Such as Query all your buckets (And Now  Have The Only Fuction).
 //
 //##service.QueryBuckets

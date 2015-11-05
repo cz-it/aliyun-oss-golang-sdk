@@ -20,7 +20,7 @@ func Delete(name, location string) (ossapiError *ossapi.Error) {
 	rsp, err := req.Send()
 	if err != nil {
 		if _, ok := err.(*ossapi.Error); !ok {
-			ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
+			ossapi.Logger.Error(err.Error())
 			ossapiError = ossapi.OSSAPIError
 			return
 		}
