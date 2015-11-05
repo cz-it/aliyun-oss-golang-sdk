@@ -207,10 +207,10 @@ Copy a object to create a new one
 
 ### Append Object
 
-	 ./osscmd object -a -b testossscmd -a shenzhen --file ./cors.go  --encoding utf-8 --expire "Fri, 28 Feb 2016 05:38:42 GMT" -p RO --type "text/html" --position 11352
+	 ./osscmd object -a -b testossscmd -a shenzhen --file ./cors.go  --encoding utf-8 --expire "Fri, 28 Feb 2016 05:38:42 GMT" -p RO --type "text/html" --position 11352 --obejct cors.go
 	Append Success. resuult: &{15136 9223372036854775807}
 	
-Append file to object. It is just like create .But a --position more . position should be equeal to result info Possition.
+Append file to object --object. It is just like create .But a --position more . position should be equeal to result info Possition.
 	
 ### Delete Object
 

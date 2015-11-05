@@ -23,14 +23,10 @@ func TestAppendObject(t *testing.T) {
 		Expires:            "Fri, 28 Feb 2012 05:38:42 GMT",
 		Encryption:         "AES256",
 		ACL:                bucket.P_Private,
-		ObjName:            "append2",
-		Location:           bucket.L_Hangzhou,
 		Body:               []byte("<html><head></head><body>test</body></html>"),
-		Type:               "text/html",
-		BucketName:         "test-object-hz"},
-
+		Type:               "text/html"},
 		Position: 43}
-	if info, err := Append(objInfo); err != nil {
+	if info, err := Append("append2", "test-object-hz", bucket.L_Hangzhou, objInfo); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("AppendObject Success!")

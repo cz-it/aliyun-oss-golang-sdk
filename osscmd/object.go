@@ -115,12 +115,9 @@ func Object(args []string) (err error) {
 			Expires:            ObjectFlag.Expire,
 			Encryption:         "AES256",
 			ACL:                per,
-			ObjName:            filepath.Base(ObjectFlag.File),
-			Location:           loc,
 			Body:               body,
-			Type:               ObjectFlag.Type,
-			BucketName:         BucketFlag.Bucket}
-		e = object.Create(objInfo)
+			Type:               ObjectFlag.Type}
+		e = object.Create(filepath.Base(ObjectFlag.File), BucketFlag.Bucket, loc, objInfo)
 		if e != nil {
 			Exit(e.Error())
 		}
@@ -156,12 +153,9 @@ func Object(args []string) (err error) {
 			Encryption:         "AES256",
 			Body:               body,
 			ACL:                per,
-			ObjName:            filepath.Base(ObjectFlag.File),
-			Location:           loc,
-			Type:               ObjectFlag.Type,
-			BucketName:         BucketFlag.Bucket},
+			Type:               ObjectFlag.Type},
 			Position: uint64(ObjectFlag.Position)}
-		info, e := object.Append(objInfo)
+		info, e := object.Append(CORSFlag.Object, BucketFlag.Bucket, loc, objInfo)
 		if e != nil {
 			Exit(e.Error())
 		}

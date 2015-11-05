@@ -37,13 +37,13 @@ type AppendObjRspInfo struct {
 	crc64     uint64
 }
 
-func Append(objInfo *AppendObjInfo) (rstInfo *AppendObjRspInfo, ossapiError *ossapi.Error) {
+func Append(objName, bucketName, location string, objInfo *AppendObjInfo) (rstInfo *AppendObjRspInfo, ossapiError *ossapi.Error) {
 	if objInfo == nil {
 		ossapiError = ossapi.ArgError
 		return
 	}
-	resource := path.Join("/", objInfo.BucketName, objInfo.ObjName)
-	host := objInfo.BucketName + "." + objInfo.Location + ".aliyuncs.com"
+	resource := path.Join("/", bucketName, objName)
+	host := bucketName + "." + location + ".aliyuncs.com"
 	header := make(map[string]string)
 	if objInfo != nil {
 		header["Cache-Control"] = objInfo.CacheControl
@@ -55,7 +55,7 @@ func Append(objInfo *AppendObjInfo) (rstInfo *AppendObjRspInfo, ossapiError *oss
 	}
 	req := &ossapi.Request{
 		Host:      host,
-		Path:      "/" + objInfo.ObjName + "?append&position=" + strconv.FormatUint(objInfo.Position, 10),
+		Path:      "/" + objName + "?append&position=" + strconv.FormatUint(objInfo.Position, 10),
 		Method:    "POST",
 		Resource:  resource,
 		Body:      objInfo.Body,

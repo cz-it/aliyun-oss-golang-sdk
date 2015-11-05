@@ -16,20 +16,17 @@ type ObjectInfo struct {
 	Expires            string
 	Encryption         string
 	ACL                string
-	ObjName            string
-	BucketName         string
-	Location           string
 	Body               []byte
 	Type               string
 }
 
-func Create(objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
+func Create(objName, bucketName, location string, objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
 	if objInfo == nil {
 		ossapiError = ossapi.ArgError
 		return
 	}
-	resource := path.Join("/", objInfo.BucketName, objInfo.ObjName)
-	host := objInfo.BucketName + "." + objInfo.Location + ".aliyuncs.com"
+	resource := path.Join("/", bucketName, objName)
+	host := bucketName + "." + location + ".aliyuncs.com"
 	header := make(map[string]string)
 	if objInfo != nil {
 		header["Cache-Control"] = objInfo.CacheControl
@@ -41,7 +38,7 @@ func Create(objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
 	}
 	req := &ossapi.Request{
 		Host:      host,
-		Path:      "/" + objInfo.ObjName,
+		Path:      "/" + objName,
 		Method:    "PUT",
 		Resource:  resource,
 		Body:      objInfo.Body,
