@@ -46,7 +46,7 @@ func TestUploadPartCopy(t *testing.T) {
 		SrcRangeEnd:   102400,
 	}
 
-	if copyInfo, err := UploadPartCopy(partInfo, nil); err != nil {
+	if copyInfo, err := Copy(partInfo, nil); err != nil {
 		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("UploadPartCopy Success!")

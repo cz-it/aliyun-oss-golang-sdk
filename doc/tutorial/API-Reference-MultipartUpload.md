@@ -154,3 +154,26 @@ Such as Delimiter COPY or REPLACE. Context is on Upload a list of UploadInfo:
 With weather initialed ,or context UploadId and Key.
 
 return nil error when success. If failed return a ossapi.Error.
+
+##mupload.Copy
+
+	Copy(partInfo *UploadPartCopyInfo, copyConnInfo *object.CopyConditionInfo) (rstInfo *UploadPartCopyRstInfo, ossapiError *ossapi.Error)
+	
+Besides append  a data slice. You can also copy a existed data slice to a uploading context. source is:
+
+	type UploadPartCopyInfo struct {
+	    ObjectName string
+	    BucketName string
+	    Location   string
+	    PartNumber int
+	    UploadID   string
+	    SrcObjectName string
+	    SrcBucketName  string
+	    SrcRangeBegin int
+	    SrcRangeEnd   int
+	}
+SrcObjectName and SrcBucketName points to the source object.SrcRangeBegin and SrcRangeEnd calculate data slice. copy these data to uploading context UploadID with NumberID PartNumber . You can also give object.CopyConditionInfo to decided wheate to copy .
+
+On Success. A Etag will return on UploadPartCopyRstInfo.ETag
+	
+return nil error when success. If failed return a ossapi.Error.

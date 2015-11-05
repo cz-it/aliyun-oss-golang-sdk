@@ -33,7 +33,7 @@ type UploadPartCopyRstInfo struct {
 	ETag         string   `xml:"ETag"`
 }
 
-func UploadPartCopy(partInfo *UploadPartCopyInfo, copyConnInfo *object.CopyConditionInfo) (rstInfo *UploadPartCopyRstInfo, ossapiError *ossapi.Error) {
+func Copy(partInfo *UploadPartCopyInfo, copyConnInfo *object.CopyConditionInfo) (rstInfo *UploadPartCopyRstInfo, ossapiError *ossapi.Error) {
 	if partInfo == nil {
 		ossapiError = ossapi.ArgError
 		return
