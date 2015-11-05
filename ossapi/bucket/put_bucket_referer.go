@@ -10,16 +10,24 @@ import (
 	"path"
 )
 
+// Referer Listinfo
 type RefererListInfo struct {
 	Referer []string
 }
 
+// ReferCOnfigurationInfo
 type RefererConfigurationInfo struct {
 	XMLName           xml.Name        `xml:"RefererConfiguration"`
 	AllowEmptyReferer bool            `xml:"AllowEmptyReferer"`
 	RefererList       RefererListInfo `xml:"RefererList"`
 }
 
+//Set Referer of bucket
+// @param name : name of bucket
+// @param location: locaton of bucket
+// @param enable : wheather allow white access
+// @param url: urls list
+// @return ossapiError: nil on success
 func SetReferer(name, location string, enable bool, urls []string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name)

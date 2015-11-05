@@ -40,6 +40,11 @@ type LifecycleConfiguration struct {
 }
 */
 
+// Query bucket's life cycle
+// @param name: name of bucket
+// @param location:location of name
+// @return infos : lifecycle info of buckets
+// @return ossapiError : nil on success
 func QueryLifecycle(name, location string) (infos []RuleInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"

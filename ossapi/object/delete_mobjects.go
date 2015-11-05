@@ -11,20 +11,30 @@ import (
 	"strconv"
 )
 
+//Key
 type KeyInfo struct {
 	Key string
 }
 
+//Delete Info
 type DeleteObjInfo struct {
 	XMLName xml.Name `xml:"Delete"`
 	Quiet   bool     `xml:"Quiet"`
 	Object  []KeyInfo
 }
 
+// Response info
 type DeleteObjRstInfo struct {
 	XMLName xml.Name  `xml:"DeleteResult"`
 	Deleted []KeyInfo `xml:"Deleted"`
 }
+
+// Delte serveral object
+// @param bucketName : name of bucket
+// @param locaton : location of bucket
+// @param info : list of objcets
+// @return rstInfo : return deleted objects
+// @return ossapiError: nil on success
 
 func DeleteObjects(bucketName, location string, info *DeleteObjInfo) (rstInfo *DeleteObjRstInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"

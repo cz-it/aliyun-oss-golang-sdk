@@ -11,6 +11,7 @@ import (
 	"strconv"
 )
 
+// init info
 type InitInfo struct {
 	CacheControl       string
 	ContentDisposition string
@@ -19,12 +20,20 @@ type InitInfo struct {
 	Encryption         string
 }
 
+// return response
 type InitRstInfo struct {
 	XMLName  xml.Name `xml:"InitiateMultipartUploadResult"`
 	Bucket   string   `xml:"Bucket"`
 	Key      string   `xml:"Key"`
 	UploadId string   `xml:"UploadId"`
 }
+
+// Init a uploading context
+// @param objName: object's Name
+// @param bucketName : bucket's name
+// @param location: bucket's location
+// @return rstInfo : uploading context info
+// @reurn ossapiError : nil on success
 
 func Init(objName, bucketName, location string, initInfo *InitInfo) (rstInfo *InitRstInfo, ossapiError *ossapi.Error) {
 	resource := path.Join("/", bucketName, objName)

@@ -11,6 +11,11 @@ import (
 	"strconv"
 )
 
+// Query bucket's cors info
+// @param bucketName : name of bucket
+// @param location: location of buket
+// @return rstinfo : CORS rules
+// @rreturn ossapiError : nil on success
 func Query(bucketName, location string) (rstInfo []CORSRuleInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName) + "/"

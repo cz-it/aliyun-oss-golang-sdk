@@ -9,6 +9,11 @@ import (
 	"path"
 )
 
+// Delte Bucket's Lifecycle.
+// All lifecycle rules will be delete
+// @param name : bucket's Name
+// @param location: bucket's Location
+// @return : nil on Success else ossapi.Error
 func DeleteLifecycle(name, location string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"

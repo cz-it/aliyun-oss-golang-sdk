@@ -11,21 +11,29 @@ import (
 	"strconv"
 )
 
+// OwnerInfo
 type OwnerInfo struct {
 	ID          string
 	DisplayName string
 }
 
+//AccessControlListInfo
 type AccessControlListInfo struct {
 	Grant string
 }
 
+// ACLInfo
 type ACLInfo struct {
 	XMLName           xml.Name `xml:"AccessControlPolicy"`
 	Owner             OwnerInfo
 	AccessControlList AccessControlListInfo
 }
 
+//Query bucket's ACL
+// @param name: name of bucket
+// @param location: location of bucket
+// @return info: ACL info of bucket
+// @return ossapiError: nil on success
 func QueryACL(name, location string) (info *ACLInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"

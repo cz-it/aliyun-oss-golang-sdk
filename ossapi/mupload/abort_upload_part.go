@@ -10,6 +10,12 @@ import (
 	"path"
 )
 
+// Abort uploading
+// @param objName: object's Name
+// @param bucketName : bucket's name
+// @param location: bucket's location
+// @param uploadID: uploading context ID
+// @reurn ossapiError : nil on success
 func Abort(objName, bucketName, location, uploadID string) (ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)

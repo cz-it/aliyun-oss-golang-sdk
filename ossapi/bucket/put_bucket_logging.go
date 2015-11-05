@@ -10,20 +10,29 @@ import (
 	"path"
 )
 
+//Logging info
 type LoggingInfo struct {
 	TargetBucket string
 	TargetPrefix string
 }
 
+// Open Loggign info
 type OpenLoggingInfo struct {
 	XMLName        xml.Name    `xml:"BucketLoggingStatus"`
 	LoggingEnabled LoggingInfo `xml:"LoggingEnabled"`
 }
 
+// Close Logginginfo
 type CloseLoggingInfo struct {
 	XMLName xml.Name `xml:"BucketLoggingStatus"`
 }
 
+// Open bucket's logging
+// @param name: name of bucket
+// @param locaton: location of bucket
+// @param targetBucket: target bucket to store log
+// @param targetPrefix: object's prefix name of logging file
+// @return ossapiError: nil on success
 func OpenLogging(name, location, targetBucket, targetPrefix string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name)
@@ -62,6 +71,10 @@ func OpenLogging(name, location, targetBucket, targetPrefix string) (ossapiError
 	return
 }
 
+// Open bucket's logging
+// @param name: name of bucket
+// @param locaton: location of bucket
+// @return ossapiError: nil on success
 func CloseLogging(name, location string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name)

@@ -26,6 +26,11 @@ type WebsiteInfo struct {
 }
 */
 
+//Query bucket's website info
+// @param name: name of bucket
+// @param location : location of bucket
+// @return info : website info of bucket
+// @return ossapiError : nil on success
 func QueryWebsite(name, location string) (info *WebsiteInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"

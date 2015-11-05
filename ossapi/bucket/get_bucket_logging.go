@@ -19,11 +19,17 @@ type LoggingInfo struct {
 }
 */
 
+//Loggingstatus
 type LoggingStatus struct {
 	XMLName        xml.Name `xml:"BucketLoggingStatus"`
 	LoggingEnabled LoggingInfo
 }
 
+//Query bucket's Logging info
+//@param name: name of bucket
+//@param location: location of bucket
+//@return info : Logging info of bucket
+//@return ossapiError : nil on success
 func QueryLogging(name, location string) (info *LoggingInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"

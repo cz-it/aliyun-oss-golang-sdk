@@ -41,7 +41,7 @@ func (req *Request) Send() (rsp *Response, err error) {
 	//fmt.Println("URL:", URL)
 	req.HttpReq, err = http.NewRequest(req.Method, URL, nil)
 	if err != nil {
-		Logger.Error("http.NewRequest(req.Method,URL, nil) Error:%s", err.Error())
+		Logger.Error(err.Error())
 		return
 	}
 	req.HttpReq.ProtoMinor = 1
@@ -49,7 +49,7 @@ func (req *Request) Send() (rsp *Response, err error) {
 	req.HttpReq.Header.Add("Date", req.Date)
 	auth, err := req.Auth()
 	if err != nil {
-		Logger.Error("req.Auth() Error:%s", err.Error)
+		Logger.Error(err.Error())
 		return
 	}
 	req.HttpReq.Header.Add("Authorization", auth)
@@ -65,7 +65,7 @@ func (req *Request) Send() (rsp *Response, err error) {
 		if req.Body != nil {
 			cntMd5, err = Base64AndMd5(req.Body)
 			if err != nil {
-				Logger.Error("Base64AndMd5(req.Body) Error:%s", err.Error())
+				Logger.Error(err.Error())
 				return
 			}
 		}
@@ -80,7 +80,7 @@ func (req *Request) Send() (rsp *Response, err error) {
 	//fmt.Println("Req head:", req.HttpReq.Header)
 	httprsp, err := httpClient.Do(req.HttpReq)
 	if err != nil {
-		Logger.Error("httpClient.Do(req.httpReq) Error:%s", err.Error())
+		Logger.Error(err.Error())
 		return
 	}
 	rsp = &Response{HttpRsp: httprsp}
@@ -94,13 +94,13 @@ func (req *Request) Send() (rsp *Response, err error) {
 		body := make([]byte, cntLen*10)
 		_, err = httprsp.Body.Read(body)
 		if err != nil && err != io.EOF {
-			Logger.Error("httprsp.Body.Read(body) Error:%s", err.Error())
+			Logger.Error(err.Error())
 			return
 		}
 		//fmt.Println("body:", string(body))
 		err = xml.Unmarshal(body, rstErr)
 		if err != nil {
-			Logger.Error("xml.Unmarshal(body, rstErr) Error:%s", err.Error())
+			Logger.Error(err.Error())
 			return
 		}
 		rstErr.ErrDetailMsg = string(body)
@@ -119,7 +119,7 @@ func (req *Request) Auth() (authStr string, err error) {
 	authStr = "OSS " + accessKeyID + ":"
 	sigStr, err := req.Signature()
 	if err != nil {
-		Logger.Error("sigStr, err := req.Signature() Error:%s", err.Error())
+		Logger.Error(err.Error())
 		return
 	}
 	authStr += sigStr
@@ -132,7 +132,7 @@ func (req *Request) Signature() (sig string, err error) {
 	if req.Body != nil {
 		cntMd5, err = Base64AndMd5(req.Body)
 		if err != nil {
-			Logger.Error("Base64AndMd5(req.Body) Error:%s", err.Error())
+			Logger.Error(err.Error())
 			return
 		}
 	}
@@ -175,7 +175,7 @@ func (req *Request) Signature() (sig string, err error) {
 	//fmt.Println("sigStr:", sigStr)
 	sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr))
 	if err != nil {
-		Logger.Error("sig, err = Base64AndHmacSha1([]byte(accessKeySecret), []byte(sigStr)) Error:%s", err.Error())
+		Logger.Error(err.Error())
 		return
 	}
 	return

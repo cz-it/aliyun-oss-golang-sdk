@@ -10,20 +10,29 @@ import (
 	"path"
 )
 
+//Index info
 type IndexInfo struct {
 	Suffix string
 }
 
+// Key Info
 type KeyInfo struct {
 	Key string
 }
 
+// Website info
 type WebsiteInfo struct {
 	XMLName       xml.Name  `xml:"WebsiteConfiguration"`
 	IndexDocument IndexInfo `xml:"IndexDocument"`
 	ErrorDocument KeyInfo   `xml:"ErrorDocument"`
 }
 
+// Set bucket's website
+// @param name: name of bucket
+// @param location: location of bucket
+// @param indexPage : index page
+// @param errorPage : 404 error page
+// @return ossapiError : nil on success
 func SetWebsite(name, location, indexPage, errorPage string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name)

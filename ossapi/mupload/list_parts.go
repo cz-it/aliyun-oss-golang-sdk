@@ -12,12 +12,14 @@ import (
 	"strings"
 )
 
+// Parts info
 type PartsFilterInfo struct {
 	MaxParts         int
 	PartNumberMarker int
 	Encoding         string
 }
 
+// Parts list
 type PartListInfo struct {
 	PartNumber   int
 	LastModified string
@@ -25,6 +27,7 @@ type PartListInfo struct {
 	Size         uint64
 }
 
+// Return Response
 type PartsResultInfo struct {
 	XMLName              xml.Name `xml:"ListPartsResult"`
 	Bucket               string   `xml:"Bucket"`
@@ -35,6 +38,15 @@ type PartsResultInfo struct {
 	IsTruncated          bool     `xml:"IsTruncated"`
 	Part                 []PartListInfo
 }
+
+// Qeury uploaded parts info
+// @param objName: object's Name
+// @param bucketName : bucket's name
+// @param location: bucket's location
+// @param uploadID: uploading context ID
+// @param filter: filter to query
+// @return rstInfo: return parts
+// @reurn ossapiError : nil on success
 
 func QueryParts(objName, bucketName, location string, uploadID string, filter *PartsFilterInfo) (rstInfo *PartsResultInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"

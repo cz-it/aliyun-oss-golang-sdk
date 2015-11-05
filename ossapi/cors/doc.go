@@ -1,7 +1,7 @@
+// Package cors is for cors
 /**
 * Author: CZ cz.theng@gmail.com
  */
-// Package cors is for cors
 /**
 CORS allow remote domain to access resources. Before this ,you should create a CORS rule for the bucket.
 

@@ -20,7 +20,6 @@ type Owner struct {
 	DisplayName string
 }
 */
-
 type ContentInfo struct {
 	Key          string
 	LastModified string
@@ -31,10 +30,12 @@ type ContentInfo struct {
 	Owner        service.Owner
 }
 
+// CommonInfo
 type CommonInfo struct {
 	Prefix string
 }
 
+//BucketsInfo
 type BucktsInfo struct {
 	XMLName        xml.Name `xml:"ListBucketResult"`
 	Name           string   `xml:"Name"`
@@ -47,6 +48,16 @@ type BucktsInfo struct {
 	CommonPrefixes CommonInfo `xml:"CommonPrefixes"`
 }
 
+// Query all objects of a bucket
+// @param name : name of bucket
+// @param location: location of bucket
+// @param prefix: select valied prefix
+// @param marker: marker after this will be return
+// @param delimiter: valied delimiter, common prefix
+// @param encoding: encoding of content
+// @param maxKeys : at most maxKeys items will return
+// @return info : objects' info
+// @return ossapiError : nil on success
 func QueryObjects(name, location string, prefix, marker, delimiter, encodingType string, maxKeys int) (info *BucktsInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"

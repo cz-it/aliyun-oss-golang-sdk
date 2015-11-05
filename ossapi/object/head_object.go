@@ -10,6 +10,7 @@ import (
 	"strconv"
 )
 
+// Brief Info
 type ObjectBriefInfo struct {
 	ObjectType  string
 	Type        string
@@ -18,6 +19,7 @@ type ObjectBriefInfo struct {
 	Length      uint64
 }
 
+// Conndtition info
 type BriefConnInfo struct {
 	ModifiedSince   string
 	UnmodifiedSince string
@@ -25,6 +27,13 @@ type BriefConnInfo struct {
 	NotMatchEtag    string
 }
 
+// Query object's meta info
+// @param objName : name of object
+// @param bucketName : name of bucket
+// @param locaton : location of bucket
+// @param info: conndtion to controll return
+// @return briefInfo : breif info of object
+// @retun ossapiError : nil on success
 func QueryMeta(objName, bucketName, location string, info *BriefConnInfo) (briefInfo *ObjectBriefInfo, ossapiError *ossapi.Error) {
 	resource := path.Join("/", bucketName, objName)
 	host := bucketName + "." + location + ".aliyuncs.com"

@@ -37,6 +37,9 @@ type CreateBucketConfiguration struct {
 // Create Bucket with name/location and permission
 // location is list above
 // permission now can be three value
+// @param name : name of bucket
+// @param permission : permission of bucket . it is P_XXX
+// @return ossapiError : nil on success
 func Create(name, location, permission string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	cfg := &CreateBucketConfiguration{LocationConstraint: location}

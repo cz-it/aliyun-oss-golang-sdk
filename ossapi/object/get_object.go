@@ -10,6 +10,7 @@ import (
 	"strconv"
 )
 
+//Response info
 type RspObjInfo struct {
 	CntType      string
 	LastModified string
@@ -20,6 +21,7 @@ type RspObjInfo struct {
 	Data         []byte
 }
 
+// Override info
 type OverrideInfo struct {
 	Type         string
 	Language     string
@@ -29,6 +31,7 @@ type OverrideInfo struct {
 	Encoding     string
 }
 
+// condition info
 type ConditionInfo struct {
 	Range        string
 	LastModify   string
@@ -37,6 +40,14 @@ type ConditionInfo struct {
 	ETagMatched  bool
 }
 
+// Query an object 's data or download
+// @param objName : name of object
+// @param bucketName : name of bucket
+// @param locaton : location of bucket
+// @param condInfo : condition to query
+// @param overrideInfo : controller which to return
+// @return data: object's data
+// @retun ossapiError : nil on success
 func Query(objName, bucketName, location string, condInfo *ConditionInfo, overrideInfo *OverrideInfo) (data []byte, ossapiError *ossapi.Error) {
 	resource := path.Join("/", bucketName, objName)
 	host := bucketName + "." + location + ".aliyuncs.com"

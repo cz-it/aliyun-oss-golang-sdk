@@ -10,12 +10,14 @@ import (
 	"strconv"
 )
 
+// Reqinfo
 type OptionReqInfo struct {
 	Origin  string
 	Method  string
 	Headers string
 }
 
+// Resoponse info
 type OptionRspInfo struct {
 	AllowOrigin   string
 	AllowMethods  string
@@ -24,6 +26,13 @@ type OptionRspInfo struct {
 	MaxAge        uint64
 }
 
+// Query CORS permission of bucket
+// @param objName : object to access
+// @param bucketName: bucket to access
+// @param location: bucket's location
+// @param optionInfo : CORS requet
+// @return rstInfo: CORS permisson
+// @return ossapiError : nil on success
 func Option(objName, bucketName, location string, optionInfo *OptionReqInfo) (rstInfo *OptionRspInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)

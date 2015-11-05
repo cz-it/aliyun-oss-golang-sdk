@@ -10,19 +10,23 @@ import (
 	"path"
 )
 
+// const define
 const (
 	LifecycleStatsEnable  = "Enabled"
 	LifecycleStatsDisable = "Disabled"
 )
 
+// Days
 type ExpirationDaysInfo struct {
 	Days uint
 }
 
+//Date
 type ExpirationDateInfo struct {
 	Date string
 }
 
+//Rule info
 type RuleInfo struct {
 	ID         string
 	Prefix     string
@@ -30,11 +34,17 @@ type RuleInfo struct {
 	Expiration ExpirationDaysInfo
 }
 
+// Lifecycle XML info
 type LifecycleConfiguration struct {
 	XMLName xml.Name `xml:"LifecycleConfiguration"`
 	Rule    []RuleInfo
 }
 
+// Set bucket's lifecycle
+// @param  name : name of bucket
+// @param location : location of bucket
+// @param rules : rules to set
+// @return ossapiError : nil on success
 func SetLifecycle(name, location string, rules []RuleInfo) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name)

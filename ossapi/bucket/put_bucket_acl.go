@@ -9,6 +9,10 @@ import (
 	"path"
 )
 
+// Set bucket's ACL info
+// @param name : name of bucket
+// @param permission : permisson to set
+// @return ossapiError : nil on success
 func SetACL(name, location, permission string) (error *ossapi.Error) {
 	resource := path.Join("/", name)
 	host := name + "." + location + ".aliyuncs.com"

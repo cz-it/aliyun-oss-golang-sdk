@@ -9,6 +9,10 @@ import (
 	"path"
 )
 
+// Delete bucket
+// @param name: bucket's name
+// @param location : bucket's location
+// @return : nil on Success else ossapi.Error
 func Delete(name, location string) (ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"

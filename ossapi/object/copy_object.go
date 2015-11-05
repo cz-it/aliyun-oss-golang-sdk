@@ -11,11 +11,13 @@ import (
 	"strconv"
 )
 
+// enmu
 const (
 	D_COPY    = "COPY"
 	D_REPLACE = "REPLACE"
 )
 
+// condition
 type CopyConditionInfo struct {
 	ETAG         string
 	Date         string
@@ -23,6 +25,7 @@ type CopyConditionInfo struct {
 	LastUnModify string
 }
 
+//Copy Info
 type CopyInfo struct {
 	ObjectName string
 	BucketName string
@@ -33,12 +36,18 @@ type CopyInfo struct {
 	ACL        string
 }
 
+// XML
 type CopyResultInfo struct {
 	XMLName      xml.Name `xml:"CopyObjectResult"`
 	ETag         string   `xml:"ETag"`
 	LastModified string   `xml:"LastModified"`
 }
 
+// Copy a object to creat a bucket
+// @param copyInfo : source and dest object and bucket
+// @param copyConnInfo : conndition to copy
+// @return rstInfo: return info
+// @return ossapiError : nil on success
 func Copy(copyInfo *CopyInfo, copyConnInfo *CopyConditionInfo) (rstInfo *CopyResultInfo, ossapiError *ossapi.Error) {
 	if copyInfo == nil {
 		ossapiError = ossapi.ArgError

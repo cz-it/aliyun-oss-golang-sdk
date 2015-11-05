@@ -10,6 +10,7 @@ import (
 	"path"
 )
 
+// rules
 type CORSRuleInfo struct {
 	AllowedOrigin []string
 	AllowedMethod []string
@@ -18,11 +19,17 @@ type CORSRuleInfo struct {
 	MaxAgeSeconds uint64
 }
 
+// XML
 type CORSInfo struct {
 	XMLName  xml.Name `xml:"CORSConfiguration"`
 	CORSRule []CORSRuleInfo
 }
 
+// Creat a CORS rule
+// @param bucketName : name of bucket
+// @param location : bucket's loction
+// @param corsInfo : cors rules
+// @return ossapiError : nil on success
 func Create(bucketName, location string, corsInfo []CORSRuleInfo) (ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	info := &CORSInfo{CORSRule: corsInfo}

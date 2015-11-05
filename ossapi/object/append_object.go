@@ -27,16 +27,25 @@ type ObjectInfo struct {
 }
 */
 
+// Append Info
 type AppendObjInfo struct {
 	ObjectInfo
 	Position uint64
 }
 
+// Resopnse Info
 type AppendObjRspInfo struct {
 	Possition uint64
 	crc64     uint64
 }
 
+// Create a Appendable object
+// @param objName : name of object
+// @param bucketName : name of bucket
+// @param locaton : location of bucket
+// @param objInfo : object meta info
+// @return rstInfo : possition and crc of data
+// @retun ossapiError : nil on success
 func Append(objName, bucketName, location string, objInfo *AppendObjInfo) (rstInfo *AppendObjRspInfo, ossapiError *ossapi.Error) {
 	if objInfo == nil {
 		ossapiError = ossapi.ArgError

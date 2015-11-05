@@ -11,11 +11,16 @@ import (
 	"strconv"
 )
 
+// LocationInfo
 type LocationInfo struct {
 	XMLName  xml.Name `xml:"LocationConstraint"`
 	Location string   `xml:",chardata"`
 }
 
+// Query bucket's location
+// @param name: name of bucket
+// @return location : location name of bucket
+// @return ossapiError : nil on success
 func QueryLocation(name string) (location string, ossapiError *ossapi.Error) {
 	host := name + ".oss.aliyuncs.com"
 	resource := path.Join("/", name) + "/"

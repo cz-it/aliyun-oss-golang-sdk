@@ -9,6 +9,7 @@ import (
 	"path"
 )
 
+// Object info
 type ObjectInfo struct {
 	CacheControl       string
 	ContentDisposition string
@@ -20,6 +21,12 @@ type ObjectInfo struct {
 	Type               string
 }
 
+// Create an new object
+// @param objName : name of object
+// @param bucketName : name of bucket
+// @param locaton : location of bucket
+// @param objInfo : object's info
+// @retun ossapiError : nil on success
 func Create(objName, bucketName, location string, objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
 	if objInfo == nil {
 		ossapiError = ossapi.ArgError

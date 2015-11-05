@@ -9,6 +9,11 @@ import (
 	"path"
 )
 
+// Delete bucket's cors attribute
+// @param bucketName: name of bucket
+// @param location : location of bucket
+
+// @return ossapiError : nil on success
 func Delete(bucketName, location string) (ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName) + "/"

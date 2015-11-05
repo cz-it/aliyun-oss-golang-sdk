@@ -29,7 +29,12 @@ type ACLInfo struct {
 	AccessControlList AccessControlListInfo
 }
 */
-
+// Query bucket's ACL info
+// @param objName : name of object
+// @param bucketName : name of bucket
+// @param locaton : location of bucket
+// @return info: ACL info
+// @retun ossapiError : nil on success
 func QueryACL(objName, bucketName, location string) (info *bucket.ACLInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)

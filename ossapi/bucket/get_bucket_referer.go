@@ -24,6 +24,11 @@ type RefererConfigurationInfo struct {
 }
 */
 
+//Query Referer info of buckets
+// @param name : name of bucket
+// @param location: location of bucket
+// @return info : referer info of bucket
+// @return ossapiError : nil on success
 func QueryReferer(name, location string) (info *RefererConfigurationInfo, ossapiError *ossapi.Error) {
 	host := name + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", name) + "/"

@@ -11,16 +11,19 @@ import (
 	"strconv"
 )
 
+// PartInfo
 type PartInfo struct {
 	PartNumber int
 	ETag       string
 }
 
+// Parts Info
 type PartsInfo struct {
 	XMLName xml.Name `xml:"CompleteMultipartUpload"`
 	Part    []PartInfo
 }
 
+// Parts complete Info
 type PartsCompleteInfo struct {
 	XMLName  xml.Name `xml:"CompleteMultipartUploadResult"`
 	Location string   `xml:"Location"`
@@ -29,6 +32,14 @@ type PartsCompleteInfo struct {
 	ETag     string   `xml:"ETag"`
 }
 
+// Finish uploading
+// @param objName: object's Name
+// @param bucketName : bucket's name
+// @param location: bucket's location
+// @param uploadID: uploading context ID
+// @param info : parts info
+// @return rstInfo : return response
+// @reurn ossapiError : nil on success
 func Complete(objName, bucketName, location string, uploadId string, info *PartsInfo) (rstInfo *PartsCompleteInfo, ossapiError *ossapi.Error) {
 	resource := path.Join("/", bucketName, objName)
 	host := bucketName + "." + location + ".aliyuncs.com"

@@ -9,6 +9,11 @@ import (
 	"path"
 )
 
+// Delte an ojbect
+// @param objName : name of object
+// @param bucketName : name of bucket
+// @param locaton : location of bucket
+// @retun ossapiError : nil on success
 func Delete(objName, bucketName, location string) (ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)
