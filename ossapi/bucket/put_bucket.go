@@ -14,21 +14,32 @@ import (
 
 // Location and Permission
 const (
-	L_Hangzhou      = "oss-cn-hangzhou"
-	L_Shenzhen      = "oss-cn-shenzhen"
-	L_Beijing       = "oss-cn-beijing"
-	L_Qingdao       = "oss-cn-qingdao"
-	L_Shanghai      = "oss-cn-shanghai"
-	L_HongKong      = "oss-cn-hongkong"
-	L_SiliconValley = "oss-us-west-1"
-	L_Singapore     = "oss-ap-southeast-1"
+	//LHangzhou is Hangzhou
+	LHangzhou = "oss-cn-hangzhou"
+	//LShenzhen is Shenzhen
+	LShenzhen = "oss-cn-shenzhen"
+	//LBeijing is Beijing
+	LBeijing = "oss-cn-beijing"
+	//LQingdao is Qingdao
+	LQingdao = "oss-cn-qingdao"
+	//LShanghai is Shanghai
+	LShanghai = "oss-cn-shanghai"
+	//LHongKong is HongKong
+	LHongKong = "oss-cn-hongkong"
+	//LSiliconValley is SiliconValley
+	LSiliconValley = "oss-us-west-1"
+	// LSingapore is Singapore
+	LSingapore = "oss-ap-southeast-1"
 
-	P_Private        = "private"
-	P_PublicReadOnly = "public-read"
-	P_PublicRW       = "public-read-write"
+	// PPrivate is private
+	PPrivate = "private"
+	// PPublicReadOnly is public-read
+	PPublicReadOnly = "public-read"
+	// PPublicRW is public-read-write
+	PPublicRW = "public-read-write"
 )
 
-// Requestion's XML Content
+// CreateBucketConfiguration Requestion's XML Content
 type CreateBucketConfiguration struct {
 	XMLName            xml.Name `xml:"CreateBucketConfiguration"`
 	LocationConstraint string   `xml:"LocationConstraint"`
@@ -67,15 +78,15 @@ func Create(name, location, permission string) (ossapiError *ossapi.Error) {
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
 	return
 }
 
-// Create Bucket with default
+// CreateDefault  Create Bucket with default
 func CreateDefault(name string) (ossapiError *ossapi.Error) {
-	ossapiError = Create(name, L_Hangzhou, P_Private)
+	ossapiError = Create(name, LHangzhou, PPrivate)
 	return
 }

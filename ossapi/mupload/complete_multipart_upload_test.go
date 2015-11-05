@@ -23,8 +23,8 @@ func TestCompleteMultipartUpload(t *testing.T) {
 		Encryption:         "AES256"}
 	var info *InitRstInfo
 	var err *ossapi.Error
-	if info, err = Init("a.c", "test-mupload", bucket.L_Hangzhou, initInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if info, err = Init("a.c", "test-mupload", bucket.LHangzhou, initInfo); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("Init Multiple Upload Success!")
 		fmt.Println(info)
@@ -37,7 +37,7 @@ func TestCompleteMultipartUpload(t *testing.T) {
 	partInfo := &UploadPartInfo{
 		ObjectName: "a.c",
 		BucketName: "test-mupload",
-		Location:   bucket.L_Hangzhou,
+		Location:   bucket.LHangzhou,
 		UploadID:   info.UploadId,
 		PartNumber: 1,
 		Data:       partData[:100*1024],
@@ -45,7 +45,7 @@ func TestCompleteMultipartUpload(t *testing.T) {
 
 	var i1 PartInfo
 	if info, err := Append(partInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		i1.ETag = info.Etag
 		i1.PartNumber = 1
@@ -55,7 +55,7 @@ func TestCompleteMultipartUpload(t *testing.T) {
 	partInfo.PartNumber = 2
 	var i2 PartInfo
 	if info, err := Append(partInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		i2.ETag = info.Etag
 		i2.PartNumber = 2
@@ -63,8 +63,8 @@ func TestCompleteMultipartUpload(t *testing.T) {
 	}
 
 	partsInfo := &PartsInfo{Part: []PartInfo{i1, i2}}
-	if info, err := Complete("a.c", "test-mupload", bucket.L_Hangzhou, info.UploadId, partsInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if info, err := Complete("a.c", "test-mupload", bucket.LHangzhou, info.UploadId, partsInfo); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log(" CompleteMultipartUpload Success!")
 		fmt.Println(info)

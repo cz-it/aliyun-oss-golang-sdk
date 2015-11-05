@@ -13,13 +13,7 @@ import (
 	"strings"
 )
 
-/*
-// redefined in get_service.go
-type Owner struct {
-	ID          string
-	DisplayName string
-}
-*/
+// ContentInfo is bucket's conetent info
 type ContentInfo struct {
 	Key          string
 	LastModified string
@@ -30,12 +24,12 @@ type ContentInfo struct {
 	Owner        service.Owner
 }
 
-// CommonInfo
+// CommonInfo is Common meta
 type CommonInfo struct {
 	Prefix string
 }
 
-//BucketsInfo
+// BucktsInfo is bucket's meta struct
 type BucktsInfo struct {
 	XMLName        xml.Name `xml:"ListBucketResult"`
 	Name           string   `xml:"Name"`
@@ -48,7 +42,7 @@ type BucktsInfo struct {
 	CommonPrefixes CommonInfo `xml:"CommonPrefixes"`
 }
 
-// Query all objects of a bucket
+// QueryObjects Query  all objects of a bucket
 // @param name : name of bucket
 // @param location: location of bucket
 // @param prefix: select valied prefix
@@ -94,18 +88,18 @@ func QueryObjects(name, location string, prefix, marker, delimiter, encodingType
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	info = new(BucktsInfo)
 	err = xml.Unmarshal(body, info)
 	if err != nil {

@@ -40,6 +40,7 @@ const (
 	`
 )
 
+//ObjectFlagInfo object flag
 type ObjectFlagInfo struct {
 	Encoding  string
 	Expire    string
@@ -52,6 +53,7 @@ type ObjectFlagInfo struct {
 }
 
 var (
+	//ObjectFlag is flag
 	ObjectFlag ObjectFlagInfo
 )
 
@@ -66,6 +68,7 @@ func init() {
 	flag.BoolVar(&ObjectFlag.Head, "head", false, "")
 }
 
+// Object is object cmd
 func Object(args []string) (err error) {
 	if err = readCfg(); err != nil {
 		fmt.Println("You May Havn't Init . Use osscmd init First!")
@@ -76,28 +79,28 @@ func Object(args []string) (err error) {
 	flag.CommandLine.Parse(args[3:])
 	var loc, per string
 	if BucketFlag.Location == "hangzhou" {
-		loc = bucket.L_Hangzhou
+		loc = bucket.LHangzhou
 	} else if BucketFlag.Location == "beijin" {
-		loc = bucket.L_Beijing
+		loc = bucket.LBeijing
 	} else if BucketFlag.Location == "shenzhen" {
-		loc = bucket.L_Shenzhen
+		loc = bucket.LShenzhen
 	} else if BucketFlag.Location == "hongkong" {
-		loc = bucket.L_HongKong
+		loc = bucket.LHongKong
 	} else if BucketFlag.Location == "qingdao" {
-		loc = bucket.L_Qingdao
+		loc = bucket.LQingdao
 	} else if BucketFlag.Location == "shanghai" {
-		loc = bucket.L_Shanghai
+		loc = bucket.LShanghai
 	} else {
-		loc = bucket.L_Hangzhou
+		loc = bucket.LHangzhou
 	}
 	if BucketFlag.Permission == "RW" {
-		per = bucket.P_PublicRW
+		per = bucket.PPublicRW
 	} else if BucketFlag.Permission == "PT" {
-		per = bucket.P_Private
+		per = bucket.PPrivate
 	} else if BucketFlag.Permission == "RO" {
-		per = bucket.P_PublicReadOnly
+		per = bucket.PPublicReadOnly
 	} else {
-		per = bucket.P_Private
+		per = bucket.PPrivate
 	}
 	if "-n" == args[2] {
 		fd, err := os.Open(ObjectFlag.File)
@@ -108,7 +111,7 @@ func Object(args []string) (err error) {
 		if err != nil {
 			Exit(err.Error())
 		}
-		objInfo := &object.ObjectInfo{
+		objInfo := &object.Info{
 			CacheControl:       "no-cache",
 			ContentDisposition: "attachment;",
 			ContentEncoding:    ObjectFlag.Encoding,
@@ -145,7 +148,7 @@ func Object(args []string) (err error) {
 		if err != nil {
 			Exit(e.Error())
 		}
-		objInfo := &object.AppendObjInfo{ObjectInfo: object.ObjectInfo{
+		objInfo := &object.AppendObjInfo{Info: object.Info{
 			CacheControl:       "no-cache",
 			ContentDisposition: "attachment;",
 			ContentEncoding:    ObjectFlag.Encoding,

@@ -11,13 +11,13 @@ import (
 	"strconv"
 )
 
-// LocationInfo
+// LocationInfo is locaiton struct
 type LocationInfo struct {
 	XMLName  xml.Name `xml:"LocationConstraint"`
 	Location string   `xml:",chardata"`
 }
 
-// Query bucket's location
+// QueryLocation  Query bucket's location
 // @param name: name of bucket
 // @return location : location name of bucket
 // @return ossapiError : nil on success
@@ -38,18 +38,18 @@ func QueryLocation(name string) (location string, ossapiError *ossapi.Error) {
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	locationInfo := new(LocationInfo)
 	err = xml.Unmarshal(body, locationInfo)
 	if err != nil {

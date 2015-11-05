@@ -12,7 +12,6 @@ import (
 // Delete bucket's cors attribute
 // @param bucketName: name of bucket
 // @param location : location of bucket
-
 // @return ossapiError : nil on success
 func Delete(bucketName, location string) (ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
@@ -31,7 +30,7 @@ func Delete(bucketName, location string) (ossapiError *ossapi.Error) {
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

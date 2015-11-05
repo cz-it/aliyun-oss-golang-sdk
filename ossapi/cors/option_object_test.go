@@ -15,8 +15,8 @@ func TestOptionObject(t *testing.T) {
 		t.Fail()
 	}
 	optionInfo := &OptionReqInfo{Origin: "www.qq.com", Method: "GET", Headers: "authorization"}
-	if info, err := Option("app.py", "test-cors", bucket.L_Hangzhou, optionInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if info, err := Option("app.py", "test-cors", bucket.LHangzhou, optionInfo); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("OptionObject Success")
 		fmt.Println(info)

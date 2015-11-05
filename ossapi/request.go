@@ -18,6 +18,7 @@ import (
 	"time"
 )
 
+// Request represent a request
 type Request struct {
 	Host      string
 	Path      string
@@ -32,34 +33,35 @@ type Request struct {
 	ExtHeader map[string]string
 	RspHeader map[string]string
 
-	HttpReq *http.Request
+	HTTPReq *http.Request
 }
 
+// Send do sent request
 func (req *Request) Send() (rsp *Response, err error) {
 	URL := "http://"
 	URL += path.Join(req.Host, req.Path)
 	//fmt.Println("URL:", URL)
-	req.HttpReq, err = http.NewRequest(req.Method, URL, nil)
+	req.HTTPReq, err = http.NewRequest(req.Method, URL, nil)
 	if err != nil {
 		Logger.Error(err.Error())
 		return
 	}
-	req.HttpReq.ProtoMinor = 1
-	req.Date = time.Now().UTC().Format(DATE_FMT)
-	req.HttpReq.Header.Add("Date", req.Date)
+	req.HTTPReq.ProtoMinor = 1
+	req.Date = time.Now().UTC().Format(DateFmt)
+	req.HTTPReq.Header.Add("Date", req.Date)
 	auth, err := req.Auth()
 	if err != nil {
 		Logger.Error(err.Error())
 		return
 	}
-	req.HttpReq.Header.Add("Authorization", auth)
+	req.HTTPReq.Header.Add("Authorization", auth)
 	for k, v := range req.XOSSes {
-		req.HttpReq.Header.Add(k, v)
+		req.HTTPReq.Header.Add(k, v)
 	}
 	if req.Body != nil {
-		req.HttpReq.Header.Add("Content-Length", strconv.FormatUint(uint64(len(req.Body)), 10))
+		req.HTTPReq.Header.Add("Content-Length", strconv.FormatUint(uint64(len(req.Body)), 10))
 		if req.CntType != "" {
-			req.HttpReq.Header.Add("Content-Type", req.CntType)
+			req.HTTPReq.Header.Add("Content-Type", req.CntType)
 		}
 		var cntMd5 string
 		if req.Body != nil {
@@ -69,24 +71,24 @@ func (req *Request) Send() (rsp *Response, err error) {
 				return
 			}
 		}
-		req.HttpReq.Header.Add("Content-MD5", cntMd5)
-		req.HttpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
+		req.HTTPReq.Header.Add("Content-MD5", cntMd5)
+		req.HTTPReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
 	}
 	if req.ExtHeader != nil {
 		for k, v := range req.ExtHeader {
-			req.HttpReq.Header.Add(k, v)
+			req.HTTPReq.Header.Add(k, v)
 		}
 	}
-	//fmt.Println("Req head:", req.HttpReq.Header)
-	httprsp, err := httpClient.Do(req.HttpReq)
+	//fmt.Println("Req head:", req.HTTPReq.Header)
+	httprsp, err := httpClient.Do(req.HTTPReq)
 	if err != nil {
 		Logger.Error(err.Error())
 		return
 	}
-	rsp = &Response{HttpRsp: httprsp}
+	rsp = &Response{HTTPRsp: httprsp}
 	if httprsp.StatusCode/100 == 4 || httprsp.StatusCode/100 == 5 {
 		var cntLen int
-		rstErr := &Error{HttpStatus: httprsp.StatusCode, ErrNo: ENone, ErrMsg: "None", ErrDetailMsg: "None"}
+		rstErr := &Error{HTTPStatus: httprsp.StatusCode, ErrNo: ErrNone, ErrMsg: "None", ErrDetailMsg: "None"}
 		cntLen, err = strconv.Atoi(httprsp.Header["Content-Length"][0])
 		if err != nil {
 			cntLen = 1024
@@ -105,16 +107,17 @@ func (req *Request) Send() (rsp *Response, err error) {
 		}
 		rstErr.ErrDetailMsg = string(body)
 		err = rstErr
-		rsp.Result = EFAIL
+		rsp.Result = ErrFAIL
 		return
 	} else if httprsp.StatusCode/100 == 2 {
-		rsp.Result = ESUCC
+		rsp.Result = ErrSUCC
 	} else {
-		rsp.Result = EUNKNOWN
+		rsp.Result = ErrUNKNOWN
 	}
 	return
 }
 
+// Auth do authorize
 func (req *Request) Auth() (authStr string, err error) {
 	authStr = "OSS " + accessKeyID + ":"
 	sigStr, err := req.Signature()
@@ -126,6 +129,7 @@ func (req *Request) Auth() (authStr string, err error) {
 	return
 }
 
+// Signature calculate Signature
 func (req *Request) Signature() (sig string, err error) {
 	sigStr := req.Method + "\n"
 	var cntMd5 string
@@ -144,7 +148,7 @@ func (req *Request) Signature() (sig string, err error) {
 	if req.XOSSes != nil {
 		var ossHeaderKeys []string
 		//fmt.Println("req.XOSSes : ", req.XOSSes)
-		for k, _ := range req.XOSSes {
+		for k := range req.XOSSes {
 			ossHeaderKeys = append(ossHeaderKeys, strings.ToLower(k))
 		}
 		sort.Sort(sort.StringSlice(ossHeaderKeys))
@@ -180,6 +184,8 @@ func (req *Request) Signature() (sig string, err error) {
 	}
 	return
 }
+
+//AddXOSS add x-oss
 func (req *Request) AddXOSS(key string, value string) {
 	if req.XOSSes == nil {
 		req.XOSSes = make(map[string]string)

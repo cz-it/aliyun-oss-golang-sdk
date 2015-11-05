@@ -1,3 +1,5 @@
+// Package mupload
+
 /**
 * Author: CZ cz.theng@gmail.com
  */
@@ -11,19 +13,19 @@ import (
 	"strconv"
 )
 
-// PartInfo
+//PartInfo is part infomation
 type PartInfo struct {
 	PartNumber int
 	ETag       string
 }
 
-// Parts Info
+//PartsInfo is a list partinfo
 type PartsInfo struct {
 	XMLName xml.Name `xml:"CompleteMultipartUpload"`
 	Part    []PartInfo
 }
 
-// Parts complete Info
+//PartsCompleteInfo Parts complete Info
 type PartsCompleteInfo struct {
 	XMLName  xml.Name `xml:"CompleteMultipartUploadResult"`
 	Location string   `xml:"Location"`
@@ -32,7 +34,7 @@ type PartsCompleteInfo struct {
 	ETag     string   `xml:"ETag"`
 }
 
-// Finish uploading
+// Complete is  Finish uploading
 // @param objName: object's Name
 // @param bucketName : bucket's name
 // @param location: bucket's location
@@ -40,48 +42,48 @@ type PartsCompleteInfo struct {
 // @param info : parts info
 // @return rstInfo : return response
 // @reurn ossapiError : nil on success
-func Complete(objName, bucketName, location string, uploadId string, info *PartsInfo) (rstInfo *PartsCompleteInfo, ossapiError *ossapi.Error) {
+func Complete(objName, bucketName, location string, uploadID string, info *PartsInfo) (rstInfo *PartsCompleteInfo, ossapiError *ossapi.Error) {
 	resource := path.Join("/", bucketName, objName)
 	host := bucketName + "." + location + ".aliyuncs.com"
 	body, err := xml.Marshal(info)
 	if err != nil {
-		ossapi.Logger.Error("xml.Marshal(cfg) Error:%s", err.Error())
+		ossapi.Logger.Error(err.Error())
 		ossapiError = ossapi.OSSAPIError
 	}
 	body = append([]byte(xml.Header), body...)
 	req := &ossapi.Request{
 		Host:     host,
-		Path:     "/" + objName + "?uploadId=" + uploadId,
+		Path:     "/" + objName + "?uploadId=" + uploadID,
 		Method:   "POST",
 		Body:     body,
 		CntType:  "application/xml",
-		SubRes:   []string{"uploadId=" + uploadId},
+		SubRes:   []string{"uploadId=" + uploadID},
 		Resource: resource}
 
 	rsp, err := req.Send()
 	if err != nil {
 		if _, ok := err.(*ossapi.Error); !ok {
-			ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
+			ossapi.Logger.Error(err.Error())
 			ossapiError = ossapi.OSSAPIError
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
-		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
+		ossapi.Logger.Error(err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	rstbody := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(rstbody)
+	rsp.HTTPRsp.Body.Read(rstbody)
 	rstInfo = new(PartsCompleteInfo)
 	err = xml.Unmarshal(body, rstInfo)
 	if err != nil {
-		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
+		ossapi.Logger.Error(err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}

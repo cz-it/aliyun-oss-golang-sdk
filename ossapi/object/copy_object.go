@@ -13,11 +13,13 @@ import (
 
 // enmu
 const (
-	D_COPY    = "COPY"
-	D_REPLACE = "REPLACE"
+	//COPY will not replace if dest is exist
+	COPY = "COPY"
+	// REPLACE wiil repalce .
+	REPLACE = "REPLACE"
 )
 
-// condition
+// CopyConditionInfo is copy condition
 type CopyConditionInfo struct {
 	ETAG         string
 	Date         string
@@ -25,7 +27,7 @@ type CopyConditionInfo struct {
 	LastUnModify string
 }
 
-//Copy Info
+//CopyInfo is Copy Info with source and dest
 type CopyInfo struct {
 	ObjectName string
 	BucketName string
@@ -36,7 +38,7 @@ type CopyInfo struct {
 	ACL        string
 }
 
-// XML
+// CopyResultInfo is return XML info
 type CopyResultInfo struct {
 	XMLName      xml.Name `xml:"CopyObjectResult"`
 	ETag         string   `xml:"ETag"`
@@ -95,18 +97,18 @@ func Copy(copyInfo *CopyInfo, copyConnInfo *CopyConditionInfo) (rstInfo *CopyRes
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	info := new(CopyResultInfo)
 	xml.Unmarshal(body, info)
 	rstInfo = info

@@ -10,19 +10,19 @@ import (
 	"path"
 )
 
-// Referer Listinfo
+//RefererListInfo is a  Referer  list
 type RefererListInfo struct {
 	Referer []string
 }
 
-// ReferCOnfigurationInfo
+// RefererConfigurationInfo is a XML continer
 type RefererConfigurationInfo struct {
 	XMLName           xml.Name        `xml:"RefererConfiguration"`
 	AllowEmptyReferer bool            `xml:"AllowEmptyReferer"`
 	RefererList       RefererListInfo `xml:"RefererList"`
 }
 
-//Set Referer of bucket
+// SetReferer Set Referer of bucket
 // @param name : name of bucket
 // @param location: locaton of bucket
 // @param enable : wheather allow white access
@@ -64,7 +64,7 @@ func SetReferer(name, location string, enable bool, urls []string) (ossapiError 
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

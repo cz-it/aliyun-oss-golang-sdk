@@ -30,6 +30,7 @@ const (
 	`
 )
 
+// CORSFlagInfo is cors flag
 type CORSFlagInfo struct {
 	Bucket   string
 	Location string
@@ -40,6 +41,7 @@ type CORSFlagInfo struct {
 }
 
 var (
+	// CORSFlag is flag
 	CORSFlag CORSFlagInfo
 )
 
@@ -50,6 +52,7 @@ func init() {
 	flag.StringVar(&CORSFlag.Object, "object", "", "obejct's name")
 }
 
+// CORS is cors cmd
 func CORS(args []string) (err error) {
 	if err = readCfg(); err != nil {
 		fmt.Println("You May Havn't Init . Use osscmd init First!")
@@ -61,19 +64,19 @@ func CORS(args []string) (err error) {
 		flag.CommandLine.Parse(args[3:])
 		var loc string
 		if BucketFlag.Location == "hangzhou" {
-			loc = bucket.L_Hangzhou
+			loc = bucket.LHangzhou
 		} else if BucketFlag.Location == "beijin" {
-			loc = bucket.L_Beijing
+			loc = bucket.LBeijing
 		} else if BucketFlag.Location == "shenzhen" {
-			loc = bucket.L_Shenzhen
+			loc = bucket.LShenzhen
 		} else if BucketFlag.Location == "hongkong" {
-			loc = bucket.L_HongKong
+			loc = bucket.LHongKong
 		} else if BucketFlag.Location == "qingdao" {
-			loc = bucket.L_Qingdao
+			loc = bucket.LQingdao
 		} else if BucketFlag.Location == "shanghai" {
-			loc = bucket.L_Shanghai
+			loc = bucket.LShanghai
 		} else {
-			loc = bucket.L_Hangzhou
+			loc = bucket.LHangzhou
 		}
 		info, e := cors.Query(BucketFlag.Bucket, loc)
 		if e != nil {
@@ -91,19 +94,19 @@ func CORS(args []string) (err error) {
 		flag.CommandLine.Parse(args[3:])
 		var loc string
 		if BucketFlag.Location == "hangzhou" {
-			loc = bucket.L_Hangzhou
+			loc = bucket.LHangzhou
 		} else if BucketFlag.Location == "beijin" {
-			loc = bucket.L_Beijing
+			loc = bucket.LBeijing
 		} else if BucketFlag.Location == "shenzhen" {
-			loc = bucket.L_Shenzhen
+			loc = bucket.LShenzhen
 		} else if BucketFlag.Location == "hongkong" {
-			loc = bucket.L_HongKong
+			loc = bucket.LHongKong
 		} else if BucketFlag.Location == "qingdao" {
-			loc = bucket.L_Qingdao
+			loc = bucket.LQingdao
 		} else if BucketFlag.Location == "shanghai" {
-			loc = bucket.L_Shanghai
+			loc = bucket.LShanghai
 		} else {
-			loc = bucket.L_Hangzhou
+			loc = bucket.LHangzhou
 		}
 		e := cors.Delete(BucketFlag.Bucket, loc)
 		if e != nil {
@@ -114,19 +117,19 @@ func CORS(args []string) (err error) {
 		flag.CommandLine.Parse(args[3:])
 		var loc string
 		if BucketFlag.Location == "hangzhou" {
-			loc = bucket.L_Hangzhou
+			loc = bucket.LHangzhou
 		} else if BucketFlag.Location == "beijin" {
-			loc = bucket.L_Beijing
+			loc = bucket.LBeijing
 		} else if BucketFlag.Location == "shenzhen" {
-			loc = bucket.L_Shenzhen
+			loc = bucket.LShenzhen
 		} else if BucketFlag.Location == "hongkong" {
-			loc = bucket.L_HongKong
+			loc = bucket.LHongKong
 		} else if BucketFlag.Location == "qingdao" {
-			loc = bucket.L_Qingdao
+			loc = bucket.LQingdao
 		} else if BucketFlag.Location == "shanghai" {
-			loc = bucket.L_Shanghai
+			loc = bucket.LShanghai
 		} else {
-			loc = bucket.L_Hangzhou
+			loc = bucket.LHangzhou
 		}
 		reqInfo := &cors.OptionReqInfo{
 			Origin:  CORSFlag.Origin,

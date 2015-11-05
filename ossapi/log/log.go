@@ -16,36 +16,44 @@ import (
 	"time"
 )
 
+// Level is log's level
 type Level int // loose enum type . maybe have some other define method
 const (
-	// content of emnu Level ,level of log
+	//LNULL is none
 	LNULL = iota
+	//LDEBUG is debug log
 	LDEBUG
+	// LINFO is info log
 	LINFO
+	//LWARNING is warning log
 	LWARNING
+	//LERROR is error log
 	LERROR
+	//LFATAL is fatal log
 	LFATAL
 )
 
 const (
-	MAX_LOG_FILE_SIZE = 5 * 1024 * 1024 // Default max log file size is 500M
+	maxLogSize = 5 * 1024 * 1024 // Default max log file size is 500M
 )
 
-type Outputer int
+type outputDevice int
 
 const (
-	OUT_STD = 1 << iota
-	OUT_FILE
+	stdoDeviceFlag = 1 << iota
+	fileDeviceFlag
 )
 
-var EOutput error = errors.New("Output is invalied!")
+// EOutput is output error
+var ErrOutput = errors.New("Output is invalied!")
 
+// Logger is log object
 type Logger struct {
-	level     Level
-	logDevice *FileDevice
-	errDevice *FileDevice
-	conDevice *ConsoleDevice
-	outputer  Outputer
+	level        Level
+	logDevice    *fileDevice
+	errDevice    *fileDevice
+	conDevice    *consoleDevice
+	outputDevice outputDevice
 
 	mtx       sync.Mutex
 	buf       []byte
@@ -66,18 +74,20 @@ func init() {
 	_logger.SetCallDepth(3)
 }
 
+//NewConsoleLogger create a Console Logger
 func NewConsoleLogger() (*Logger, error) {
 	var err error
-	logger := &Logger{level: LDEBUG, outputer: OUT_STD, callDepth: 3}
-	logger.conDevice, err = NewConsoleDevice()
+	logger := &Logger{level: LDEBUG, outputDevice: stdoDeviceFlag, callDepth: 3}
+	logger.conDevice, err = newConsoleDevice()
 	return logger, err
 }
 
+//NewFileLogger create a file logger
 func NewFileLogger(logPath, fileName string) (*Logger, error) {
 	var err error
-	logger := &Logger{level: LDEBUG, outputer: OUT_FILE, callDepth: 2}
+	logger := &Logger{level: LDEBUG, outputDevice: fileDeviceFlag, callDepth: 2}
 	logFileName := filepath.Join(logPath, fileName+".log")
-	logger.logDevice, err = NewFileDevice(logFileName)
+	logger.logDevice, err = newFileDevice(logFileName)
 	if err != nil {
 		return nil, err
 	}
@@ -89,17 +99,21 @@ func NewFileLogger(logPath, fileName string) (*Logger, error) {
 		return nil, err
 	}
 	*/
-	logger.errDevice, _ = NewFileDevice(errFileName)
+	logger.errDevice, _ = newFileDevice(errFileName)
 	return logger, nil
 }
 
+// SetCallDepth set call path
 func (l *Logger) SetCallDepth(d int) {
 	l.callDepth = d
 }
 
 func (l *Logger) getFileLine() string {
 	_, file, line, ok := runtime.Caller(l.callDepth)
-	if !ok { file = "???" ; line = 0 } // for coverall
+	if !ok {
+		file = "???"
+		line = 0
+	} // for coverall
 
 	return file + ":" + itoa(line, -1)
 }
@@ -110,8 +124,10 @@ func (l *Logger) getFileLine() string {
 * Knows the buffer has capacity.
  */
 func itoa(i int, wid int) string {
-	var u uint = uint(i)
-	if u == 0 && wid <= 1 { return "0" } // for coverall
+	var u = uint(i)
+	if u == 0 && wid <= 1 {
+		return "0"
+	} // for coverall
 
 	// Assemble decimal in reverse order.
 	var b [32]byte
@@ -156,7 +172,9 @@ func (l *Logger) output(level Level, prefix string, format string, v ...interfac
 		levelStr = "[ERROR]"
 	} else if level == LFATAL {
 		levelStr = "[FATAL]"
-	} else { levelStr = "[UNKNOWN LEVEL]" } // for coverall
+	} else {
+		levelStr = "[UNKNOWN LEVEL]"
+	} // for coverall
 
 	var msg string
 	if format == "" {
@@ -178,29 +196,32 @@ func (l *Logger) output(level Level, prefix string, format string, v ...interfac
 		l.buf = append(l.buf, '\n')
 	}
 
-	if l.outputer == OUT_STD {
-		_, err = l.conDevice.Write(l.buf)
-	} else if l.outputer == OUT_FILE {
+	if l.outputDevice == stdoDeviceFlag {
+		_, err = l.conDevice.write(l.buf)
+	} else if l.outputDevice == fileDeviceFlag {
 		if level <= LWARNING {
 			_, err = l.logDevice.Write(l.buf)
 		} else {
 			_, err = l.errDevice.Write(l.buf)
 		}
-	} else { err = EOutput } // for coverall
+	} else {
+		err = ErrOutput
+	} // for coverall
 	return
 }
 
+// SetMaxFileSize set max files size
 func (l *Logger) SetMaxFileSize(fileSize uint64) {
-	l.logDevice.SetFileSize(fileSize)
-	l.errDevice.SetFileSize(fileSize)
+	l.logDevice.setFileSize(fileSize)
+	l.errDevice.setFileSize(fileSize)
 }
 
+// SetLevel set log level
 func (l *Logger) SetLevel(level Level) {
 	l.level = level
 }
 
-/** Nothing to change */
-
+//Debug debug log
 func (l *Logger) Debug(format string, v ...interface{}) error {
 	if l.level > LDEBUG {
 		return nil
@@ -210,6 +231,7 @@ func (l *Logger) Debug(format string, v ...interface{}) error {
 	return err
 }
 
+// Info is info log
 func (l *Logger) Info(format string, v ...interface{}) error {
 	if l.level > LINFO {
 		return nil
@@ -219,6 +241,7 @@ func (l *Logger) Info(format string, v ...interface{}) error {
 	return err
 }
 
+// Warning is warning log
 func (l *Logger) Warning(format string, v ...interface{}) error {
 	if l.level > LWARNING {
 		return nil
@@ -235,6 +258,7 @@ func (l *Logger) Error(format string, v ...interface{}) error {
 	return err
 }
 
+// Fatal is fatal log
 func (l *Logger) Fatal(format string, v ...interface{}) error {
 	if l.level > LFATAL {
 		return nil
@@ -244,22 +268,27 @@ func (l *Logger) Fatal(format string, v ...interface{}) error {
 	return err
 }
 
+//DEBUG is golbal Debug log
 func DEBUG(format string, v ...interface{}) error {
 	return _logger.Debug(format, v...)
 }
 
+//INFO is global Info log
 func INFO(format string, v ...interface{}) error {
 	return _logger.Info(format, v...)
 }
 
+//WARNING is global warning log
 func WARNING(format string, v ...interface{}) error {
 	return _logger.Warning(format, v...)
 }
 
+// ERROR is global error log
 func ERROR(format string, v ...interface{}) error {
 	return _logger.Error(format, v...)
 }
 
+// FATAL is global fatal log
 func FATAL(format string, v ...interface{}) error {
 	return _logger.Fatal(format, v...)
 }

@@ -11,6 +11,7 @@ import (
 	"os"
 )
 
+// Flag is flaginfo
 var Flag FlagInfo
 
 const (
@@ -37,6 +38,7 @@ const (
 	`
 )
 
+//FlagInfo is flag
 type FlagInfo struct {
 	Version bool
 	ID      string
@@ -54,11 +56,13 @@ func init() {
 	flag.StringVar(&Flag.Secort, "s", "", " Access Key Secort")
 }
 
+// Usage is help info
 func Usage() {
 	fmt.Println(helpStr)
 	os.Exit(0)
 }
 
+// InitUsage is init
 func InitUsage() {
 	fmt.Println(initHelpStr)
 	os.Exit(0)

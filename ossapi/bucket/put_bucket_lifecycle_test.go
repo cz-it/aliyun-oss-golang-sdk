@@ -15,8 +15,8 @@ func TestSetBucketLifecycle(t *testing.T) {
 		t.Fail()
 	}
 	rules := []RuleInfo{RuleInfo{Prefix: "nimei", Status: LifecycleStatsEnable, Expiration: ExpirationDaysInfo{2}}}
-	if err := SetLifecycle("test-put-bucket3", L_Beijing, rules); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if err := SetLifecycle("test-put-bucket3", LBeijing, rules); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("SetBucketLiecycle Success")
 	}

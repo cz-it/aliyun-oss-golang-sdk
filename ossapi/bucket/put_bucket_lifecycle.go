@@ -16,17 +16,17 @@ const (
 	LifecycleStatsDisable = "Disabled"
 )
 
-// Days
+// ExpirationDaysInfo is the real Days
 type ExpirationDaysInfo struct {
 	Days uint
 }
 
-//Date
+// ExpirationDateInfo is the real Date
 type ExpirationDateInfo struct {
 	Date string
 }
 
-//Rule info
+// RuleInfo is Rule info
 type RuleInfo struct {
 	ID         string
 	Prefix     string
@@ -34,13 +34,13 @@ type RuleInfo struct {
 	Expiration ExpirationDaysInfo
 }
 
-// Lifecycle XML info
+// LifecycleConfiguration is  Lifecycle XML info
 type LifecycleConfiguration struct {
 	XMLName xml.Name `xml:"LifecycleConfiguration"`
 	Rule    []RuleInfo
 }
 
-// Set bucket's lifecycle
+// SetLifecycle  Set bucket's lifecycle
 // @param  name : name of bucket
 // @param location : location of bucket
 // @param rules : rules to set
@@ -73,7 +73,7 @@ func SetLifecycle(name, location string, rules []RuleInfo) (ossapiError *ossapi.
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

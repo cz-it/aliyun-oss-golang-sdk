@@ -9,7 +9,7 @@ import (
 	"path"
 )
 
-// Delete bucket
+// DeleteWebsite delete bucket's website infomation
 // @param name: bucket's name
 // @param location : bucket's location
 // @return : nil on Success else ossapi.Error
@@ -30,7 +30,7 @@ func DeleteWebsite(name, location string) (ossapiError *ossapi.Error) {
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

@@ -16,7 +16,7 @@ import (
 // @param location: location of buket
 // @return rstinfo : CORS rules
 // @rreturn ossapiError : nil on success
-func Query(bucketName, location string) (rstInfo []CORSRuleInfo, ossapiError *ossapi.Error) {
+func Query(bucketName, location string) (rstInfo []RuleInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName) + "/"
 	req := &ossapi.Request{
@@ -33,19 +33,19 @@ func Query(bucketName, location string) (rstInfo []CORSRuleInfo, ossapiError *os
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("strconv.Atoi(rsp.HttpRsp.Header Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	rstBody := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(rstBody)
-	info := new(CORSInfo)
+	rsp.HTTPRsp.Body.Read(rstBody)
+	info := new(Info)
 	err = xml.Unmarshal(rstBody, info)
 	if err != nil {
 		ossapi.Logger.Error("xml.Unmarshal(body, rstInfo)Error:%s", err.Error())

@@ -24,6 +24,7 @@ const (
 	configPathFile = ".osscmd/config.xml"
 )
 
+// ConfigInfo is configure
 type ConfigInfo struct {
 	XMLName         xml.Name `xml:"Config"`
 	AccessKeyID     string   `xml:"AccessKeyID"`

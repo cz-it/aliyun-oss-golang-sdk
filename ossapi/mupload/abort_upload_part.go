@@ -34,7 +34,7 @@ func Abort(objName, bucketName, location, uploadID string) (ossapiError *ossapi.
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		fmt.Println(ossapiError.ErrDetailMsg)
 		return

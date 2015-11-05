@@ -2,6 +2,7 @@
 * Author: CZ cz.theng@gmail.com
  */
 
+// Package log is a wraper for log
 package log
 
 import (
@@ -12,55 +13,55 @@ import (
 	"sync"
 )
 
-type Devicer interface {
+type devicer interface {
 	Write(buf []byte) (n int, err error)
 }
 
-type Device struct {
+type device struct {
 	fp  *os.File
 	mtx sync.Mutex
 }
 
-type ConsoleDevice struct {
-	Device
+type consoleDevice struct {
+	device
 }
 
-func NewConsoleDevice() (*ConsoleDevice, error) {
-	cd := new(ConsoleDevice)
+func newConsoleDevice() (*consoleDevice, error) {
+	cd := new(consoleDevice)
 	cd.fp = os.Stdout
 	return cd, nil
 }
 
-func (cd *ConsoleDevice) Write(buf []byte) (n int, err error) {
+func (cd *consoleDevice) write(buf []byte) (n int, err error) {
 	cd.mtx.Lock()
 	defer cd.mtx.Unlock()
 	n, err = cd.fp.Write(buf)
 	return
 }
 
-type FileDevice struct {
-	Device
+type fileDevice struct {
+	device
 	fileName string
 	fileSize uint64
 	logLen   uint64
 }
 
-func NewFileDevice(fileName string) (fd *FileDevice, err error) {
-	fd = new(FileDevice)
+func newFileDevice(fileName string) (fd *fileDevice, err error) {
+	fd = new(fileDevice)
 	fd.fileName = fileName
 	fd.fp, err = openFile(fd.fileName)
 	return fd, err
 }
 
-func (fd *FileDevice) SetFileSize(size uint64) {
+func (fd *fileDevice) setFileSize(size uint64) {
 	fd.fileSize = size
 }
 
-func (fd *FileDevice) SetFileName(fileName string) {
+func (fd *fileDevice) SetFileName(fileName string) {
 	fd.fileName = fileName
 }
 
-func (fd *FileDevice) Write(buf []byte) (n int, err error) {
+func (fd *fileDevice) Write(buf []byte) (n int, err error) {
 	fd.mtx.Lock()
 	defer fd.mtx.Unlock()
 	bufLen := uint64(len(buf))
@@ -68,35 +69,34 @@ func (fd *FileDevice) Write(buf []byte) (n int, err error) {
 		n, err = fd.fp.Write(buf)
 		fd.logLen += uint64(n)
 		return
-	} else {
-		remainBuf := buf[fd.fileSize-fd.logLen:]
-		/* for CoverAll 95%
-		n, err = fd.fp.Write(buf[:fd.fileSize-fd.logLen])
-		if err != nil {
-			return
-		}
-		*/
-		n, _ = fd.fp.Write(buf[:fd.fileSize-fd.logLen])
-		fd.fp.Sync()
-		fd.fp.Close()
-		/* for CoverAll 95%
-		fd.fp, err = openFile(fd.fileName)
-		if err != nil {
-			return
-		}
-		*/
-		fd.fp, _ = openFile(fd.fileName)
-		fd.logLen = 0
-		/* for Covarall 95%
-		n, err = fd.fp.Write(remainBuf)
-		if err != nil {
-			return
-		}
-		*/
-		n, _ = fd.fp.Write(remainBuf)
-		fd.logLen += uint64(n)
+	}
+	remainBuf := buf[fd.fileSize-fd.logLen:]
+	/* for CoverAll 95%
+	n, err = fd.fp.Write(buf[:fd.fileSize-fd.logLen])
+	if err != nil {
 		return
 	}
+	*/
+	n, _ = fd.fp.Write(buf[:fd.fileSize-fd.logLen])
+	fd.fp.Sync()
+	fd.fp.Close()
+	/* for CoverAll 95%
+	fd.fp, err = openFile(fd.fileName)
+	if err != nil {
+		return
+	}
+	*/
+	fd.fp, _ = openFile(fd.fileName)
+	fd.logLen = 0
+	/* for Covarall 95%
+	n, err = fd.fp.Write(remainBuf)
+	if err != nil {
+		return
+	}
+	*/
+	n, _ = fd.fp.Write(remainBuf)
+	fd.logLen += uint64(n)
+	return
 }
 
 func fileNotExist(filePath string) bool {

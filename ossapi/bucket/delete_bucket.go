@@ -29,7 +29,7 @@ func Delete(name, location string) (ossapiError *ossapi.Error) {
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

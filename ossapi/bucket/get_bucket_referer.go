@@ -24,7 +24,7 @@ type RefererConfigurationInfo struct {
 }
 */
 
-//Query Referer info of buckets
+// QueryReferer Query Referer info of buckets
 // @param name : name of bucket
 // @param location: location of bucket
 // @return info : referer info of bucket
@@ -46,18 +46,18 @@ func QueryReferer(name, location string) (info *RefererConfigurationInfo, ossapi
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	info = new(RefererConfigurationInfo)
 	err = xml.Unmarshal(body, info)
 	if err != nil {

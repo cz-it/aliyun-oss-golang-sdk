@@ -35,21 +35,19 @@ var (
 )
 
 const (
-	// GMT Format Date
-	DATE_FMT = "Mon, 02 Jan 2006 15:04:05 GMT"
+	// DateFmt is format date
+	DateFmt = "Mon, 02 Jan 2006 15:04:05 GMT"
 )
 
 // http client for http request
 var httpClient http.Client
 
-/**
-* Init ossapi with Access Key's ID and secret
-* @param ID : Access Key's ID
-* @param secret : Access Key's secret
- */
+// Init ossapi with Access Key's ID and secret
+// @param ID : Access Key's ID
+// @param secret : Access Key's secret
 func Init(ID string, secret string) error {
 	if "" == ID || "" == secret {
-		return EARG
+		return ErrARG
 	}
 	accessKeyID = ID
 	accessKeySecret = secret

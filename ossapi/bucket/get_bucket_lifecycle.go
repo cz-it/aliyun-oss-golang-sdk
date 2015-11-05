@@ -40,7 +40,7 @@ type LifecycleConfiguration struct {
 }
 */
 
-// Query bucket's life cycle
+// QueryLifecycle Query bucket's life cycle
 // @param name: name of bucket
 // @param location:location of name
 // @return infos : lifecycle info of buckets
@@ -62,18 +62,18 @@ func QueryLifecycle(name, location string) (infos []RuleInfo, ossapiError *ossap
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	info := new(LifecycleConfiguration)
 	err = xml.Unmarshal(body, info)
 	if err != nil {

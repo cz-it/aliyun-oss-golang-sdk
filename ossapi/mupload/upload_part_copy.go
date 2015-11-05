@@ -6,14 +6,13 @@ package mupload
 
 import (
 	"encoding/xml"
-	"fmt"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi"
 	"github.com/cz-it/aliyun-oss-golang-sdk/ossapi/object"
 	"path"
 	"strconv"
 )
 
-// copy part info
+//UploadPartCopyInfo is  copy part info
 type UploadPartCopyInfo struct {
 	ObjectName    string
 	BucketName    string
@@ -26,7 +25,7 @@ type UploadPartCopyInfo struct {
 	SrcRangeEnd   int
 }
 
-// resoponse info
+//UploadPartCopyRstInfo  is  resoponse info
 type UploadPartCopyRstInfo struct {
 	XMLName      xml.Name `xml:"CopyObjectResult"`
 	LastModified string   `xml:"LastModified"`
@@ -79,20 +78,18 @@ func Copy(partInfo *UploadPartCopyInfo, copyConnInfo *object.CopyConditionInfo) 
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	fmt.Println("rsp:", rsp.HttpRsp)
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
-	fmt.Println("rsp:body", string(body))
+	rsp.HTTPRsp.Body.Read(body)
 	rstInfo = new(UploadPartCopyRstInfo)
 	xml.Unmarshal(body, rstInfo)
 	return

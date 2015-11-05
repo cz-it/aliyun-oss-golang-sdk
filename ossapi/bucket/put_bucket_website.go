@@ -10,24 +10,24 @@ import (
 	"path"
 )
 
-//Index info
+// IndexInfo is Index info with suffix
 type IndexInfo struct {
 	Suffix string
 }
 
-// Key Info
+// KeyInfo is real key value
 type KeyInfo struct {
 	Key string
 }
 
-// Website info
+// WebsiteInfo is website info xml wraper
 type WebsiteInfo struct {
 	XMLName       xml.Name  `xml:"WebsiteConfiguration"`
 	IndexDocument IndexInfo `xml:"IndexDocument"`
 	ErrorDocument KeyInfo   `xml:"ErrorDocument"`
 }
 
-// Set bucket's website
+// SetWebsite  Set bucket's website
 // @param name: name of bucket
 // @param location: location of bucket
 // @param indexPage : index page
@@ -68,7 +68,7 @@ func SetWebsite(name, location, indexPage, errorPage string) (ossapiError *ossap
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

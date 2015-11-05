@@ -9,11 +9,12 @@ import (
 )
 
 const (
-	Major = "1"
-	Minor = "0"
-	Patch = "0"
+	major = "1"
+	minor = "0"
+	patch = "0"
 )
 
+// Version show OSSAPI's verison
 func Version() string {
-	return strings.Join([]string{Major, Minor, Patch}, ".")
+	return strings.Join([]string{major, minor, patch}, ".")
 }

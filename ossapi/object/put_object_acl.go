@@ -9,12 +9,11 @@ import (
 	"path"
 )
 
-// Set Object's ACL info
+// SetACL Set Object's ACL info
 // @param objName : name of object
 // @param bucketName : name of bucket
 // @param locaton : location of bucket
 // @retun ossapiError : nil on success
-
 func SetACL(objName, bucketName, location, permission string) (error *ossapi.Error) {
 	resource := path.Join("/", bucketName, objName)
 	host := bucketName + "." + location + ".aliyuncs.com"
@@ -34,7 +33,7 @@ func SetACL(objName, bucketName, location, permission string) (error *ossapi.Err
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		error = err.(*ossapi.Error)
 		return
 	}

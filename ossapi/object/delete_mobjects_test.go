@@ -19,8 +19,8 @@ func TestDeleteObjects(t *testing.T) {
 		Quiet:  false,
 		Object: []KeyInfo{KeyInfo{Key: "test"}, KeyInfo{Key: "test2"}},
 	}
-	if info, err := DeleteObjects("test-object-hz", bucket.L_Hangzhou, info); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if info, err := DeleteObjects("test-object-hz", bucket.LHangzhou, info); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("Delte Multiplie Objects Success!")
 		fmt.Println(info)

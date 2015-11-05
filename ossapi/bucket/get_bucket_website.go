@@ -26,7 +26,7 @@ type WebsiteInfo struct {
 }
 */
 
-//Query bucket's website info
+// QueryWebsite Query bucket's website info
 // @param name: name of bucket
 // @param location : location of bucket
 // @return info : website info of bucket
@@ -48,18 +48,18 @@ func QueryWebsite(name, location string) (info *WebsiteInfo, ossapiError *ossapi
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	info = new(WebsiteInfo)
 	err = xml.Unmarshal(body, info)
 	if err != nil {

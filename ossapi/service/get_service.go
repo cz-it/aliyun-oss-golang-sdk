@@ -14,25 +14,25 @@ import (
 	"strings"
 )
 
-// bucket info
+//Bucket is a Bucket object
 type Bucket struct {
 	Name         string
 	CreationDate string
 	Location     string
 }
 
-// buckets
+// Buckets is a Bucket list for xml
 type Buckets struct {
 	Bucket []Bucket
 }
 
-// owner info
+// Owner descript Owner information
 type Owner struct {
 	ID          string
 	DisplayName string
 }
 
-// buckets info return form xml
+//BucketsInfo descripton all buckets' information
 type BucketsInfo struct {
 	XMLName     xml.Name `xml:"ListAllMyBucketsResult"`
 	Prefix      string   `xml:"Prefix"`
@@ -44,10 +44,15 @@ type BucketsInfo struct {
 	Buckets     Buckets  `xml:"Buckets"`
 }
 
-// GetService will list bucket of a account
+// QueryBuckets will list bucket of a account
 // buckets with prefix will be return if prefix is not ""
 // marker mark the split for return
 // at moste maxKeys will return ,default is 100
+// @param prefix: bucket's prefix
+// @param marker : marker after it will be return
+// @param maxKeys : at most maxKeys will be return
+// @return  bucketsInfo : buckets' info
+// @return ossapiError : nil on success
 func QueryBuckets(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo, ossapiError *ossapi.Error) {
 	var args []string
 	path := "/"
@@ -77,24 +82,24 @@ func QueryBuckets(prefix, marker string, maxKeys int) (bucketsInfo *BucketsInfo,
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error(err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	bucketsInfo = new(BucketsInfo)
 	xml.Unmarshal(body, bucketsInfo)
 	return
 }
 
-// GetServiceDefault list all buckets with no prefix ,no marker and maxkeys to 100
+// QueryBucketsDefault list all buckets with no prefix ,no marker and maxkeys to 100
 func QueryBucketsDefault() (bucketsInfo *BucketsInfo, err *ossapi.Error) {
 	bucketsInfo, err = QueryBuckets("", "", 0)
 	return

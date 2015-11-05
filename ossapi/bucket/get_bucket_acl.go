@@ -11,25 +11,25 @@ import (
 	"strconv"
 )
 
-// OwnerInfo
+// OwnerInfo is owner info
 type OwnerInfo struct {
 	ID          string
 	DisplayName string
 }
 
-//AccessControlListInfo
+//AccessControlListInfo is ACL real value
 type AccessControlListInfo struct {
 	Grant string
 }
 
-// ACLInfo
+// ACLInfo is ACL XML wraper
 type ACLInfo struct {
 	XMLName           xml.Name `xml:"AccessControlPolicy"`
 	Owner             OwnerInfo
 	AccessControlList AccessControlListInfo
 }
 
-//Query bucket's ACL
+// QueryACL Query bucket's ACL
 // @param name: name of bucket
 // @param location: location of bucket
 // @return info: ACL info of bucket
@@ -51,18 +51,18 @@ func QueryACL(name, location string) (info *ACLInfo, ossapiError *ossapi.Error) 
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	info = new(ACLInfo)
 	xml.Unmarshal(body, info)
 	return

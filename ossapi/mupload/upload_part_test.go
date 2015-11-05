@@ -23,8 +23,8 @@ func TestUploadPart(t *testing.T) {
 		Encryption:         "AES256"}
 	var info *InitRstInfo
 	var err *ossapi.Error
-	if info, err = Init("a.c", "test-mupload", bucket.L_Hangzhou, initInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if info, err = Init("a.c", "test-mupload", bucket.LHangzhou, initInfo); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("Init Multiple Upload Success!")
 		fmt.Println(info)
@@ -37,14 +37,14 @@ func TestUploadPart(t *testing.T) {
 	partInfo := &UploadPartInfo{
 		ObjectName: "a.c",
 		BucketName: "test-mupload",
-		Location:   bucket.L_Hangzhou,
+		Location:   bucket.LHangzhou,
 		UploadID:   info.UploadId,
 		PartNumber: 1,
 		Data:       partData[:100*1024],
 		CntType:    "text/html"}
 
 	if info, err := Append(partInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("UploadPart Success!")
 		fmt.Println(info)

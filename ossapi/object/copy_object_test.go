@@ -18,18 +18,18 @@ func TestCopyObject(t *testing.T) {
 	copyInfo := &CopyInfo{
 		ObjectName: "test2.html",
 		BucketName: "test-object-hz",
-		Location:   bucket.L_Hangzhou,
+		Location:   bucket.LHangzhou,
 		Source:     "/test-object-hz/test"}
 
 	if info, err := Copy(copyInfo, nil); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("CopyObject Success")
 		fmt.Println(info)
 	}
 	conInfo := &CopyConditionInfo{}
 	if info, err := Copy(copyInfo, conInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("CopyObject Success")
 		fmt.Println(info)

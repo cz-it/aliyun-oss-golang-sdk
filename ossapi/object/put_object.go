@@ -9,8 +9,8 @@ import (
 	"path"
 )
 
-// Object info
-type ObjectInfo struct {
+// Info is object's info
+type Info struct {
 	CacheControl       string
 	ContentDisposition string
 	ContentEncoding    string
@@ -27,7 +27,7 @@ type ObjectInfo struct {
 // @param locaton : location of bucket
 // @param objInfo : object's info
 // @retun ossapiError : nil on success
-func Create(objName, bucketName, location string, objInfo *ObjectInfo) (ossapiError *ossapi.Error) {
+func Create(objName, bucketName, location string, objInfo *Info) (ossapiError *ossapi.Error) {
 	if objInfo == nil {
 		ossapiError = ossapi.ArgError
 		return
@@ -62,7 +62,7 @@ func Create(objName, bucketName, location string, objInfo *ObjectInfo) (ossapiEr
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

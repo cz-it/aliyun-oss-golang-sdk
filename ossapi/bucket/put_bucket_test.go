@@ -15,12 +15,12 @@ func TestCreate(t *testing.T) {
 		t.Fail()
 	}
 	if err := CreateDefault("test-put-bucket2"); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		fmt.Println("Create Default Success!")
 	}
-	if err := Create("test-put-bucket3", L_Beijing, P_Private); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if err := Create("test-put-bucket3", LBeijing, PPrivate); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		fmt.Println("Create Success")
 	}

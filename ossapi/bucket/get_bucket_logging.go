@@ -19,13 +19,13 @@ type LoggingInfo struct {
 }
 */
 
-//Loggingstatus
+// LoggingStatus is logging status struct
 type LoggingStatus struct {
 	XMLName        xml.Name `xml:"BucketLoggingStatus"`
 	LoggingEnabled LoggingInfo
 }
 
-//Query bucket's Logging info
+// QueryLogging Query bucket's Logging info
 //@param name: name of bucket
 //@param location: location of bucket
 //@return info : Logging info of bucket
@@ -47,18 +47,18 @@ func QueryLogging(name, location string) (info *LoggingInfo, ossapiError *ossapi
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	status := new(LoggingStatus)
 	err = xml.Unmarshal(body, status)
 	if err != nil {

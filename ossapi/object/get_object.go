@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-//Response info
+//RspObjInfo is Response info
 type RspObjInfo struct {
 	CntType      string
 	LastModified string
@@ -21,7 +21,7 @@ type RspObjInfo struct {
 	Data         []byte
 }
 
-// Override info
+// OverrideInfo is  Override option
 type OverrideInfo struct {
 	Type         string
 	Language     string
@@ -31,7 +31,7 @@ type OverrideInfo struct {
 	Encoding     string
 }
 
-// condition info
+//ConditionInfo is  condition info
 type ConditionInfo struct {
 	Range        string
 	LastModify   string
@@ -107,18 +107,18 @@ func Query(objName, bucketName, location string, condInfo *ConditionInfo, overri
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	data = body
 	return
 }

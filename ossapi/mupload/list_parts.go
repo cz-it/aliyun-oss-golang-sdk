@@ -12,14 +12,14 @@ import (
 	"strings"
 )
 
-// Parts info
+//PartsFilterInfo is  Parts info
 type PartsFilterInfo struct {
 	MaxParts         int
 	PartNumberMarker int
 	Encoding         string
 }
 
-// Parts list
+// PartListInfo is  Parts list
 type PartListInfo struct {
 	PartNumber   int
 	LastModified string
@@ -27,19 +27,19 @@ type PartListInfo struct {
 	Size         uint64
 }
 
-// Return Response
+//PartsResultInfo is  Return Response
 type PartsResultInfo struct {
 	XMLName              xml.Name `xml:"ListPartsResult"`
 	Bucket               string   `xml:"Bucket"`
 	Key                  string   `xml:"Key"`
-	UploadId             string   `xml:"UploadId"`
+	UploadId             string   `xml:"UploadId"` // have to be Id golint
 	NextPartNumberMarker string   `xml:"NextPartNumberMarker"`
 	MaxParts             int      `xml:"MaxParts"`
 	IsTruncated          bool     `xml:"IsTruncated"`
 	Part                 []PartListInfo
 }
 
-// Qeury uploaded parts info
+// QueryParts Qeury uploaded parts info
 // @param objName: object's Name
 // @param bucketName : bucket's name
 // @param location: bucket's location
@@ -47,7 +47,6 @@ type PartsResultInfo struct {
 // @param filter: filter to query
 // @return rstInfo: return parts
 // @reurn ossapiError : nil on success
-
 func QueryParts(objName, bucketName, location string, uploadID string, filter *PartsFilterInfo) (rstInfo *PartsResultInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName, objName)
@@ -86,18 +85,18 @@ func QueryParts(objName, bucketName, location string, uploadID string, filter *P
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	rstBody := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(rstBody)
+	rsp.HTTPRsp.Body.Read(rstBody)
 	rstInfo = new(PartsResultInfo)
 	err = xml.Unmarshal(rstBody, rstInfo)
 	if err != nil {

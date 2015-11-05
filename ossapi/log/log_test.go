@@ -12,12 +12,12 @@ import (
 func TestLog(t *testing.T) {
 	l, err := NewFileLogger(".ossapilog", "ossapi")
 	if err != nil {
-		fmt.Errorf("Create Logger Error\n")
+		fmt.Errorf("create Logger Error\n")
 		return
 	}
 	l.SetMaxFileSize(10000) //100MB
 	l.SetLevel(LDEBUG)
-	l.Error("ErrorErrorError")
+	l.Error("errorErrorError")
 	l.Debug("Debug:int a is %d", 10)
 	l.Fatal("fatal")
 	l.Info("Info")
@@ -25,7 +25,7 @@ func TestLog(t *testing.T) {
 	l.Warning("Warning")
 	l.Info("", err)
 	l.SetLevel(LFATAL)
-	l.Error("Error")
+	l.Error("error")
 	l.Debug("Debug:int a is %d", 10)
 	l.Fatal("fatal")
 	l.Info("Info")
@@ -42,7 +42,7 @@ func TestLog(t *testing.T) {
 func TestConsoleLog(t *testing.T) {
 	l, err := NewConsoleLogger()
 	if err != nil {
-		fmt.Errorf("Create Logger Error\n")
+		fmt.Errorf("create Logger Error\n")
 		return
 	}
 	l.Info("aa")
@@ -52,7 +52,7 @@ func TestConsoleLog(t *testing.T) {
 func TestLogFileLog_2(t *testing.T) {
 	l, err := NewFileLogger("/dev/a", "txt")
 	if err != nil {
-		fmt.Errorf("Create Logger Error\n")
+		fmt.Errorf("create Logger Error\n")
 		return
 	}
 	l.SetCallDepth(1024)
@@ -63,7 +63,7 @@ func TestLogFileLog_2(t *testing.T) {
 func TestLogSizeFile(t *testing.T) {
 	l, err := NewFileLogger(".log", "ossapi")
 	if err != nil {
-		fmt.Errorf("Create Logger Error\n")
+		fmt.Errorf("create Logger Error\n")
 		return
 	}
 	l.SetMaxFileSize(200) //100MB

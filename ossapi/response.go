@@ -11,7 +11,7 @@ import (
 //Response to Request
 type Response struct {
 	Result  error
-	HttpRsp *http.Response
+	HTTPRsp *http.Response
 }
 
 // Tag Info for a Response

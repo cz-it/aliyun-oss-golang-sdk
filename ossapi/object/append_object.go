@@ -27,19 +27,19 @@ type ObjectInfo struct {
 }
 */
 
-// Append Info
+//AppendObjInfo is  Append Info
 type AppendObjInfo struct {
-	ObjectInfo
+	Info
 	Position uint64
 }
 
-// Resopnse Info
+// AppendObjRspInfo is  Resopnse Info
 type AppendObjRspInfo struct {
 	Possition uint64
 	crc64     uint64
 }
 
-// Create a Appendable object
+// Append  Create a Appendable object
 // @param objName : name of object
 // @param bucketName : name of bucket
 // @param locaton : location of bucket
@@ -82,12 +82,12 @@ func Append(objName, bucketName, location string, objInfo *AppendObjInfo) (rstIn
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	pos, _ := strconv.Atoi(rsp.HttpRsp.Header["X-Oss-Next-Append-Position"][0])
-	crc, _ := strconv.Atoi(rsp.HttpRsp.Header["X-Oss-Hash-Crc64ecma"][0])
+	pos, _ := strconv.Atoi(rsp.HTTPRsp.Header["X-Oss-Next-Append-Position"][0])
+	crc, _ := strconv.Atoi(rsp.HTTPRsp.Header["X-Oss-Hash-Crc64ecma"][0])
 	rstInfo = &AppendObjRspInfo{
 		Possition: uint64(pos),
 		crc64:     uint64(crc)}

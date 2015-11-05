@@ -23,8 +23,8 @@ func TestAbortUploadPart(t *testing.T) {
 		Encryption:         "AES256"}
 	var info *InitRstInfo
 	var err *ossapi.Error
-	if info, err = Init("a.c", "test-mupload", bucket.L_Hangzhou, initInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if info, err = Init("a.c", "test-mupload", bucket.LHangzhou, initInfo); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("Init Multiple Upload Success!")
 		fmt.Println(info)
@@ -37,7 +37,7 @@ func TestAbortUploadPart(t *testing.T) {
 	partInfo := &UploadPartInfo{
 		ObjectName: "app.py",
 		BucketName: "test-mupload",
-		Location:   bucket.L_Hangzhou,
+		Location:   bucket.LHangzhou,
 		UploadID:   info.UploadId,
 		PartNumber: 1,
 		Data:       partData[:100*1024],
@@ -45,15 +45,15 @@ func TestAbortUploadPart(t *testing.T) {
 
 	var i1 PartInfo
 	if info, err := Append(partInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		i1.ETag = info.Etag
 		i1.PartNumber = 1
 		t.Log("UploadPart Success!")
 	}
 
-	if err := Abort("app.py", "test-mupload", bucket.L_Hangzhou, info.UploadId); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if err := Abort("app.py", "test-mupload", bucket.LHangzhou, info.UploadId); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log(" AbortUploadPart Success!")
 	}

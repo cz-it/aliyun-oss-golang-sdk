@@ -11,7 +11,7 @@ import (
 	"strconv"
 )
 
-// init info
+//InitInfo  is  init info
 type InitInfo struct {
 	CacheControl       string
 	ContentDisposition string
@@ -20,12 +20,12 @@ type InitInfo struct {
 	Encryption         string
 }
 
-// return response
+// InitRstInfo is  return response
 type InitRstInfo struct {
 	XMLName  xml.Name `xml:"InitiateMultipartUploadResult"`
 	Bucket   string   `xml:"Bucket"`
 	Key      string   `xml:"Key"`
-	UploadId string   `xml:"UploadId"`
+	UploadId string   `xml:"UploadId"` // have to do this golint
 }
 
 // Init a uploading context
@@ -34,7 +34,6 @@ type InitRstInfo struct {
 // @param location: bucket's location
 // @return rstInfo : uploading context info
 // @reurn ossapiError : nil on success
-
 func Init(objName, bucketName, location string, initInfo *InitInfo) (rstInfo *InitRstInfo, ossapiError *ossapi.Error) {
 	resource := path.Join("/", bucketName, objName)
 	host := bucketName + "." + location + ".aliyuncs.com"
@@ -62,18 +61,18 @@ func Init(objName, bucketName, location string, initInfo *InitInfo) (rstInfo *In
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	rstInfo = new(InitRstInfo)
 	err = xml.Unmarshal(body, rstInfo)
 	if err != nil {

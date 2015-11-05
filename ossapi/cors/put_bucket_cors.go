@@ -10,8 +10,8 @@ import (
 	"path"
 )
 
-// rules
-type CORSRuleInfo struct {
+//RuleInfo is CORS rules
+type RuleInfo struct {
 	AllowedOrigin []string
 	AllowedMethod []string
 	AllowedHeader []string
@@ -19,20 +19,20 @@ type CORSRuleInfo struct {
 	MaxAgeSeconds uint64
 }
 
-// XML
-type CORSInfo struct {
+// Info is  XML wraper
+type Info struct {
 	XMLName  xml.Name `xml:"CORSConfiguration"`
-	CORSRule []CORSRuleInfo
+	CORSRule []RuleInfo
 }
 
-// Creat a CORS rule
+// Create Create a CORS rule
 // @param bucketName : name of bucket
 // @param location : bucket's loction
 // @param corsInfo : cors rules
 // @return ossapiError : nil on success
-func Create(bucketName, location string, corsInfo []CORSRuleInfo) (ossapiError *ossapi.Error) {
+func Create(bucketName, location string, corsInfo []RuleInfo) (ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
-	info := &CORSInfo{CORSRule: corsInfo}
+	info := &Info{CORSRule: corsInfo}
 	body, err := xml.Marshal(info)
 	if err != nil {
 		ossapi.Logger.Error("xml.Marshal(cfg) Error:%s", err.Error())
@@ -58,7 +58,7 @@ func Create(bucketName, location string, corsInfo []CORSRuleInfo) (ossapiError *
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

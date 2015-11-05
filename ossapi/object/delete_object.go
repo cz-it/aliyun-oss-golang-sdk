@@ -9,7 +9,7 @@ import (
 	"path"
 )
 
-// Delte an ojbect
+// Delete  Delete an ojbect
 // @param objName : name of object
 // @param bucketName : name of bucket
 // @param locaton : location of bucket
@@ -30,7 +30,7 @@ func Delete(objName, bucketName, location string) (ossapiError *ossapi.Error) {
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

@@ -9,7 +9,7 @@ import (
 	"path"
 )
 
-// Set bucket's ACL info
+// SetACL  Set bucket's ACL info
 // @param name : name of bucket
 // @param permission : permisson to set
 // @return ossapiError : nil on success
@@ -32,11 +32,11 @@ func SetACL(name, location, permission string) (error *ossapi.Error) {
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		error = err.(*ossapi.Error)
 		return
 	}
 	b := make([]byte, 1024)
-	rsp.HttpRsp.Body.Read(b)
+	rsp.HTTPRsp.Body.Read(b)
 	return
 }

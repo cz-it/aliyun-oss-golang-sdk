@@ -10,24 +10,24 @@ import (
 	"path"
 )
 
-//Logging info
+// LoggingInfo is Logging info
 type LoggingInfo struct {
 	TargetBucket string
 	TargetPrefix string
 }
 
-// Open Loggign info
+// OpenLoggingInfo is  Open Loggign info
 type OpenLoggingInfo struct {
 	XMLName        xml.Name    `xml:"BucketLoggingStatus"`
 	LoggingEnabled LoggingInfo `xml:"LoggingEnabled"`
 }
 
-// Close Logginginfo
+// CloseLoggingInfo is  Close Logginginfo
 type CloseLoggingInfo struct {
 	XMLName xml.Name `xml:"BucketLoggingStatus"`
 }
 
-// Open bucket's logging
+// OpenLogging  Open bucket's logging
 // @param name: name of bucket
 // @param locaton: location of bucket
 // @param targetBucket: target bucket to store log
@@ -64,14 +64,14 @@ func OpenLogging(name, location, targetBucket, targetPrefix string) (ossapiError
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
 	return
 }
 
-// Open bucket's logging
+// CloseLogging Close bucket's logging
 // @param name: name of bucket
 // @param locaton: location of bucket
 // @return ossapiError: nil on success
@@ -102,7 +102,7 @@ func CloseLogging(name, location string) (ossapiError *ossapi.Error) {
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

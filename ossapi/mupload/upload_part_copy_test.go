@@ -23,8 +23,8 @@ func TestUploadPartCopy(t *testing.T) {
 		Encryption:         "AES256"}
 	var info *InitRstInfo
 	var err *ossapi.Error
-	if info, err = Init("a.c", "test-mupload", bucket.L_Hangzhou, initInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if info, err = Init("a.c", "test-mupload", bucket.LHangzhou, initInfo); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("Init Multiple Upload Success!")
 		fmt.Println(info)
@@ -37,7 +37,7 @@ func TestUploadPartCopy(t *testing.T) {
 	partInfo := &UploadPartCopyInfo{
 		ObjectName:    "a.cpp",
 		BucketName:    "test-mupload",
-		Location:      bucket.L_Hangzhou,
+		Location:      bucket.LHangzhou,
 		UploadID:      info.UploadId,
 		PartNumber:    1,
 		SrcObjectName: "a.c",
@@ -47,7 +47,7 @@ func TestUploadPartCopy(t *testing.T) {
 	}
 
 	if copyInfo, err := Copy(partInfo, nil); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("UploadPartCopy Success!")
 		fmt.Println(copyInfo)

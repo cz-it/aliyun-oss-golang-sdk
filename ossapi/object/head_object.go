@@ -10,8 +10,8 @@ import (
 	"strconv"
 )
 
-// Brief Info
-type ObjectBriefInfo struct {
+// BriefInfo is  Brief Info
+type BriefInfo struct {
 	ObjectType  string
 	Type        string
 	LastModifed string
@@ -19,7 +19,7 @@ type ObjectBriefInfo struct {
 	Length      uint64
 }
 
-// Conndtition info
+// BriefConnInfo is Conndtition info
 type BriefConnInfo struct {
 	ModifiedSince   string
 	UnmodifiedSince string
@@ -27,14 +27,14 @@ type BriefConnInfo struct {
 	NotMatchEtag    string
 }
 
-// Query object's meta info
+// QueryMeta  Query object's meta info
 // @param objName : name of object
 // @param bucketName : name of bucket
 // @param locaton : location of bucket
 // @param info: conndtion to controll return
 // @return briefInfo : breif info of object
 // @retun ossapiError : nil on success
-func QueryMeta(objName, bucketName, location string, info *BriefConnInfo) (briefInfo *ObjectBriefInfo, ossapiError *ossapi.Error) {
+func QueryMeta(objName, bucketName, location string, info *BriefConnInfo) (briefInfo *BriefInfo, ossapiError *ossapi.Error) {
 	resource := path.Join("/", bucketName, objName)
 	host := bucketName + "." + location + ".aliyuncs.com"
 	header := make(map[string]string)
@@ -67,19 +67,19 @@ func QueryMeta(objName, bucketName, location string, info *BriefConnInfo) (brief
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	length, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	length, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		length = 0
 	}
 
-	briefInfo = &ObjectBriefInfo{ObjectType: rsp.HttpRsp.Header["X-Oss-Object-Type"][0],
-		Type:        rsp.HttpRsp.Header["Content-Type"][0],
-		LastModifed: rsp.HttpRsp.Header["Last-Modified"][0],
-		ETag:        rsp.HttpRsp.Header["Etag"][0],
+	briefInfo = &BriefInfo{ObjectType: rsp.HTTPRsp.Header["X-Oss-Object-Type"][0],
+		Type:        rsp.HTTPRsp.Header["Content-Type"][0],
+		LastModifed: rsp.HTTPRsp.Header["Last-Modified"][0],
+		ETag:        rsp.HTTPRsp.Header["Etag"][0],
 		Length:      uint64(length),
 	}
 	return

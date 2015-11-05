@@ -21,8 +21,8 @@ func TestInit(t *testing.T) {
 		ContentEncoding:    "utf-8",
 		Expires:            "Fri, 28 Feb 2012 05:38:42 GMT",
 		Encryption:         "AES256"}
-	if info, err := Init("a.c", "test-mupload", bucket.L_Hangzhou, initInfo); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+	if info, err := Init("a.c", "test-mupload", bucket.LHangzhou, initInfo); err != nil {
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("Init Multiple Upload Success!")
 		fmt.Println(info)

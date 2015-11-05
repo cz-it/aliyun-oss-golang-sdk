@@ -10,12 +10,12 @@ import (
 	"strconv"
 )
 
-// Return Etag
+//UploadPartRstInfo  Return Etag
 type UploadPartRstInfo struct {
 	Etag string
 }
 
-// upload part info
+//UploadPartInfo  upload part info
 type UploadPartInfo struct {
 	ObjectName string
 	BucketName string
@@ -52,11 +52,11 @@ func Append(partInfo *UploadPartInfo) (rstInfo *UploadPartRstInfo, ossapiError *
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
 	rstInfo = new(UploadPartRstInfo)
-	rstInfo.Etag = rsp.HttpRsp.Header["Etag"][0]
+	rstInfo.Etag = rsp.HTTPRsp.Header["Etag"][0]
 	return
 }

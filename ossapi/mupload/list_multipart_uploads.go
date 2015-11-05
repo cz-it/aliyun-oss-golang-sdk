@@ -12,6 +12,7 @@ import (
 	"strings"
 )
 
+// FilterInfo is filter
 type FilterInfo struct {
 	Delimiter      string
 	MaxUploads     int
@@ -21,12 +22,14 @@ type FilterInfo struct {
 	Encoding       string
 }
 
+// UploadInfo is upload info
 type UploadInfo struct {
 	Key       string
 	UploadId  string
 	Initiated string
 }
 
+//MultipartUploadsResultInfo is result info
 type MultipartUploadsResultInfo struct {
 	XMLName            xml.Name `xml:"ListMultipartUploadsResult"`
 	Bucket             string   `xml:"Bucket"`
@@ -41,6 +44,7 @@ type MultipartUploadsResultInfo struct {
 	Upload             []UploadInfo
 }
 
+//QueryObjects query mutli object :w
 func QueryObjects(bucketName, location string, filter *FilterInfo) (rstInfo *MultipartUploadsResultInfo, ossapiError *ossapi.Error) {
 	host := bucketName + "." + location + ".aliyuncs.com"
 	resource := path.Join("/", bucketName)
@@ -85,18 +89,18 @@ func QueryObjects(bucketName, location string, filter *FilterInfo) (rstInfo *Mul
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	rstBody := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(rstBody)
+	rsp.HTTPRsp.Body.Read(rstBody)
 	rstInfo = new(MultipartUploadsResultInfo)
 	err = xml.Unmarshal(rstBody, rstInfo)
 	if err != nil {

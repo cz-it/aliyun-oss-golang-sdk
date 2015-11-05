@@ -14,7 +14,7 @@ func TestGetBucketLocation(t *testing.T) {
 		t.Fail()
 	}
 	if info, err := QueryLocation("test-put-bucket2"); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		t.Log("GetBucketLocation Success")
 		fmt.Println(info)

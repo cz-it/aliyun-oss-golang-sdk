@@ -9,7 +9,7 @@ import (
 	"path"
 )
 
-// Delte Bucket's Lifecycle.
+// DeleteLifecycle delete Bucket's Lifecycle.
 // All lifecycle rules will be delete
 // @param name : bucket's Name
 // @param location: bucket's Location
@@ -31,7 +31,7 @@ func DeleteLifecycle(name, location string) (ossapiError *ossapi.Error) {
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}

@@ -29,7 +29,8 @@ type ACLInfo struct {
 	AccessControlList AccessControlListInfo
 }
 */
-// Query bucket's ACL info
+
+// QueryACL Query bucket's ACL info
 // @param objName : name of object
 // @param bucketName : name of bucket
 // @param locaton : location of bucket
@@ -52,18 +53,18 @@ func QueryACL(objName, bucketName, location string) (info *bucket.ACLInfo, ossap
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
-	bodyLen, err := strconv.Atoi(rsp.HttpRsp.Header["Content-Length"][0])
+	bodyLen, err := strconv.Atoi(rsp.HTTPRsp.Header["Content-Length"][0])
 	if err != nil {
 		ossapi.Logger.Error("GetService's Send Error:%s", err.Error())
 		ossapiError = ossapi.OSSAPIError
 		return
 	}
 	body := make([]byte, bodyLen)
-	rsp.HttpRsp.Body.Read(body)
+	rsp.HTTPRsp.Body.Read(body)
 	info = new(bucket.ACLInfo)
 	xml.Unmarshal(body, info)
 	return

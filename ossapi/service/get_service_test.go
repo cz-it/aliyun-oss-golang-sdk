@@ -15,7 +15,7 @@ func TestGetService(t *testing.T) {
 		t.Fail()
 	}
 	if buckets, err := QueryBucketsDefault(); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		fmt.Println(buckets)
 		t.Log("[SUCC]:GetService")
@@ -23,7 +23,7 @@ func TestGetService(t *testing.T) {
 
 	fmt.Println("+++++++++++++++Get Service With+++++++++++")
 	if buckets, err := QueryBuckets("aa", "b&afds=safsd?asfsab", 10); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		fmt.Println(buckets)
 		t.Log("[SUCC]:GetService")
@@ -34,7 +34,7 @@ func TestGetService(t *testing.T) {
 		t.Fail()
 	}
 	if buckets, err := QueryBucketsDefault(); err != nil {
-		fmt.Println(err.ErrNo, err.HttpStatus, err.ErrMsg, err.ErrDetailMsg)
+		fmt.Println(err.ErrNo, err.HTTPStatus, err.ErrMsg, err.ErrDetailMsg)
 	} else {
 		fmt.Println(buckets)
 		t.Log("[SUCC]:GetService")

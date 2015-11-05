@@ -10,14 +10,14 @@ import (
 	"strconv"
 )
 
-// Reqinfo
+// OptionReqInfo is Reqinfo
 type OptionReqInfo struct {
 	Origin  string
 	Method  string
 	Headers string
 }
 
-// Resoponse info
+// OptionRspInfo is  Resoponse info
 type OptionRspInfo struct {
 	AllowOrigin   string
 	AllowMethods  string
@@ -26,7 +26,7 @@ type OptionRspInfo struct {
 	MaxAge        uint64
 }
 
-// Query CORS permission of bucket
+// Option  Query CORS permission of bucket
 // @param objName : object to access
 // @param bucketName: bucket to access
 // @param location: bucket's location
@@ -56,16 +56,16 @@ func Option(objName, bucketName, location string, optionInfo *OptionReqInfo) (rs
 			return
 		}
 	}
-	if rsp.Result != ossapi.ESUCC {
+	if rsp.Result != ossapi.ErrSUCC {
 		ossapiError = err.(*ossapi.Error)
 		return
 	}
 	rstInfo = new(OptionRspInfo)
-	rstInfo.AllowOrigin = rsp.HttpRsp.Header["Access-Control-Allow-Origin"][0]
-	rstInfo.AllowMethods = rsp.HttpRsp.Header["Access-Control-Allow-Methods"][0]
-	rstInfo.ExposeHeaders = rsp.HttpRsp.Header["Access-Control-Expose-Headers"][0]
-	rstInfo.AllowHeaders = rsp.HttpRsp.Header["Access-Control-Allow-Headers"][0]
-	age, _ := strconv.Atoi(rsp.HttpRsp.Header["Access-Control-Max-Age"][0])
+	rstInfo.AllowOrigin = rsp.HTTPRsp.Header["Access-Control-Allow-Origin"][0]
+	rstInfo.AllowMethods = rsp.HTTPRsp.Header["Access-Control-Allow-Methods"][0]
+	rstInfo.ExposeHeaders = rsp.HTTPRsp.Header["Access-Control-Expose-Headers"][0]
+	rstInfo.AllowHeaders = rsp.HTTPRsp.Header["Access-Control-Allow-Headers"][0]
+	age, _ := strconv.Atoi(rsp.HTTPRsp.Header["Access-Control-Max-Age"][0])
 	rstInfo.MaxAge = uint64(age)
 	return
 }
