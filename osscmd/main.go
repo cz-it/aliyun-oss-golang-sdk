@@ -7,11 +7,21 @@ package main
 import (
 	"encoding/xml"
 	"os"
+	"os/user"
+	"path"
 	"path/filepath"
 )
 
+func init() {
+	usr, err := user.Current()
+	if err != nil {
+		return
+	}
+	configPath = path.Join(usr.HomeDir, configPathFile)
+}
+
 const (
-	configPath = "./.osscmd/config.xml"
+	configPathFile = ".osscmd/config.xml"
 )
 
 type ConfigInfo struct {
@@ -21,6 +31,7 @@ type ConfigInfo struct {
 }
 
 var (
+	configPath      string
 	accessKeyID     string
 	accessKeySecret string
 )

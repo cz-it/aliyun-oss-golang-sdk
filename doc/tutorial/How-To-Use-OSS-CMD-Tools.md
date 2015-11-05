@@ -1,10 +1,42 @@
 #How To Use OSS CMD Tools
+OSS CMD tool is a command tool to help test OSSAPI. 
+Use golang's get command can get it .
 
+	go get github.com/cz-it/aliyun-oss-golang-sdk/osscmd
+Use "osscmd -v" to test if install successfuly.
 
-## 1.Buckets
+This tool has two layer option like git ,such as `git commit -m "commit"` .Use OSSCMD `osscmd init -i YOUR_ACCESS_KEY_ID` .Here init is the first layer option and -i is the second.
 
+## 1.Init With Your ID And Secort
+To use OSS CMD tool .First you should invoke init command .This will store your Access Key ID and Access Key Secort to ~/.osscmd/config.xml.Then you can use other commands without  Access Key ID and Access Key Secort.
+
+	./osscmd init -i v8P430U3UcILPA -s EB9v8yL2aM07YOgtO1BdfrXtdxa1
+	[SUCC]: Init Success!
+Then cat config file like this:
+
+	cat ~/.osscmd/config.xml
+	<Config>
+		<AccessKeyID>v8P430U3UcILPA</AccessKeyID>
+		<AccessKeySecret>EB9v8yL2aM07YOgtO1BdfrXtdxa1</AccessKeySecret>
+	</Config>	
+After this , you have successfull init OSSCMD.
+## 2.Buckets
+`bucket` is the first option to do things with bucket.
+
+### Query All Your Buckets
+
+	./osscmd bucket -l
+	Owner: 1415982622007927
+		Bucket[0]:{test-cors 2015-10-27T17:38:40.000Z oss-cn-hangzhou}
+		Bucket[1]:{test-mupload 2015-10-26T03:01:30.000Z oss-cn-hangzhou}
+		Bucket[2]:{test-object-hz 2015-10-24T08:17:21.000Z oss-cn-hangzhou}
+		
+-l option will list all your buckets. Every one with a Name/Create Time And Location.
 ### Create Bucket
-
+	./osscmd bucket -c -b testosscmd2  -a shenzhen
+	Create Bucket testosscmd2 Success !
+	
+-c option will create a bucket named -b on location -a . Location now have shenzhen/beijin/shanghai/hongkong and qingdao which mean literal city's name.	
 ###Set Bucket's Attributes
 osscmd has subcommand bucket and option -s to set bucket's attributes. 
 
@@ -145,7 +177,9 @@ If bucket has config logging , it will return with Target Bucket name and Target
 	
 --lifecycle option indicate to query bucket's lifecycle info .If bucket has no lifecycle , it return a NoSuchLifecycle Error . If bucket has lifecycles , it show evey rules.
 	
-##2.Object
+##3.Object
+
+`objcet` is a first layer option which do things with object.
 ###Create Object
 
 	./osscmd object -n -b testossscmd -a shenzhen --file ./main.go  --encoding utf-8 --expire "Fri, 28 Feb 2016 05:38:42 GMT" -p RO --type "text/html"
@@ -210,7 +244,9 @@ Set Ojbect permission to RO(Pubic ReadOnly) , RW(Public Write And Read) and PT(P
 	
 Query object's ACL info . --acl option should be given. Object's Owner and permission info will return.
 	
-##3.MultiUpload
+##4.MultiUpload
+`mupload` is a first layer optin which do things with multiupload .
+
 ### Init a MulitplyUpload Context.
 
 	./osscmd mupload -i --object init -b testossscmd -a shenzhen
@@ -257,8 +293,10 @@ Init a MulitplyUpload Context . ID And Key will be used to do the following acti
 	
 Cancle will Abort Uploading , And objects will not be stored.
 
-##4. CORS
+##5. CORS
 CORS allow other domain to access resources 
+
+`cors` is a first layer option which do things with CORS.
 ### Query Bucket's CORS
 
 	./osscmd cors -q -b testossscmd  -a shenzhen
