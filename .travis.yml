@@ -11,13 +11,11 @@ script:
     - go test -v -covermode=count -coverprofile=coverage_ossapi_mupload.out github.com/cz-it/aliyun-oss-golang-sdk/ossapi/mupload 
     - go test -v -covermode=count -coverprofile=coverage_ossapi_object.out github.com/cz-it/aliyun-oss-golang-sdk/ossapi/object 
     - go test -v -covermode=count -coverprofile=coverage_ossapi_service.out github.com/cz-it/aliyun-oss-golang-sdk/ossapi/service 
-    - go test -v -covermode=count -coverprofile=coverage_osscmd.out github.com/cz-it/aliyun-oss-golang-sdk/osscmd
     - cat coverage_ossapi_bucket.out | awk '{if(NR!=1){print $0}}' >> coverage.out 
     - cat coverage_ossapi_log.out | awk '{if(NR!=1){print $0}}' >> coverage.out 
     - cat coverage_ossapi_mupload.out | awk '{if(NR!=1){print $0}}' >> coverage.out 
     - cat coverage_ossapi_object.out | awk '{if(NR!=1){print $0}}' >> coverage.out 
     - cat coverage_ossapi_service.out | awk '{if(NR!=1){print $0}}' >> coverage.out 
-    - cat coverage_osscmd.out | awk '{if(NR!=1){print $0}}' >> coverage.out 
     - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken n1g054tpzsXT3kJVwetmlA8SwPxpjDyIR
     - make
 
