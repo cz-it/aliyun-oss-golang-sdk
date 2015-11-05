@@ -73,7 +73,7 @@ Here is an example to show how to create a bucket and a object on it .More exapm
 		
 		func main() {
 			fmt.Println(ossapi.Version())
-			err := ossapi.Init("v8P430U3UcILP6KA", "EB9v8yL2aM07YOgtO1BdfrXtdxa4A1")
+			err := ossapi.Init("v8P430U3UcILPA", "EB9v8yL2aM07YOgtO1BdfrXtdxa1")
 			if err != nil {
 				fmt.Println(err.Error())
 				return
